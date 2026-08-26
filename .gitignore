@@ -1,0 +1,23 @@
+# Dataset — each teammate keeps their own local copy here; never push 320 images to GitHub.
+data/raw/
+data/processed/
+
+# Regenerable outputs / figures — keep the repo to code only.
+results/
+*.png
+*.jpg
+*.jpeg
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
