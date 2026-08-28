@@ -29,7 +29,7 @@ from config import RAW_DIR  # noqa: E402
 import cv2
 import numpy as np
 from scipy.signal import find_peaks
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import distance_transform_edt, binary_fill_holes
 
 
 def _coherence_diffusion(image, theta_field, coherence_field, iterations=15, dt=0.2, kappa=15.0):
@@ -166,12 +166,26 @@ def _estimate_ridge_frequency(image, theta_field, block=16, window=32,
     return freq_field
 
 
-def _build_log_gabor_kernel(theta0, f0, kernel_size, bandwidth, angular_sigma):
+def _build_log_gabor_kernel(theta_ridge, f0, kernel_size, bandwidth, angular_sigma):
     """Builds a real-valued 2D Log-Gabor (Field, 1987) convolution kernel for
     one specific orientation/frequency, by designing the filter in the
     frequency domain (as a radial log-frequency Gaussian x an angular
     Gaussian, with the radial term explicitly zeroed at rho==0 so the filter
-    can never respond to DC/illumination) and taking its inverse FFT."""
+    can never respond to DC/illumination) and taking its inverse FFT.
+
+    theta_ridge is the SPATIAL ridge orientation (theta_field's convention:
+    0=horizontal ridges, 90deg=vertical ridges). A set of parallel ridges at
+    spatial angle theta_ridge has its Fourier-domain energy concentrated at
+    frequency-domain angle theta_ridge + 90deg, not at theta_ridge itself —
+    same 90-degree spatial-vs-gradient distinction as the orientation_field()
+    fix in common.py, just showing up here as spatial-vs-frequency-domain
+    instead. Confirmed directly: a kernel built with the angular Gaussian
+    centered at theta_ridge (no correction) had ~1.5e-8x response to ridges
+    actually at that spatial angle — matching the Gaussian's far-tail weight
+    exactly 90 degrees off — while a kernel built at theta_ridge+90deg gives
+    full-strength response, as it should.
+    """
+    theta0 = theta_ridge + np.pi / 2  # rotate ridge angle to its frequency-domain angle
     freqs = np.fft.fftshift(np.fft.fftfreq(kernel_size))
     U, V = np.meshgrid(freqs, freqs)  # U: x-frequency, V: y-frequency
     rho = np.sqrt(U ** 2 + V ** 2)
@@ -277,6 +291,48 @@ def _log_gabor_filter(image, theta_field, freq_field, block=16,
     return np.clip(result, 0, 255).astype(np.uint8)
 
 
+def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray"):
+    """Restores non-fingerprint (background) blocks to either a flat
+    mid-gray (fill="gray", default) or the original raw pixels
+    (fill="original"), so Step 5's Log-Gabor output — which assumes real
+    ridge structure to filter — is never shown over background, only over
+    the segmented fingerprint area from Step 1.
+
+    Tested both options on real images: leaving the raw background in
+    actually made NFIQ2 score WORSE than doing no masking at all (e.g.
+    53->19 on one DB3_B image) — NFIQ2 seems to read the real (noisy,
+    textured) background as low-quality fingerprint-like content and lets
+    it drag the whole score down. A flat gray background reads
+    unambiguously as "not fingerprint" and consistently scored as high or
+    higher than the unmasked baseline in the same tests, so it's the default.
+
+    segment()'s per-block Otsu variance classification can misfire on a
+    very dense, over-inked ridge core: local variance there can end up
+    LOWER than the surrounding moderately-pressed ridges (the block is
+    nearly saturated dark rather than alternating light/dark), so Otsu
+    lumps it in with the blank background — punching a hole of raw,
+    unenhanced pixels into the middle of the fingerprint (confirmed
+    visually on a real DB3_B image). Since that hole is fully enclosed by
+    real foreground blocks (unlike the true background margin, which
+    touches the image border), filling it with binary_fill_holes recovers
+    it without touching segment() itself or affecting any other pipeline.
+    """
+    fg_mask_blocks = binary_fill_holes(fg_mask_blocks)
+
+    h, w = enhanced.shape
+    n_block_rows, n_block_cols = fg_mask_blocks.shape
+    h2, w2 = n_block_rows * block, n_block_cols * block
+
+    # upsample the per-block mask to pixel resolution; any leftover border
+    # thinner than one block (past h2/w2) was never covered by segmentation
+    # in the first place, so it's left as background (False) by default.
+    fg_px = np.zeros((h, w), dtype=bool)
+    fg_px[:h2, :w2] = np.repeat(np.repeat(fg_mask_blocks, block, axis=0), block, axis=1)
+
+    background = image if fill == "original" else np.full_like(enhanced, 128)
+    return np.where(fg_px, enhanced, background).astype(np.uint8)
+
+
 def enhance(image, params=None):
     """
     image: 2D grayscale numpy array
@@ -319,6 +375,13 @@ def enhance(image, params=None):
         bandwidth=log_gabor_bandwidth,
         angular_sigma=log_gabor_angular_sigma,
     )
+
+    # Mask background back in: fg_mask_blocks (Step 1) marks which blocks are
+    # actual fingerprint vs background — Log-Gabor filtering only makes sense
+    # over real ridge structure, so background blocks are restored to the
+    # original pixels (or a flat gray) instead of showing filtered noise.
+    background_fill = params.get("background_fill", "gray")
+    enhanced = _mask_background(enhanced, image, fg_mask_blocks, fill=background_fill)
 
     return enhanced
 
