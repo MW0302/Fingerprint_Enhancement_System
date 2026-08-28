@@ -29,7 +29,13 @@ from config import RAW_DIR  # noqa: E402
 import cv2
 import numpy as np
 from scipy.signal import find_peaks
-from scipy.ndimage import distance_transform_edt, binary_fill_holes
+from scipy.ndimage import (
+    distance_transform_edt,
+    binary_fill_holes,
+    binary_closing,
+    binary_dilation,
+    label,
+)
 
 
 def _coherence_diffusion(image, theta_field, coherence_field, iterations=15, dt=0.2, kappa=15.0):
@@ -291,33 +297,71 @@ def _log_gabor_filter(image, theta_field, freq_field, block=16,
     return np.clip(result, 0, 255).astype(np.uint8)
 
 
+def _clean_fg_mask(fg_mask_blocks):
+    """Cleans up segment()'s raw per-block foreground mask before it's used
+    to mask Step 5's output. Visualizing fg_mask_blocks over real images
+    (overlaying it on the raw scan) showed segment()'s per-block Otsu
+    variance classification failing in two ways, not just the enclosed-hole
+    case this function originally only handled:
+
+      1. Jagged notches biting into the real fingerprint area from the
+         edges — a moderately-pressed ridge region right at the print's own
+         boundary often has just-below-threshold variance, so segment()
+         crops a chunk of real ridge detail off as "background" (confirmed
+         visually on DB1_B/DB4_B: the enhanced output had big gray bites
+         taken out of visibly-real ridge texture, not just a coarse but
+         otherwise-reasonable outline).
+      2. Small isolated false-foreground or false-background specks
+         scattered away from the real print (sensor dust, paper grain).
+
+    Fixed with a standard sequence: morphological closing (bridges small-
+    to-medium notches/gaps), fill any now-enclosed holes (the over-inked-
+    core case from before), keep only the largest connected component
+    (drops stray specks disconnected from the real print), then a small
+    dilation (recovers the marginal blocks along the print's true edge that
+    Otsu was systematically too conservative about). This is post-
+    processing on segment()'s OUTPUT only — segment() itself, shared by
+    every pipeline, is untouched.
+
+    Not a full fix: a segment() failure caused by an image-wide contrast
+    gradient (one whole side of the print reading as lower-variance than
+    the Otsu cutoff) can leave a large contiguous region misclassified that
+    no reasonably-sized closing/dilation fully recovers — confirmed on one
+    DB2_B image where roughly a third of the print stayed excluded even
+    after this cleanup. That's a genuine segment() limitation to flag, not
+    something this function claims to fully solve.
+    """
+    struct = np.ones((5, 5))
+    closed = binary_closing(fg_mask_blocks, structure=struct, iterations=1)
+    filled = binary_fill_holes(closed)
+
+    labeled, n_components = label(filled)
+    if n_components > 0:
+        sizes = np.bincount(labeled.ravel())
+        sizes[0] = 0  # background label never counts
+        filled = labeled == sizes.argmax()
+
+    return binary_dilation(filled, structure=np.ones((3, 3)), iterations=1)
+
+
 def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray"):
     """Restores non-fingerprint (background) blocks to either a flat
     mid-gray (fill="gray", default) or the original raw pixels
     (fill="original"), so Step 5's Log-Gabor output — which assumes real
     ridge structure to filter — is never shown over background, only over
-    the segmented fingerprint area from Step 1.
+    the segmented fingerprint area from Step 1 (cleaned up by
+    _clean_fg_mask first — see its docstring for why segment()'s raw
+    per-block output isn't used directly).
 
-    Tested both options on real images: leaving the raw background in
+    Tested both fill options on real images: leaving the raw background in
     actually made NFIQ2 score WORSE than doing no masking at all (e.g.
     53->19 on one DB3_B image) — NFIQ2 seems to read the real (noisy,
     textured) background as low-quality fingerprint-like content and lets
     it drag the whole score down. A flat gray background reads
     unambiguously as "not fingerprint" and consistently scored as high or
     higher than the unmasked baseline in the same tests, so it's the default.
-
-    segment()'s per-block Otsu variance classification can misfire on a
-    very dense, over-inked ridge core: local variance there can end up
-    LOWER than the surrounding moderately-pressed ridges (the block is
-    nearly saturated dark rather than alternating light/dark), so Otsu
-    lumps it in with the blank background — punching a hole of raw,
-    unenhanced pixels into the middle of the fingerprint (confirmed
-    visually on a real DB3_B image). Since that hole is fully enclosed by
-    real foreground blocks (unlike the true background margin, which
-    touches the image border), filling it with binary_fill_holes recovers
-    it without touching segment() itself or affecting any other pipeline.
     """
-    fg_mask_blocks = binary_fill_holes(fg_mask_blocks)
+    fg_mask_blocks = _clean_fg_mask(fg_mask_blocks)
 
     h, w = enhanced.shape
     n_block_rows, n_block_cols = fg_mask_blocks.shape
