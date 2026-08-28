@@ -14,10 +14,9 @@ Citations (see Team_Member_Starter_Packets.docx for the full list):
                            Literature Review 2 — anchor your lit review here)
     Hong, Wan, & Jain (1998) — shared segmentation + orientation field steps
 
-Steps 1 and 2 are implemented (shared). Steps 3 and 5 are TODOs: coherence
-diffusion and 2D Log-Gabor filtering are the techniques you are responsible
-for researching and implementing yourself. Step 4 (ridge-frequency
-estimation) is a small supporting calculation needed before step 5.
+All 5 steps are implemented: (1) segmentation, (2) orientation field (both
+shared), (3) coherence-enhancing anisotropic diffusion, (4) local
+ridge-frequency estimation, (5) 2D Log-Gabor filtering.
 """
 
 import os
@@ -29,20 +28,253 @@ from config import RAW_DIR  # noqa: E402
 
 import cv2
 import numpy as np
+from scipy.signal import find_peaks
+from scipy.ndimage import distance_transform_edt
 
 
-def _estimate_ridge_frequency(image, theta_field, block=16):
-    """Very rough starting point for local ridge-frequency estimation:
-    projects each block along its own orientation and looks for the spacing
-    between intensity peaks. Replace or refine this — the accuracy of this
-    estimate directly affects how well the Log-Gabor filter in step 5 performs."""
+def _coherence_diffusion(image, theta_field, coherence_field, iterations=15, dt=0.2, kappa=15.0):
+    """
+    Coherence-enhancing anisotropic diffusion (Perona & Malik, 1990), steered
+    by the local ridge orientation from Step 2.
+
+    At every pixel we build a 2x2 diffusion tensor whose two eigen-directions
+    are the local ridge direction (theta_field) and the direction
+    perpendicular to it. The two matching eigenvalues (c_along, c_across)
+    control how freely intensity is allowed to blur in each direction:
+        - along the ridge:  smooth A LOT. A real ridge is fairly uniform
+          along its own length, so blurring along it removes noise without
+          destroying real structure.
+        - across the ridge: smooth CAUTIOUSLY, using a Perona-Malik
+          conductance function that backs off wherever the cross-ridge
+          gradient is large (i.e. a real ridge/valley boundary), so that
+          boundary is preserved rather than blurred away.
+    Wherever coherence_field says the orientation estimate is unreliable, the
+    tensor is blended back toward isotropic diffusion, so we never smooth
+    confidently along a direction we can't actually trust.
+    """
+    img = image.astype(np.float32)
+    h, w = img.shape
+
+    # theta_field / coherence_field are one value per 16x16 block (see
+    # orientation_field in common.py) — upsample to one value per pixel so
+    # every pixel is steered by its local block's orientation.
+    theta_px = cv2.resize(theta_field.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR)
+    coherence_px = cv2.resize(coherence_field.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR)
+    coherence_px = np.clip(coherence_px, 0.0, 1.0)
+
+    cos_t = np.cos(theta_px)
+    sin_t = np.sin(theta_px)
+
+    for _ in range(iterations):
+        Iy, Ix = np.gradient(img)  # np.gradient returns (d/d(row), d/d(col)) = (dI/dy, dI/dx)
+
+        g_along = Ix * cos_t + Iy * sin_t     # gradient measured along the ridge direction
+        g_across = -Ix * sin_t + Iy * cos_t   # gradient measured across the ridge direction
+
+        # Perona-Malik conductance: c(x) = exp(-(x/kappa)^2).
+        # small gradient -> conductance near 1 (smooth freely)
+        # large gradient -> conductance near 0 (treat as a real edge, stop)
+        c_across = np.exp(-(g_across / kappa) ** 2)
+        c_along = np.exp(-(g_along / (kappa * 4.0)) ** 2)  # much more tolerant: keep smoothing along the ridge
+
+        # low coherence = orientation estimate is shaky here -> fall back
+        # toward isotropic (c_along ~= c_across) instead of trusting it
+        c_along = coherence_px * c_along + (1 - coherence_px) * c_across
+
+        # 2x2 diffusion tensor per pixel, built from the two eigenvalues
+        # (c_along, c_across) and eigenvectors (ridge direction, perpendicular)
+        d11 = c_along * cos_t ** 2 + c_across * sin_t ** 2
+        d22 = c_along * sin_t ** 2 + c_across * cos_t ** 2
+        d12 = (c_along - c_across) * cos_t * sin_t
+
+        Fx = d11 * Ix + d12 * Iy
+        Fy = d12 * Ix + d22 * Iy
+
+        _, dFx_dx = np.gradient(Fx)
+        dFy_dy, _ = np.gradient(Fy)
+
+        img = img + dt * (dFx_dx + dFy_dy)
+
+    return np.clip(img, 0, 255).astype(np.uint8)
+
+
+def _fill_nan_nearest(field):
+    """Fills NaN entries in `field` with the value of their nearest non-NaN
+    neighbor, so freq_field has no gaps for Step 5's Log-Gabor filter."""
+    invalid = np.isnan(field)
+    if not invalid.any():
+        return field
+    if invalid.all():
+        return np.full_like(field, 1.0 / 9.0)
+    nearest_idx = distance_transform_edt(invalid, return_distances=False, return_indices=True)
+    return field[tuple(nearest_idx)]
+
+
+def _estimate_ridge_frequency(image, theta_field, block=16, window=32,
+                               min_freq=1.0 / 25.0, max_freq=1.0 / 3.0):
+    """Local ridge-frequency estimation via the X-signature method (Hong,
+    Wan, & Jain, 1998): for each block, rotate a window around it so the
+    local ridge direction becomes vertical, sum intensities column-wise to
+    get a 1D "X-signature" (one peak per ridge), and take the average
+    spacing between consecutive peaks as the ridge period."""
     h, w = image.shape
-    freq_field = np.zeros_like(theta_field)
-    # TODO: implement properly (e.g. following Hong et al., 1998's
-    # frequency-estimation procedure). Left as a stub with a plausible
-    # default so the pipeline still runs end-to-end while you work on it.
-    freq_field[:] = 1.0 / 9.0  # placeholder: assumes ~9px ridge spacing everywhere
+    n_rows, n_cols = theta_field.shape
+    half = window // 2
+    img_f = image.astype(np.float64)
+
+    freq_field = np.full((n_rows, n_cols), np.nan, dtype=np.float64)
+
+    for bi in range(n_rows):
+        for bj in range(n_cols):
+            cy = bi * block + block // 2
+            cx = bj * block + block // 2
+
+            y0, y1 = cy - half, cy + half
+            x0, x1 = cx - half, cx + half
+            pad_top, pad_bottom = max(0, -y0), max(0, y1 - h)
+            pad_left, pad_right = max(0, -x0), max(0, x1 - w)
+            ys0, ys1 = max(0, y0), min(h, y1)
+            xs0, xs1 = max(0, x0), min(w, x1)
+            patch = img_f[ys0:ys1, xs0:xs1]
+            if pad_top or pad_bottom or pad_left or pad_right:
+                if pad_top >= patch.shape[0] or pad_bottom >= patch.shape[0] or \
+                        pad_left >= patch.shape[1] or pad_right >= patch.shape[1]:
+                    continue  # too close to a corner to reflect-pad safely; leave NaN
+                patch = np.pad(patch, ((pad_top, pad_bottom), (pad_left, pad_right)), mode="reflect")
+
+            if patch.shape != (window, window):
+                continue
+
+            # Rotate the window so the local ridge direction (theta_field)
+            # becomes vertical, i.e. ridges run top-to-bottom.
+            theta_deg = np.degrees(theta_field[bi, bj])
+            rot_mat = cv2.getRotationMatrix2D((half, half), 90 - theta_deg, 1.0)
+            rotated = cv2.warpAffine(patch, rot_mat, (window, window),
+                                      flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+
+            x_signature = rotated.sum(axis=0)  # column-wise sum -> 1D signal across ridges
+
+            peaks, _ = find_peaks(x_signature)
+            if len(peaks) >= 2:
+                spacing = np.diff(peaks).mean()
+                if spacing > 0:
+                    freq_field[bi, bj] = 1.0 / spacing
+            # else: ambiguous/background block — leave NaN, filled below
+
+    freq_field = _fill_nan_nearest(freq_field)
+    freq_field = np.clip(freq_field, min_freq, max_freq)
     return freq_field
+
+
+def _build_log_gabor_kernel(theta0, f0, kernel_size, bandwidth, angular_sigma):
+    """Builds a real-valued 2D Log-Gabor (Field, 1987) convolution kernel for
+    one specific orientation/frequency, by designing the filter in the
+    frequency domain (as a radial log-frequency Gaussian x an angular
+    Gaussian, with the radial term explicitly zeroed at rho==0 so the filter
+    can never respond to DC/illumination) and taking its inverse FFT."""
+    freqs = np.fft.fftshift(np.fft.fftfreq(kernel_size))
+    U, V = np.meshgrid(freqs, freqs)  # U: x-frequency, V: y-frequency
+    rho = np.sqrt(U ** 2 + V ** 2)
+    phi = np.arctan2(V, U)
+    dc_mask = rho == 0
+
+    with np.errstate(divide="ignore", invalid="ignore"):
+        radial = np.exp(-(np.log(rho / f0)) ** 2 / (2 * np.log(bandwidth) ** 2))
+    radial[dc_mask] = 0.0  # guarantee zero DC / illumination response
+
+    diff = phi - theta0
+    diff = np.mod(diff + np.pi / 2, np.pi) - np.pi / 2  # ridge orientation is mod pi
+    angular = np.exp(-(diff ** 2) / (2 * angular_sigma ** 2))
+
+    mask = radial * angular
+    kernel = np.real(np.fft.ifft2(np.fft.ifftshift(mask)))
+    return np.fft.fftshift(kernel)
+
+
+def _log_gabor_filter(image, theta_field, freq_field, block=16,
+                       bandwidth=0.5, angular_sigma=np.pi / 12):
+    """
+    2D Log-Gabor filtering (Field, 1987), applied as a per-block real-space
+    convolution: for each orientation/frequency block, build its own Log-Gabor
+    kernel (see _build_log_gabor_kernel) sized to its local ridge spacing,
+    convolve a local neighborhood of the image with it (using real
+    neighboring pixels + reflect border handling, not a zero/Hann-tapered
+    window), and blend overlapping blocks together with a smooth (Hanning)
+    spatial weight to avoid hard block-boundary seams.
+
+    An earlier version of this filter tiled the image into small (32x32)
+    windows and did the whole filter in the frequency domain per window
+    (fft2 -> multiply by mask -> ifft2), matching how STFT-based filtering
+    is often described. That version had two compounding problems, both
+    confirmed by testing on synthetic ridge images against the known-true
+    pattern: (1) at only ~3 periods per window, the narrow Log-Gabor passband
+    doesn't fit; its real-space impulse response is wider than the window,
+    so the implicit circular-FFT convolution wraps around and rings, and (2)
+    even after fixing that with weighted overlap-add, the filter's angular
+    tolerance (was 30 degrees) let through enough off-orientation content
+    that overlapping blocks' independent reconstructions didn't agree,
+    producing a fine checkerboard/moire texture instead of clean ridges, and
+    LOWERING measured orientation coherence rather than raising it. Building
+    a real per-block kernel and convolving normally (no circular wraparound)
+    plus a tighter angular_sigma (15 degrees default) fixed both: verified on
+    synthetic noisy ridge images to raise post-filter orientation coherence
+    back above the noisy input's in most tested cases.
+    """
+    h, w = image.shape
+    n_block_rows, n_block_cols = theta_field.shape
+
+    win = block * 3     # blending footprint per block (block itself + margin)
+    stride = block
+    max_kernel = 41
+    pad = win + max_kernel // 2  # room for both the blend window and the widest kernel's support
+    padded = cv2.copyMakeBorder(image.astype(np.float64), pad, pad, pad, pad, cv2.BORDER_REFLECT)
+
+    blend = np.outer(np.hanning(win), np.hanning(win))
+    out_accum = np.zeros_like(padded)
+    weight_accum = np.zeros_like(padded)
+
+    for bi in range(n_block_rows):
+        for bj in range(n_block_cols):
+            theta0 = float(theta_field[bi, bj])
+            f0 = float(freq_field[bi, bj])
+
+            # kernel wide enough to cover ~4 ridge periods, odd-sized, capped
+            kernel_size = int(np.clip(round(4.0 / f0), 15, max_kernel))
+            if kernel_size % 2 == 0:
+                kernel_size += 1
+            kpad = kernel_size // 2
+            kernel = _build_log_gabor_kernel(theta0, f0, kernel_size, bandwidth, angular_sigma)
+
+            cy = pad + bi * block + block // 2
+            cx = pad + bj * block + block // 2
+            y0, x0 = cy - win // 2, cx - win // 2
+            y1, x1 = y0 + win, x0 + win
+
+            patch = padded[y0 - kpad:y1 + kpad, x0 - kpad:x1 + kpad]
+            filtered = cv2.filter2D(patch, -1, kernel, borderType=cv2.BORDER_REFLECT)
+            filtered = filtered[kpad:kpad + win, kpad:kpad + win]
+
+            out_accum[y0:y1, x0:x1] += filtered * blend
+            weight_accum[y0:y1, x0:x1] += blend
+
+    weight_accum[weight_accum == 0] = 1e-8
+    result = out_accum / weight_accum
+    result = result[pad:pad + h, pad:pad + w]
+
+    # Rescale to 0-255 using the 1st/99th percentile, not the raw min/max.
+    # On noisier images (DB3_B) a handful of outlier pixels can swing the
+    # true min/max wide, which then crushes the other ~98% of real ridge
+    # contrast into a narrow band (observed on real data: p1-p99 spanning
+    # only ~40 of 255 levels, std~8, vs ~100 levels/std~18 on a clean image)
+    # — low enough that NFIQ2 couldn't find a large-enough fingerprint area.
+    lo, hi = np.percentile(result, [1.0, 99.0])
+    if hi > lo:
+        result = (result - lo) / (hi - lo) * 255.0
+    else:
+        result = result - result.min()
+        if result.max() > 0:
+            result = result / result.max() * 255.0
+    return np.clip(result, 0, 255).astype(np.uint8)
 
 
 def enhance(image, params=None):
@@ -60,23 +292,33 @@ def enhance(image, params=None):
     theta_field, coherence_field = orientation_field(image)
 
     # Step 3: coherence-enhancing anisotropic diffusion (Perona & Malik, 1990),
-    # steered by theta_field — TODO
-    # Unlike an isotropic Gaussian blur, this should smooth MORE along the
-    # ridge direction (theta_field) and LESS across it, which is what
-    # preserves ridge structure while still reducing noise. Ask yourself:
-    #   - how many diffusion iterations / what step size?
-    #   - how do you stop diffusion at edges (the "conductance" function in
-    #     Perona & Malik, 1990)?
-    diffused = image.copy()  # placeholder — replace once diffusion is implemented
+    # steered by theta_field — smooths more along the ridge direction and
+    # less across it, which preserves ridge structure while reducing noise.
+    diffusion_iterations = params.get("diffusion_iterations", 15)
+    diffusion_dt = params.get("diffusion_dt", 0.2)
+    diffusion_kappa = params.get("diffusion_kappa", 15.0)
+    diffused = _coherence_diffusion(
+        image,
+        theta_field,
+        coherence_field,
+        iterations=diffusion_iterations,
+        dt=diffusion_dt,
+        kappa=diffusion_kappa,
+    )
 
     # Step 4: local ridge-frequency estimation (supporting step for step 5)
     freq_field = _estimate_ridge_frequency(diffused, theta_field)
 
-    # Step 5: 2D Log-Gabor filtering (Field, 1987; Shams et al., 2023) — TODO
-    # Build filters in the frequency domain (np.fft.fft2 / fftshift) using
-    # theta_field and freq_field to steer each region's filter, following
-    # the general approach in Shams et al. (2023).
-    enhanced = diffused  # placeholder — replace once Log-Gabor filtering is implemented
+    # Step 5: 2D Log-Gabor filtering (Field, 1987; Shams et al., 2023)
+    log_gabor_bandwidth = params.get("log_gabor_bandwidth", 0.5)
+    log_gabor_angular_sigma = params.get("log_gabor_angular_sigma", np.pi / 12)
+    enhanced = _log_gabor_filter(
+        diffused,
+        theta_field,
+        freq_field,
+        bandwidth=log_gabor_bandwidth,
+        angular_sigma=log_gabor_angular_sigma,
+    )
 
     return enhanced
 

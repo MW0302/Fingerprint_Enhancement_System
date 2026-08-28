@@ -121,7 +121,15 @@ def orientation_field(img, block=BLOCK):
 
     Gxx, Gyy, Gxy = reduce_sum(gxx), reduce_sum(gyy), reduce_sum(gxy)
 
-    theta_field = 0.5 * np.arctan2(2 * Gxy, (Gxx - Gyy) + 1e-8)
+    # 0.5*arctan2(2*Gxy, Gxx-Gyy) is the structure tensor's dominant
+    # eigenvector direction, which points along the dominant GRADIENT (i.e.
+    # ACROSS the ridge, since intensity changes fastest crossing a ridge, not
+    # along it). Rotating by 90 degrees converts this to the ridge direction
+    # itself, which is what every caller of this function actually needs.
+    grad_theta = 0.5 * np.arctan2(2 * Gxy, (Gxx - Gyy) + 1e-8)
+    theta_field = grad_theta + np.pi / 2
+    theta_field = np.where(theta_field > np.pi / 2, theta_field - np.pi, theta_field)
+
     num = np.sqrt((Gxx - Gyy) ** 2 + 4 * Gxy ** 2)
     den = Gxx + Gyy + 1e-8
     coherence_field = num / den
