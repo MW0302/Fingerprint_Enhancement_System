@@ -344,7 +344,8 @@ def _clean_fg_mask(fg_mask_blocks):
     return binary_dilation(filled, structure=np.ones((3, 3)), iterations=1)
 
 
-def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray"):
+def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray",
+                      min_foreground_fraction=0.15):
     """Restores non-fingerprint (background) blocks to either a flat
     mid-gray (fill="gray", default) or the original raw pixels
     (fill="original"), so Step 5's Log-Gabor output — which assumes real
@@ -362,6 +363,19 @@ def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray"):
     higher than the unmasked baseline in the same tests, so it's the default.
     """
     fg_mask_blocks = _clean_fg_mask(fg_mask_blocks)
+
+    # Safety valve: on 80 real DB3_B images, cleaned foreground coverage
+    # never dropped below 31% — but segment()'s single global Otsu
+    # threshold can still fail hard on a genuinely low-contrast/uneven scan
+    # (confirmed on one DB2_B image: a real, roughly contiguous third of
+    # the print stayed misclassified even after _clean_fg_mask). Rather
+    # than keep chasing Otsu accuracy on such outliers, treat an
+    # implausibly small cleaned foreground as "segmentation failed for this
+    # image" and skip masking entirely — an unmasked (fully Log-Gabor'd,
+    # background included) image is a much better fallback than confidently
+    # painting most of a possibly-real fingerprint gray.
+    if fg_mask_blocks.mean() < min_foreground_fraction:
+        return enhanced
 
     h, w = enhanced.shape
     n_block_rows, n_block_cols = fg_mask_blocks.shape
@@ -420,12 +434,19 @@ def enhance(image, params=None):
         angular_sigma=log_gabor_angular_sigma,
     )
 
-    # Mask background back in: fg_mask_blocks (Step 1) marks which blocks are
-    # actual fingerprint vs background — Log-Gabor filtering only makes sense
-    # over real ridge structure, so background blocks are restored to the
-    # original pixels (or a flat gray) instead of showing filtered noise.
-    background_fill = params.get("background_fill", "gray")
-    enhanced = _mask_background(enhanced, image, fg_mask_blocks, fill=background_fill)
+    # Optional: mask background back in using fg_mask_blocks (Step 1), so
+    # Log-Gabor output (which assumes real ridge structure) isn't shown over
+    # background. Off by default — segment()'s per-block Otsu can still
+    # misjudge the true fingerprint boundary on some real images even after
+    # _clean_fg_mask's cleanup (confirmed: a real, contiguous chunk of one
+    # DB2_B print stayed misclassified), and a break in the fingerprint body
+    # itself is worse than a cosmetically imperfect background. Pass
+    # params={"mask_background": True} to opt in.
+    if params.get("mask_background", False):
+        background_fill = params.get("background_fill", "gray")
+        min_foreground_fraction = params.get("min_foreground_fraction", 0.15)
+        enhanced = _mask_background(enhanced, image, fg_mask_blocks, fill=background_fill,
+                                     min_foreground_fraction=min_foreground_fraction)
 
     return enhanced
 
