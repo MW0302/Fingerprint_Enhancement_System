@@ -1,41 +1,111 @@
 """
-Pipeline C — Member C: Coherence-Preserving Denoising
-(Coherence Diffusion + 2D Log-Gabor Filtering)
+Pipeline C — Member C: Coherence-Preserving, Multi-Filter Enhancement
+(Homomorphic Filtering + Coherence Diffusion + 2D Log-Gabor Filtering)
 
-Targets (see Dataset_Problem_Analysis_and_Revised_Pipelines.docx, Section 6):
-    P2 — high random noise (DB3)
-    P6 — weak/inconsistent ridge orientation (DB4, DB3)
-    P4 — blurred/soft ridges (secondary, cross-check against Pipeline D)
+Finalised design (see Dataset_Problem_Analysis_and_Revised_Pipelines.md,
+Sections 5-6, revised 29 August 2026): all four pipelines target the SAME
+three evidenced problems, each with a different classical technique family,
+so the group's NFIQ2 results support a genuine technique-vs-technique
+comparison rather than four pipelines solving four disjoint problems:
+    P1 — low global contrast (DB3)              -> Homomorphic filtering
+    P2 — high random noise (DB3)                 -> Coherence diffusion
+    P6 — weak/inconsistent ridge orientation
+         (DB4, DB3)                              -> 2D Log-Gabor filtering
+
+Segmentation and block-wise normalisation were dropped (30 August 2026):
+they targeted P5/P7, which are no longer in scope now that only P1/P2/P6
+are being solved, and — since Otsu segmentation and Hong et al.
+normalisation would otherwise have been called identically by all four
+pipelines — keeping them would have violated the lecturer's requirement
+that no technique repeat across pipelines. Exactly three primary,
+independently citable techniques per pipeline (one per shared problem) is
+sufficient.
 
 Citations (see Team_Member_Starter_Packets.docx for the full list):
+    Oppenheim, Schafer, & Stockham (1968) — homomorphic filtering
     Perona & Malik (1990) — anisotropic / coherence-enhancing diffusion
     Field (1987) — Log-Gabor filtering
     Shams et al. (2023) — methodological inspiration (this is the group's own
                            Literature Review 2 — anchor your lit review here)
-    Hong, Wan, & Jain (1998) — shared segmentation + orientation field steps
+    Hong, Wan, & Jain (1998) — structure-tensor orientation field (a
+                                supporting calculation, not one of the three
+                                primary techniques — see module docstring
+                                note above on why it doesn't count as a
+                                repeated technique)
 
-All 5 steps are implemented: (1) segmentation, (2) orientation field (both
-shared), (3) coherence-enhancing anisotropic diffusion, (4) local
-ridge-frequency estimation, (5) 2D Log-Gabor filtering.
+All four steps are implemented:
+    1. Homomorphic filtering (P1 — contrast)
+    2. Orientation field (supporting calculation; steers steps 3 & 4)
+    3. Coherence-enhancing anisotropic diffusion (P2 — noise)
+    4. Ridge-frequency estimation + 2D Log-Gabor filtering (P6 — orientation)
+
+Run this file directly (`python pipeline_c.py`) to sanity-check it against
+one test image before running it over the full dataset.
 """
 
 import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import segment, orientation_field  # noqa: E402
+from common import orientation_field  # noqa: E402
 from config import RAW_DIR  # noqa: E402
 
 import cv2
 import numpy as np
-from scipy.signal import find_peaks
-from scipy.ndimage import (
-    distance_transform_edt,
-    binary_fill_holes,
-    binary_closing,
-    binary_dilation,
-    label,
-)
+
+
+def _homomorphic_filter(image, cutoff=0.06, gamma_low=0.5, gamma_high=2.0, sharpness=1.0):
+    """
+    Step 1: homomorphic filtering (Oppenheim, Schafer, & Stockham, 1968).
+
+    Models an image as illumination(x,y) * reflectance(x,y), where
+    illumination varies slowly (low spatial frequency) and reflectance
+    carries the fine ridge/valley detail (high spatial frequency). Taking a
+    log turns that product into a sum, which a single frequency-domain
+    filter can then split apart: attenuate the low-frequency illumination
+    term (gamma_low < 1) while boosting the high-frequency reflectance term
+    (gamma_high > 1), then undo the log with exp().
+
+    This directly targets P1 (DB3's systematically low, narrow-SD global
+    contrast — Section 3.2) and, as a side effect, P3 (uneven illumination),
+    since both are driven by the same low-frequency component this filter
+    suppresses. It runs first in the pipeline (before orientation estimation
+    in step 2) so the downstream diffusion and Log-Gabor steps are steered
+    using a contrast-corrected image rather than DB3's original flat one.
+    """
+    img = image.astype(np.float64) + 1.0  # +1 avoids log(0) on pure-black pixels
+    log_img = np.log(img)
+
+    h, w = image.shape
+    Fshift = np.fft.fftshift(np.fft.fft2(log_img))
+
+    u = (np.arange(w) - w // 2) / w
+    v = (np.arange(h) - h // 2) / h
+    U, V = np.meshgrid(u, v)
+    D = np.sqrt(U ** 2 + V ** 2)
+
+    # High-pass emphasis transfer function: ~gamma_low near DC (attenuate
+    # illumination), rising smoothly to ~gamma_high at high frequencies
+    # (boost reflectance/detail); `cutoff` sets where the transition sits,
+    # `sharpness` how quickly it happens.
+    H = (gamma_high - gamma_low) * (1 - np.exp(-sharpness * (D ** 2) / (cutoff ** 2 + 1e-12))) + gamma_low
+
+    filtered = np.fft.ifft2(np.fft.ifftshift(Fshift * H))
+    result = np.exp(np.real(filtered)) - 1.0
+
+    # Rescale to 0-255 using the 1st/99th percentile, not the true min/max:
+    # without a prior normalisation step, a handful of outlier pixels (e.g.
+    # DB1's bright platen corners) can otherwise dominate a min/max stretch
+    # and crush the entire ridge/valley structure into a narrow dark band —
+    # this happened in practice on DB1 once block-wise normalisation was
+    # dropped from the pipeline. Same robust-percentile idea already used
+    # for Michelson contrast in Section 2 of the dataset analysis.
+    lo, hi = np.percentile(result, [1, 99])
+    if hi > lo:
+        result = (result - lo) / (hi - lo) * 255.0
+    else:
+        result = result - result.min()
+    return np.clip(result, 0, 255).astype(np.uint8)
 
 
 def _coherence_diffusion(image, theta_field, coherence_field, iterations=15, dt=0.2, kappa=15.0):
@@ -104,291 +174,200 @@ def _coherence_diffusion(image, theta_field, coherence_field, iterations=15, dt=
     return np.clip(img, 0, 255).astype(np.uint8)
 
 
-def _fill_nan_nearest(field):
-    """Fills NaN entries in `field` with the value of their nearest non-NaN
-    neighbor, so freq_field has no gaps for Step 5's Log-Gabor filter."""
-    invalid = np.isnan(field)
-    if not invalid.any():
-        return field
-    if invalid.all():
-        return np.full_like(field, 1.0 / 9.0)
-    nearest_idx = distance_transform_edt(invalid, return_distances=False, return_indices=True)
-    return field[tuple(nearest_idx)]
+def _estimate_ridge_frequency(image, theta_field, block=16, window_len=32, window_width=16,
+                               min_period=3, max_period=25, default_freq=1.0 / 9.0):
+    """
+    Local ridge-frequency estimation, following the x-signature procedure in
+    Hong, Wan, & Jain (1998).
 
+    For each block, an oriented window aligned with the block's ridge
+    direction (theta_field) is sampled: `window_width` parallel lines run
+    ALONG the ridge, each `window_len` samples long, and are averaged pixel-
+    for-pixel to build a 1D "x-signature" that profiles intensity ACROSS the
+    ridges/valleys (averaging along the ridge cancels most of the noise a
+    single scanline would carry). The average spacing between consecutive
+    peaks in that profile is the local ridge period in pixels; frequency is
+    1/period.
 
-def _estimate_ridge_frequency(image, theta_field, block=16, window=32,
-                               min_freq=1.0 / 25.0, max_freq=1.0 / 3.0):
-    """Local ridge-frequency estimation via the X-signature method (Hong,
-    Wan, & Jain, 1998): for each block, rotate a window around it so the
-    local ridge direction becomes vertical, sum intensities column-wise to
-    get a 1D "X-signature" (one peak per ridge), and take the average
-    spacing between consecutive peaks as the ridge period."""
-    h, w = image.shape
-    n_rows, n_cols = theta_field.shape
-    half = window // 2
-    img_f = image.astype(np.float64)
+    Blocks whose x-signature doesn't yield at least two peaks with a
+    plausible fingerprint period (e.g. background, or a low-coherence block
+    where "the ridge direction" isn't meaningful) fall back to
+    `default_freq` rather than reporting a wild estimate — a bad frequency
+    would otherwise mistune the Log-Gabor filter for that whole block in
+    step 5.
+    """
+    img = image.astype(np.float64)
+    h, w = img.shape
+    nby, nbx = theta_field.shape
+    freq_field = np.full_like(theta_field, default_freq, dtype=np.float64)
 
-    freq_field = np.full((n_rows, n_cols), np.nan, dtype=np.float64)
+    half_len = window_len // 2
+    half_width = window_width // 2
+    xs = np.arange(-half_width, half_width)
+    ys = np.arange(-half_len, half_len)
+    xv, yv = np.meshgrid(xs, ys, indexing="xy")  # shape (window_len, window_width)
 
-    for bi in range(n_rows):
-        for bj in range(n_cols):
-            cy = bi * block + block // 2
-            cx = bj * block + block // 2
+    for by in range(nby):
+        for bx in range(nbx):
+            theta = theta_field[by, bx]
+            cy = by * block + block // 2
+            cx = bx * block + block // 2
 
-            y0, y1 = cy - half, cy + half
-            x0, x1 = cx - half, cx + half
-            pad_top, pad_bottom = max(0, -y0), max(0, y1 - h)
-            pad_left, pad_right = max(0, -x0), max(0, x1 - w)
-            ys0, ys1 = max(0, y0), min(h, y1)
-            xs0, xs1 = max(0, x0), min(w, x1)
-            patch = img_f[ys0:ys1, xs0:xs1]
-            if pad_top or pad_bottom or pad_left or pad_right:
-                if pad_top >= patch.shape[0] or pad_bottom >= patch.shape[0] or \
-                        pad_left >= patch.shape[1] or pad_right >= patch.shape[1]:
-                    continue  # too close to a corner to reflect-pad safely; leave NaN
-                patch = np.pad(patch, ((pad_top, pad_bottom), (pad_left, pad_right)), mode="reflect")
+            cos_t, sin_t = np.cos(theta), np.sin(theta)
+            # xv is the across-ridge offset, yv the along-ridge offset;
+            # rotate that ridge-aligned frame into image (x, y) coordinates.
+            sample_x = cx + xv * (-sin_t) + yv * cos_t
+            sample_y = cy + xv * cos_t + yv * sin_t
 
-            if patch.shape != (window, window):
-                continue
+            if (sample_x.min() < 0 or sample_x.max() >= w - 1 or
+                    sample_y.min() < 0 or sample_y.max() >= h - 1):
+                continue  # oriented window falls off the image; keep default_freq
 
-            # Rotate the window so the local ridge direction (theta_field)
-            # becomes vertical, i.e. ridges run top-to-bottom.
-            theta_deg = np.degrees(theta_field[bi, bj])
-            rot_mat = cv2.getRotationMatrix2D((half, half), 90 - theta_deg, 1.0)
-            rotated = cv2.warpAffine(patch, rot_mat, (window, window),
-                                      flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+            x0 = np.floor(sample_x).astype(int)
+            y0 = np.floor(sample_y).astype(int)
+            fx = sample_x - x0
+            fy = sample_y - y0
+            x1 = np.clip(x0 + 1, 0, w - 1)
+            y1 = np.clip(y0 + 1, 0, h - 1)
+            x0 = np.clip(x0, 0, w - 1)
+            y0 = np.clip(y0, 0, h - 1)
 
-            x_signature = rotated.sum(axis=0)  # column-wise sum -> 1D signal across ridges
+            Ia, Ib = img[y0, x0], img[y0, x1]
+            Ic, Id = img[y1, x0], img[y1, x1]
+            sampled = (Ia * (1 - fx) * (1 - fy) + Ib * fx * (1 - fy) +
+                       Ic * (1 - fx) * fy + Id * fx * fy)
 
-            peaks, _ = find_peaks(x_signature)
+            x_signature = sampled.mean(axis=0)  # average along the ridge -> profile across ridges
+
+            peaks = [k for k in range(1, len(x_signature) - 1)
+                     if x_signature[k] > x_signature[k - 1] and x_signature[k] >= x_signature[k + 1]]
+
             if len(peaks) >= 2:
-                spacing = np.diff(peaks).mean()
-                if spacing > 0:
-                    freq_field[bi, bj] = 1.0 / spacing
-            # else: ambiguous/background block — leave NaN, filled below
+                period = float(np.mean(np.diff(peaks)))
+                if min_period <= period <= max_period:
+                    freq_field[by, bx] = 1.0 / period
+                # else: implausible spacing for a real ridge -> keep default_freq
 
-    freq_field = _fill_nan_nearest(freq_field)
-    freq_field = np.clip(freq_field, min_freq, max_freq)
     return freq_field
 
 
-def _build_log_gabor_kernel(theta_ridge, f0, kernel_size, bandwidth, angular_sigma):
-    """Builds a real-valued 2D Log-Gabor (Field, 1987) convolution kernel for
-    one specific orientation/frequency, by designing the filter in the
-    frequency domain (as a radial log-frequency Gaussian x an angular
-    Gaussian, with the radial term explicitly zeroed at rho==0 so the filter
-    can never respond to DC/illumination) and taking its inverse FFT.
-
-    theta_ridge is the SPATIAL ridge orientation (theta_field's convention:
-    0=horizontal ridges, 90deg=vertical ridges). A set of parallel ridges at
-    spatial angle theta_ridge has its Fourier-domain energy concentrated at
-    frequency-domain angle theta_ridge + 90deg, not at theta_ridge itself —
-    same 90-degree spatial-vs-gradient distinction as the orientation_field()
-    fix in common.py, just showing up here as spatial-vs-frequency-domain
-    instead. Confirmed directly: a kernel built with the angular Gaussian
-    centered at theta_ridge (no correction) had ~1.5e-8x response to ridges
-    actually at that spatial angle — matching the Gaussian's far-tail weight
-    exactly 90 degrees off — while a kernel built at theta_ridge+90deg gives
-    full-strength response, as it should.
+def _log_gabor_filter_2d(shape, freq0, theta0, sigma_onf=0.65, sigma_theta_deg=20.0):
     """
-    theta0 = theta_ridge + np.pi / 2  # rotate ridge angle to its frequency-domain angle
-    freqs = np.fft.fftshift(np.fft.fftfreq(kernel_size))
-    U, V = np.meshgrid(freqs, freqs)  # U: x-frequency, V: y-frequency
-    rho = np.sqrt(U ** 2 + V ** 2)
-    phi = np.arctan2(V, U)
-    dc_mask = rho == 0
+    Builds one 2D Log-Gabor transfer function H(u,v) over a frequency-domain
+    grid of the given shape, tuned to a single local ridge frequency (freq0,
+    cycles/pixel, from step 4) and orientation (theta0, radians, from step 2)
+    — Field (1987).
 
-    with np.errstate(divide="ignore", invalid="ignore"):
-        radial = np.exp(-(np.log(rho / f0)) ** 2 / (2 * np.log(bandwidth) ** 2))
-    radial[dc_mask] = 0.0  # guarantee zero DC / illumination response
-
-    diff = phi - theta0
-    diff = np.mod(diff + np.pi / 2, np.pi) - np.pi / 2  # ridge orientation is mod pi
-    angular = np.exp(-(diff ** 2) / (2 * angular_sigma ** 2))
-
-    mask = radial * angular
-    kernel = np.real(np.fft.ifft2(np.fft.ifftshift(mask)))
-    return np.fft.fftshift(kernel)
-
-
-def _log_gabor_filter(image, theta_field, freq_field, block=16,
-                       bandwidth=0.5, angular_sigma=np.pi / 12):
+    A Log-Gabor filter is defined directly as a Gaussian in LOG-frequency
+    space rather than linear frequency space (the ordinary Gabor filters
+    Pipeline B already uses). That avoids the DC bias / limited bandwidth a
+    linear-domain Gaussian carries, so the same filter shape stays well
+    behaved whether it's tuned to DB3's tight high-frequency ridges or DB4's
+    coarser ones — useful here since Pipeline C's own problem set (P2, P6)
+    spans both.
     """
-    2D Log-Gabor filtering (Field, 1987), applied as a per-block real-space
-    convolution: for each orientation/frequency block, build its own Log-Gabor
-    kernel (see _build_log_gabor_kernel) sized to its local ridge spacing,
-    convolve a local neighborhood of the image with it (using real
-    neighboring pixels + reflect border handling, not a zero/Hann-tapered
-    window), and blend overlapping blocks together with a smooth (Hanning)
-    spatial weight to avoid hard block-boundary seams.
+    rows, cols = shape
+    u = (np.arange(cols) - cols // 2) / cols
+    v = (np.arange(rows) - rows // 2) / rows
+    U, V = np.meshgrid(u, v)
+    radius = np.sqrt(U ** 2 + V ** 2)
+    radius[rows // 2, cols // 2] = 1.0  # placeholder so log() below doesn't hit log(0) at DC
 
-    An earlier version of this filter tiled the image into small (32x32)
-    windows and did the whole filter in the frequency domain per window
-    (fft2 -> multiply by mask -> ifft2), matching how STFT-based filtering
-    is often described. That version had two compounding problems, both
-    confirmed by testing on synthetic ridge images against the known-true
-    pattern: (1) at only ~3 periods per window, the narrow Log-Gabor passband
-    doesn't fit; its real-space impulse response is wider than the window,
-    so the implicit circular-FFT convolution wraps around and rings, and (2)
-    even after fixing that with weighted overlap-add, the filter's angular
-    tolerance (was 30 degrees) let through enough off-orientation content
-    that overlapping blocks' independent reconstructions didn't agree,
-    producing a fine checkerboard/moire texture instead of clean ridges, and
-    LOWERING measured orientation coherence rather than raising it. Building
-    a real per-block kernel and convolving normally (no circular wraparound)
-    plus a tighter angular_sigma (15 degrees default) fixed both: verified on
-    synthetic noisy ridge images to raise post-filter orientation coherence
-    back above the noisy input's in most tested cases.
+    theta_grid = np.arctan2(V, U)
+
+    # radial component: Gaussian over log(radius/freq0)
+    log_radius_ratio = np.log(radius / freq0 + 1e-12)
+    radial = np.exp(-(log_radius_ratio ** 2) / (2 * np.log(sigma_onf) ** 2))
+    radial[rows // 2, cols // 2] = 0.0  # zero the DC term explicitly
+
+    # angular component: Gaussian around theta0. Ridge orientation is a
+    # direction, not a vector (theta0 and theta0 + pi describe the same
+    # ridge), so both lobes of the frequency plane 180 degrees apart get
+    # folded onto the same angular response.
+    sigma_theta = np.radians(sigma_theta_deg)
+    dtheta = theta_grid - theta0
+    dtheta = np.arctan2(np.sin(dtheta), np.cos(dtheta))  # wrap to [-pi, pi]
+    dtheta = np.minimum(np.abs(dtheta), np.abs(np.abs(dtheta) - np.pi))
+    angular = np.exp(-(dtheta ** 2) / (2 * sigma_theta ** 2))
+
+    H = radial * angular
+    return np.fft.ifftshift(H)  # match np.fft.fft2's unshifted (DC-at-corner) layout
+
+
+def _log_gabor_enhance(image, theta_field, freq_field, block=16, window=40,
+                        sigma_onf=0.5, sigma_theta_deg=12.0):
     """
-    h, w = image.shape
-    n_block_rows, n_block_cols = theta_field.shape
+    Step 4: block-wise 2D Log-Gabor filtering (Field, 1987), each block
+    tuned to its own local orientation (theta_field, step 2) and ridge
+    frequency (freq_field, step 4) — following the general locally-tuned,
+    block-wise filtering strategy in Shams et al. (2023), built here from
+    Log-Gabor transfer functions rather than Hong et al.'s (1998) spatial
+    Gabor kernels (that spatial-domain approach is Pipeline B's technique;
+    this frequency-domain one is Pipeline C's point of comparison against it
+    for the same P2/P6 problems).
 
-    win = block * 3     # blending footprint per block (block itself + margin)
-    stride = block
-    max_kernel = 41
-    pad = win + max_kernel // 2  # room for both the blend window and the widest kernel's support
-    padded = cv2.copyMakeBorder(image.astype(np.float64), pad, pad, pad, pad, cv2.BORDER_REFLECT)
+    Each block is filtered inside a larger `window`-sized neighbourhood, not
+    just its own `block` pixels, so the FFT has enough context to represent
+    the tuned frequency cleanly. Since `window` is twice `block`, neighbouring
+    blocks' windows overlap; rather than hard-cutting each to its own centre
+    region (which leaves a visible seam at every block boundary — adjacent
+    blocks are tuned to slightly different theta/freq, so their filtered
+    outputs don't land on the same scale), every window is blended into the
+    output with a 2D Hanning taper via overlap-add, weighted-averaging the
+    overlapping contributions instead of hard-cutting them.
 
-    blend = np.outer(np.hanning(win), np.hanning(win))
-    out_accum = np.zeros_like(padded)
-    weight_accum = np.zeros_like(padded)
-
-    for bi in range(n_block_rows):
-        for bj in range(n_block_cols):
-            theta0 = float(theta_field[bi, bj])
-            f0 = float(freq_field[bi, bj])
-
-            # kernel wide enough to cover ~4 ridge periods, odd-sized, capped
-            kernel_size = int(np.clip(round(4.0 / f0), 15, max_kernel))
-            if kernel_size % 2 == 0:
-                kernel_size += 1
-            kpad = kernel_size // 2
-            kernel = _build_log_gabor_kernel(theta0, f0, kernel_size, bandwidth, angular_sigma)
-
-            cy = pad + bi * block + block // 2
-            cx = pad + bj * block + block // 2
-            y0, x0 = cy - win // 2, cx - win // 2
-            y1, x1 = y0 + win, x0 + win
-
-            patch = padded[y0 - kpad:y1 + kpad, x0 - kpad:x1 + kpad]
-            filtered = cv2.filter2D(patch, -1, kernel, borderType=cv2.BORDER_REFLECT)
-            filtered = filtered[kpad:kpad + win, kpad:kpad + win]
-
-            out_accum[y0:y1, x0:x1] += filtered * blend
-            weight_accum[y0:y1, x0:x1] += blend
-
-    weight_accum[weight_accum == 0] = 1e-8
-    result = out_accum / weight_accum
-    result = result[pad:pad + h, pad:pad + w]
-
-    # Rescale to 0-255 using the 1st/99th percentile, not the raw min/max.
-    # On noisier images (DB3_B) a handful of outlier pixels can swing the
-    # true min/max wide, which then crushes the other ~98% of real ridge
-    # contrast into a narrow band (observed on real data: p1-p99 spanning
-    # only ~40 of 255 levels, std~8, vs ~100 levels/std~18 on a clean image)
-    # — low enough that NFIQ2 couldn't find a large-enough fingerprint area.
-    lo, hi = np.percentile(result, [1.0, 99.0])
-    if hi > lo:
-        result = (result - lo) / (hi - lo) * 255.0
-    else:
-        result = result - result.min()
-        if result.max() > 0:
-            result = result / result.max() * 255.0
-    return np.clip(result, 0, 255).astype(np.uint8)
-
-
-def _clean_fg_mask(fg_mask_blocks):
-    """Cleans up segment()'s raw per-block foreground mask before it's used
-    to mask Step 5's output. Visualizing fg_mask_blocks over real images
-    (overlaying it on the raw scan) showed segment()'s per-block Otsu
-    variance classification failing in two ways, not just the enclosed-hole
-    case this function originally only handled:
-
-      1. Jagged notches biting into the real fingerprint area from the
-         edges — a moderately-pressed ridge region right at the print's own
-         boundary often has just-below-threshold variance, so segment()
-         crops a chunk of real ridge detail off as "background" (confirmed
-         visually on DB1_B/DB4_B: the enhanced output had big gray bites
-         taken out of visibly-real ridge texture, not just a coarse but
-         otherwise-reasonable outline).
-      2. Small isolated false-foreground or false-background specks
-         scattered away from the real print (sensor dust, paper grain).
-
-    Fixed with a standard sequence: morphological closing (bridges small-
-    to-medium notches/gaps), fill any now-enclosed holes (the over-inked-
-    core case from before), keep only the largest connected component
-    (drops stray specks disconnected from the real print), then a small
-    dilation (recovers the marginal blocks along the print's true edge that
-    Otsu was systematically too conservative about). This is post-
-    processing on segment()'s OUTPUT only — segment() itself, shared by
-    every pipeline, is untouched.
-
-    Not a full fix: a segment() failure caused by an image-wide contrast
-    gradient (one whole side of the print reading as lower-variance than
-    the Otsu cutoff) can leave a large contiguous region misclassified that
-    no reasonably-sized closing/dilation fully recovers — confirmed on one
-    DB2_B image where roughly a third of the print stayed excluded even
-    after this cleanup. That's a genuine segment() limitation to flag, not
-    something this function claims to fully solve.
+    Log-Gabor filtering also removes the DC term, so a block's raw filtered
+    values carry no fixed relationship to the input's 0-255 range; each
+    block is rescaled to match the mean/std of its OWN local input window
+    before blending, rather than one global min-max stretch at the end
+    (which was the other source of visible per-block banding).
     """
-    struct = np.ones((5, 5))
-    closed = binary_closing(fg_mask_blocks, structure=struct, iterations=1)
-    filled = binary_fill_holes(closed)
+    img = image.astype(np.float64)
+    h, w = img.shape
+    nby, nbx = theta_field.shape
 
-    labeled, n_components = label(filled)
-    if n_components > 0:
-        sizes = np.bincount(labeled.ravel())
-        sizes[0] = 0  # background label never counts
-        filled = labeled == sizes.argmax()
+    pad = window // 2
+    padded = cv2.copyMakeBorder(img, pad, pad, pad, pad, cv2.BORDER_REFLECT)
 
-    return binary_dilation(filled, structure=np.ones((3, 3)), iterations=1)
+    # 2D raised-cosine taper: 0 at a window's own edges, 1 at its centre, so
+    # overlap-add blends neighbouring windows smoothly instead of seaming.
+    taper_1d = np.hanning(window)
+    taper_1d = np.clip(taper_1d, 1e-3, None)  # keep every contribution weighted, never exactly zero
+    taper = np.outer(taper_1d, taper_1d)
 
+    accum = np.zeros_like(padded)
+    weight = np.zeros_like(padded)
 
-def _mask_background(enhanced, image, fg_mask_blocks, block=16, fill="gray",
-                      min_foreground_fraction=0.15):
-    """Restores non-fingerprint (background) blocks to either a flat
-    mid-gray (fill="gray", default) or the original raw pixels
-    (fill="original"), so Step 5's Log-Gabor output — which assumes real
-    ridge structure to filter — is never shown over background, only over
-    the segmented fingerprint area from Step 1 (cleaned up by
-    _clean_fg_mask first — see its docstring for why segment()'s raw
-    per-block output isn't used directly).
+    for by in range(nby):
+        for bx in range(nbx):
+            theta = theta_field[by, bx]
+            freq = freq_field[by, bx]
+            if not np.isfinite(freq) or freq <= 0:
+                freq = 1.0 / 9.0
 
-    Tested both fill options on real images: leaving the raw background in
-    actually made NFIQ2 score WORSE than doing no masking at all (e.g.
-    53->19 on one DB3_B image) — NFIQ2 seems to read the real (noisy,
-    textured) background as low-quality fingerprint-like content and lets
-    it drag the whole score down. A flat gray background reads
-    unambiguously as "not fingerprint" and consistently scored as high or
-    higher than the unmasked baseline in the same tests, so it's the default.
-    """
-    fg_mask_blocks = _clean_fg_mask(fg_mask_blocks)
+            cy = by * block + block // 2 + pad
+            cx = bx * block + block // 2 + pad
+            y0, y1 = cy - pad, cy - pad + window
+            x0, x1 = cx - pad, cx - pad + window
+            win = padded[y0:y1, x0:x1]
+            if win.shape != (window, window):
+                continue  # shouldn't happen given the reflect-padding, but be defensive
 
-    # Safety valve: on 80 real DB3_B images, cleaned foreground coverage
-    # never dropped below 31% — but segment()'s single global Otsu
-    # threshold can still fail hard on a genuinely low-contrast/uneven scan
-    # (confirmed on one DB2_B image: a real, roughly contiguous third of
-    # the print stayed misclassified even after _clean_fg_mask). Rather
-    # than keep chasing Otsu accuracy on such outliers, treat an
-    # implausibly small cleaned foreground as "segmentation failed for this
-    # image" and skip masking entirely — an unmasked (fully Log-Gabor'd,
-    # background included) image is a much better fallback than confidently
-    # painting most of a possibly-real fingerprint gray.
-    if fg_mask_blocks.mean() < min_foreground_fraction:
-        return enhanced
+            H = _log_gabor_filter_2d((window, window), freq, theta,
+                                      sigma_onf=sigma_onf, sigma_theta_deg=sigma_theta_deg)
+            F = np.fft.fft2(win)
+            filtered = np.real(np.fft.ifft2(F * H))
 
-    h, w = enhanced.shape
-    n_block_rows, n_block_cols = fg_mask_blocks.shape
-    h2, w2 = n_block_rows * block, n_block_cols * block
+            local_mean, local_std = win.mean(), win.std() + 1e-6
+            f_mean, f_std = filtered.mean(), filtered.std() + 1e-6
+            filtered = (filtered - f_mean) / f_std * local_std + local_mean
 
-    # upsample the per-block mask to pixel resolution; any leftover border
-    # thinner than one block (past h2/w2) was never covered by segmentation
-    # in the first place, so it's left as background (False) by default.
-    fg_px = np.zeros((h, w), dtype=bool)
-    fg_px[:h2, :w2] = np.repeat(np.repeat(fg_mask_blocks, block, axis=0), block, axis=1)
+            accum[y0:y1, x0:x1] += filtered * taper
+            weight[y0:y1, x0:x1] += taper
 
-    background = image if fill == "original" else np.full_like(enhanced, 128)
-    return np.where(fg_px, enhanced, background).astype(np.uint8)
+    weight[weight == 0] = 1.0
+    merged = (accum / weight)[pad:pad + h, pad:pad + w]
+    return np.clip(merged, 0, 255).astype(np.uint8)
 
 
 def enhance(image, params=None):
@@ -399,20 +378,39 @@ def enhance(image, params=None):
     """
     params = params or {}
 
-    # Step 1: segmentation (shared)
-    fg_mask_blocks, block_var = segment(image)
+    # Step 1: homomorphic filtering (Oppenheim, Schafer, & Stockham, 1968)
+    # — this pipeline's technique for P1 (low global contrast, systematic
+    # to DB3). Runs directly on the raw image (segmentation and block-wise
+    # normalisation were dropped — see module docstring: they targeted
+    # P5/P7, which are out of scope now that only P1/P2/P6 are shared
+    # across pipelines, and keeping them would have meant all four
+    # pipelines calling the identical Otsu/Hong et al. steps, which the
+    # lecturer's no-repeated-technique requirement rules out).
+    contrast_enhanced = _homomorphic_filter(
+        image,
+        cutoff=params.get("homomorphic_cutoff", 0.06),
+        gamma_low=params.get("homomorphic_gamma_low", 0.5),
+        gamma_high=params.get("homomorphic_gamma_high", 2.0),
+        sharpness=params.get("homomorphic_sharpness", 1.0),
+    )
 
-    # Step 2: ridge orientation field estimation (shared; Hong et al., 1998)
-    theta_field, coherence_field = orientation_field(image)
+    # Step 2: ridge orientation field estimation (Hong et al., 1998) — a
+    # supporting calculation, not one of this pipeline's three primary
+    # techniques (see module docstring). Computed on the contrast-corrected
+    # image so steps 3-4 are steered by a cleaner orientation estimate than
+    # DB3's original flat contrast would give.
+    theta_field, coherence_field = orientation_field(contrast_enhanced)
 
-    # Step 3: coherence-enhancing anisotropic diffusion (Perona & Malik, 1990),
-    # steered by theta_field — smooths more along the ridge direction and
-    # less across it, which preserves ridge structure while reducing noise.
+    # Step 3: coherence-enhancing anisotropic diffusion (Perona & Malik,
+    # 1990), steered by theta_field — this pipeline's technique for P2
+    # (high random noise, systematic to DB3). Smooths MORE along the ridge
+    # direction and LESS across it, preserving the ridge/valley boundary
+    # itself.
     diffusion_iterations = params.get("diffusion_iterations", 15)
     diffusion_dt = params.get("diffusion_dt", 0.2)
     diffusion_kappa = params.get("diffusion_kappa", 15.0)
     diffused = _coherence_diffusion(
-        image,
+        contrast_enhanced,
         theta_field,
         coherence_field,
         iterations=diffusion_iterations,
@@ -420,33 +418,29 @@ def enhance(image, params=None):
         kappa=diffusion_kappa,
     )
 
-    # Step 4: local ridge-frequency estimation (supporting step for step 5)
-    freq_field = _estimate_ridge_frequency(diffused, theta_field)
+    # Step 4a: local ridge-frequency estimation (supporting calculation for
+    # step 4b; Hong, Wan, & Jain, 1998 x-signature method)
+    freq_field = _estimate_ridge_frequency(
+        diffused,
+        theta_field,
+        window_len=params.get("freq_window_len", 32),
+        window_width=params.get("freq_window_width", 16),
+        min_period=params.get("freq_min_period", 3),
+        max_period=params.get("freq_max_period", 25),
+    )
 
-    # Step 5: 2D Log-Gabor filtering (Field, 1987; Shams et al., 2023)
-    log_gabor_bandwidth = params.get("log_gabor_bandwidth", 0.5)
-    log_gabor_angular_sigma = params.get("log_gabor_angular_sigma", np.pi / 12)
-    enhanced = _log_gabor_filter(
+    # Step 4b: 2D Log-Gabor filtering (Field, 1987; Shams et al., 2023),
+    # tuned per block by theta_field (step 2) and freq_field (step 4a) —
+    # this pipeline's technique for P6 (weak/inconsistent ridge orientation,
+    # DB4/DB3).
+    enhanced = _log_gabor_enhance(
         diffused,
         theta_field,
         freq_field,
-        bandwidth=log_gabor_bandwidth,
-        angular_sigma=log_gabor_angular_sigma,
+        window=params.get("log_gabor_window", 40),
+        sigma_onf=params.get("log_gabor_sigma_onf", 0.5),
+        sigma_theta_deg=params.get("log_gabor_sigma_theta_deg", 12.0),
     )
-
-    # Optional: mask background back in using fg_mask_blocks (Step 1), so
-    # Log-Gabor output (which assumes real ridge structure) isn't shown over
-    # background. Off by default — segment()'s per-block Otsu can still
-    # misjudge the true fingerprint boundary on some real images even after
-    # _clean_fg_mask's cleanup (confirmed: a real, contiguous chunk of one
-    # DB2_B print stayed misclassified), and a break in the fingerprint body
-    # itself is worse than a cosmetically imperfect background. Pass
-    # params={"mask_background": True} to opt in.
-    if params.get("mask_background", False):
-        background_fill = params.get("background_fill", "gray")
-        min_foreground_fraction = params.get("min_foreground_fraction", 0.15)
-        enhanced = _mask_background(enhanced, image, fg_mask_blocks, fill=background_fill,
-                                     min_foreground_fraction=min_foreground_fraction)
 
     return enhanced
 
