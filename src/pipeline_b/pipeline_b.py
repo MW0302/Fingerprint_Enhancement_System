@@ -15,15 +15,22 @@ comparison rather than four pipelines solving four disjoint problems:
          (DB4, DB3)                                -> Orientation-steered
                                                        morphological processing
 
-Segmentation and block-wise normalisation were dropped (30 August 2026):
-they targeted P5/P7, which are no longer in scope now that only P1/P2/P6
-are being solved, and — since Otsu segmentation and Hong et al.
-normalisation would otherwise have been called identically by all four
-pipelines — keeping them would have violated the lecturer's requirement
-that no technique repeat across pipelines. Exactly three primary,
-independently citable techniques per pipeline (one per shared problem) is
-sufficient. Adaptive thresholding (Sauvola) is no longer part of this
-pipeline's plan — it is not one of the three shared problems.
+Segmentation and block-wise normalisation, revision history: dropped on 30
+August 2026 because — with only P1/P2/P6 in scope — having all four
+pipelines call the identical Otsu/Hong et al. steps as a counted technique
+would have violated the lecturer's no-repeated-technique requirement. Added
+back the same day (later revision) as a shared PREPROCESSING stage (Steps
+0a-0b below) used by all four pipelines uniformly: this does not reopen the
+repeated-technique issue because preprocessing that conditions the image
+without independently solving P1/P2/P6 itself is treated the same way
+orientation_field() already is (see below) — a supporting step, not one of
+the three counted techniques. It was made uniform across all four pipelines,
+rather than added to just one, to satisfy the group's own "Fair Experimental
+Conditions" principle (Handover Notes) — every pipeline should start from
+the same input so differences in the results reflect the three counted
+techniques, not differing preprocessing. Adaptive thresholding (Sauvola) is
+still not part of this pipeline's plan — it is not one of the three shared
+problems.
 
 Ridge orientation field estimation (structure tensor) is a supporting
 calculation, not one of the three primary techniques — it is used
@@ -36,17 +43,18 @@ CRITICAL: enhance() returns the GREYSCALE output (after denoising, before
 binarisation), not a binarised output. NFIQ2 expects greyscale input — see
 the caution in the analysis document, Section 6, Pipeline B.
 
-All three steps below are TODOs: wavelet-domain contrast enhancement,
-wavelet shrinkage denoising, and orientation-steered morphological
-processing are the techniques you are responsible for researching and
-implementing yourself.
+Steps 0a-0b (normalisation, segmentation) are implemented as shared
+preprocessing. All three numbered steps below are still TODOs:
+wavelet-domain contrast enhancement, wavelet shrinkage denoising, and
+orientation-steered morphological processing are the techniques you are
+responsible for researching and implementing yourself.
 """
 
 import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import orientation_field  # noqa: E402
+from common import orientation_field, normalize_image, segment  # noqa: E402
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -61,11 +69,23 @@ def enhance(image, params=None):
     """
     params = params or {}
 
+    # Step 0a-0b: block-wise normalisation + Otsu segmentation (Hong, Wan, &
+    # Jain, 1998) — shared preprocessing, not one of this pipeline's three
+    # primary techniques (see module docstring). fg_mask_blocks is available
+    # if your own Step 3/4 implementation wants to skip or de-emphasise
+    # background blocks; it's not required.
+    normalized = normalize_image(
+        image,
+        target_mean=params.get("normalize_target_mean", 100.0),
+        target_var=params.get("normalize_target_var", 1600.0),
+    )
+    fg_mask_blocks, _block_var = segment(normalized)
+
     # Step 1: wavelet decomposition + detail-coefficient contrast
     # enhancement (P1 — low global contrast) — TODO
     # A common Python starting point is PyWavelets (`pip install PyWavelets`):
     #   import pywt
-    #   coeffs = pywt.wavedec2(image, 'db4', level=2)
+    #   coeffs = pywt.wavedec2(normalized, 'db4', level=2)
     #   ... scale up the magnitude of the detail coefficients (cH, cV, cD)
     #       at one or more levels to sharpen local contrast ...
     #   contrast_enhanced = pywt.waverec2(coeffs, 'db4')
@@ -73,7 +93,7 @@ def enhance(image, params=None):
     # a boost will amplify noise before Step 2 has a chance to remove it —
     # is a mild boost here, relying on Step 2 to clean up afterwards, the
     # right order, or should denoising come first?
-    contrast_enhanced = image.copy()  # placeholder — replace once this step is implemented
+    contrast_enhanced = normalized.copy()  # placeholder — replace once this step is implemented
 
     # Step 2: wavelet decomposition + soft-threshold shrinkage denoising
     # (P2 — high random noise) — TODO

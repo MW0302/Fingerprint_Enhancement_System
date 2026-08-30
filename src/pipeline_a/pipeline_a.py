@@ -12,14 +12,20 @@ comparison rather than four pipelines solving four disjoint problems:
     P6 — weak/inconsistent ridge orientation
          (DB4, DB3)                                -> Oriented Gabor filtering
 
-Segmentation and block-wise normalisation were dropped (30 August 2026):
-they targeted P5/P7, which are no longer in scope now that only P1/P2/P6
-are being solved, and — since Otsu segmentation and Hong et al.
-normalisation would otherwise have been called identically by all four
-pipelines — keeping them would have violated the lecturer's requirement
-that no technique repeat across pipelines. Exactly three primary,
-independently citable techniques per pipeline (one per shared problem) is
-sufficient.
+Segmentation and block-wise normalisation, revision history: dropped on 30
+August 2026 because — with only P1/P2/P6 in scope — having all four
+pipelines call the identical Otsu/Hong et al. steps as a counted technique
+would have violated the lecturer's no-repeated-technique requirement. Added
+back the same day (later revision) as a shared PREPROCESSING stage (Steps
+0a-0b below) used by all four pipelines uniformly: this does not reopen the
+repeated-technique issue because preprocessing that conditions the image
+without independently solving P1/P2/P6 itself is treated the same way
+orientation_field() already is (see below) — a supporting step, not one of
+the three counted techniques. It was made uniform across all four pipelines,
+rather than added to just one, to satisfy the group's own "Fair Experimental
+Conditions" principle (Handover Notes) — every pipeline should start from
+the same input so differences in the results reflect the three counted
+techniques, not differing preprocessing.
 
 Ridge orientation field estimation (structure tensor) is a supporting
 calculation, not one of the three primary techniques — it is used
@@ -28,18 +34,18 @@ Gabor filtering step. Find your own citation for it and for the Gabor
 filtering technique itself when you write this up; do not reuse Pipeline
 C's citation list without checking it applies to your own implementation.
 
-Steps 1 (CLAHE) is implemented as a starting point — tune it and be ready
-to explain your parameter choices. Steps 2 (median/bilateral filtering)
-and 3 (oriented Gabor filtering) are TODOs: these are the techniques you
-are responsible for researching, implementing, and being able to explain
-yourself.
+Steps 0a-0b (normalisation, segmentation) and 1 (CLAHE) are implemented as
+a starting point — tune CLAHE's parameters and be ready to explain your
+choices. Steps 2 (median/bilateral filtering) and 3 (oriented Gabor
+filtering) are TODOs: these are the techniques you are responsible for
+researching, implementing, and being able to explain yourself.
 """
 
 import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import orientation_field  # noqa: E402
+from common import orientation_field, normalize_image, segment  # noqa: E402
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -54,11 +60,23 @@ def enhance(image, params=None):
     """
     params = params or {}
 
+    # Step 0a-0b: block-wise normalisation + Otsu segmentation (Hong, Wan, &
+    # Jain, 1998) — shared preprocessing, not one of this pipeline's three
+    # primary techniques (see module docstring). fg_mask_blocks is available
+    # if your own Step 2/3 implementation wants to skip or de-emphasise
+    # background blocks; it's not required.
+    normalized = normalize_image(
+        image,
+        target_mean=params.get("normalize_target_mean", 100.0),
+        target_var=params.get("normalize_target_var", 1600.0),
+    )
+    fg_mask_blocks, _block_var = segment(normalized)
+
     # Step 1: CLAHE (P1 — low global contrast)
     clip_limit = params.get("clahe_clip", 2.0)
     grid_size = params.get("clahe_grid", 8)
     clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(grid_size, grid_size))
-    contrast_enhanced = clahe.apply(image)
+    contrast_enhanced = clahe.apply(normalized)
 
     # Step 2: median / bilateral filtering (P2 — high random noise) — TODO
     # DB3's noise level is roughly 3-4x every other subset (see the analysis

@@ -18,27 +18,37 @@ comparison rather than four pipelines solving four disjoint problems:
                                                        orientation-frequency
                                                        ridge reconstruction
 
-Segmentation and block-wise normalisation were dropped (30 August 2026):
-they targeted P5/P7, which are no longer in scope now that only P1/P2/P6
-are being solved, and — since Otsu segmentation and Hong et al.
-normalisation would otherwise have been called identically by all four
-pipelines — keeping them would have violated the lecturer's requirement
-that no technique repeat across pipelines. Exactly three primary,
-independently citable techniques per pipeline (one per shared problem) is
-sufficient, so the earlier "light morphological clean-up" step has also
-been dropped — it was never one of the three shared problems.
+Segmentation and block-wise normalisation, revision history: dropped on 30
+August 2026 because — with only P1/P2/P6 in scope — having all four
+pipelines call the identical Otsu/Hong et al. steps as a counted technique
+would have violated the lecturer's no-repeated-technique requirement. Added
+back the same day (later revision) as a shared PREPROCESSING stage (Steps
+0a-0b below) used by all four pipelines uniformly: this does not reopen the
+repeated-technique issue because preprocessing that conditions the image
+without independently solving P1/P2/P6 itself is not one of the three
+counted techniques (see common.py's module docstring — the same reasoning
+already applied to orientation_field(), shared by Pipelines A, B, and C).
+It was made uniform across all four pipelines, rather than added to just
+one, to satisfy the group's own "Fair Experimental Conditions" principle
+(Handover Notes) — every pipeline should start from the same input so
+differences in the results reflect the three counted techniques, not
+differing preprocessing. The earlier "light morphological clean-up" step
+is still dropped — it was never one of the three shared problems.
 
-All three steps below are TODOs: FFT high-frequency emphasis filtering,
-frequency-domain Wiener/notch filtering, and STFT-based ridge
-reconstruction are the techniques you are responsible for researching,
-implementing, and being able to explain yourself. Find your own citation
-for each; do not assume any particular citation is already settled.
+Steps 0a-0b (normalisation, segmentation) are implemented as shared
+preprocessing. All three numbered steps below are still TODOs: FFT
+high-frequency emphasis filtering, frequency-domain Wiener/notch filtering,
+and STFT-based ridge reconstruction are the techniques you are responsible
+for researching, implementing, and being able to explain yourself. Find
+your own citation for each; do not assume any particular citation is
+already settled.
 """
 
 import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
+from common import normalize_image, segment  # noqa: E402
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -53,6 +63,20 @@ def enhance(image, params=None):
     """
     params = params or {}
 
+    # Step 0a-0b: block-wise normalisation + Otsu segmentation (Hong, Wan, &
+    # Jain, 1998) — shared preprocessing, not one of this pipeline's three
+    # primary techniques (see module docstring). fg_mask_blocks is available
+    # if your own Step 2/3 implementation wants to skip or de-emphasise
+    # background blocks; it's not required. Unlike Pipelines A/B/C, this
+    # pipeline still doesn't need orientation_field() — Step 3's STFT
+    # technique estimates orientation and frequency jointly on its own.
+    normalized = normalize_image(
+        image,
+        target_mean=params.get("normalize_target_mean", 100.0),
+        target_var=params.get("normalize_target_var", 1600.0),
+    )
+    fg_mask_blocks, _block_var = segment(normalized)
+
     # Step 1: FFT high-frequency emphasis filtering (P1 — low global
     # contrast) — TODO
     # Core idea: take the 2D FFT of the image (np.fft.fft2 / fftshift),
@@ -65,7 +89,7 @@ def enhance(image, params=None):
     #   - how do you rescale the output back to a valid 0-255 range without
     #     a few outlier pixels dominating the stretch? (Consider a robust
     #     percentile-based rescale rather than true min/max.)
-    contrast_enhanced = image.copy()  # placeholder — replace once this step is implemented
+    contrast_enhanced = normalized.copy()  # placeholder — replace once this step is implemented
 
     # Step 2: frequency-domain Wiener / notch filtering (P2 — high random
     # noise) — TODO
