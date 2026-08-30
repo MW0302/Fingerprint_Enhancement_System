@@ -1,30 +1,45 @@
 """
-Pipeline A — Member A: Contrast and Orientation Enhancement (CLAHE + Gabor)
+Pipeline A — Member A: Spatial-Domain Contrast, Noise, and Orientation Enhancement
+(CLAHE + Median/Bilateral Filtering + Oriented Gabor Filtering)
 
-Targets (see Dataset_Problem_Analysis_and_Revised_Pipelines.docx, Section 6):
-    P1 — low global contrast (DB3)
-    P3 — uneven illumination (DB3, DB2)
-    P6 — weak/inconsistent ridge orientation (DB4, DB3)
-    P7 — within-subset heterogeneity (DB1)
+Finalised design (see Dataset_Problem_Analysis_and_Revised_Pipelines.md,
+Sections 5-6, revised 29 August 2026): all four pipelines target the SAME
+three evidenced problems, each with a different classical technique family,
+so the group's NFIQ2 results support a genuine technique-vs-technique
+comparison rather than four pipelines solving four disjoint problems:
+    P1 — low global contrast (DB3)                -> CLAHE
+    P2 — high random noise (DB3)                   -> Median / bilateral filtering
+    P6 — weak/inconsistent ridge orientation
+         (DB4, DB3)                                -> Oriented Gabor filtering
 
-Citations (see Team_Member_Starter_Packets.docx for the full list):
-    Zuiderveld (1994) — CLAHE
-    Hong, Wan, & Jain (1998) — orientation field + oriented Gabor filtering,
-                                and the shared segmentation/normalisation steps
+Segmentation and block-wise normalisation were dropped (30 August 2026):
+they targeted P5/P7, which are no longer in scope now that only P1/P2/P6
+are being solved, and — since Otsu segmentation and Hong et al.
+normalisation would otherwise have been called identically by all four
+pipelines — keeping them would have violated the lecturer's requirement
+that no technique repeat across pipelines. Exactly three primary,
+independently citable techniques per pipeline (one per shared problem) is
+sufficient.
 
-Every function below matches one step in the pipeline's step sequence.
-Steps 1, 2, and 4 are already implemented (shared across pipelines).
-Step 3 (CLAHE) is implemented as a starting point — tune it and be ready to
-explain your parameter choices. Step 5 (oriented Gabor filtering) is left as
-a TODO: this is the technique you are responsible for researching and
-implementing yourself.
+Ridge orientation field estimation (structure tensor) is a supporting
+calculation, not one of the three primary techniques — it is used
+internally here (and by Pipelines B and C) only to steer the oriented
+Gabor filtering step. Find your own citation for it and for the Gabor
+filtering technique itself when you write this up; do not reuse Pipeline
+C's citation list without checking it applies to your own implementation.
+
+Steps 1 (CLAHE) is implemented as a starting point — tune it and be ready
+to explain your parameter choices. Steps 2 (median/bilateral filtering)
+and 3 (oriented Gabor filtering) are TODOs: these are the techniques you
+are responsible for researching, implementing, and being able to explain
+yourself.
 """
 
 import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import segment, normalize_image, orientation_field  # noqa: E402
+from common import orientation_field  # noqa: E402
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -39,24 +54,33 @@ def enhance(image, params=None):
     """
     params = params or {}
 
-    # Step 1: segmentation (shared) — not applied to the pixels yet, just
-    # computed here so you can use fg_mask_blocks later if your Gabor
-    # implementation should skip background blocks.
-    fg_mask_blocks, block_var = segment(image)
-
-    # Step 2: block-wise normalisation (shared)
-    normalized = normalize_image(image)
-
-    # Step 3: CLAHE (Zuiderveld, 1994)
+    # Step 1: CLAHE (P1 — low global contrast)
     clip_limit = params.get("clahe_clip", 2.0)
     grid_size = params.get("clahe_grid", 8)
     clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(grid_size, grid_size))
-    contrast_enhanced = clahe.apply(normalized)
+    contrast_enhanced = clahe.apply(image)
 
-    # Step 4: ridge orientation field estimation (shared; Hong et al., 1998)
-    theta_field, coherence_field = orientation_field(contrast_enhanced)
+    # Step 2: median / bilateral filtering (P2 — high random noise) — TODO
+    # DB3's noise level is roughly 3-4x every other subset (see the analysis
+    # document, Section 3). Ask yourself:
+    #   - median filtering is simple and edge-preserving for salt-and-pepper
+    #     style noise, but can blur fine ridge detail if the kernel is too
+    #     large — what kernel size keeps ridges intact?
+    #   - bilateral filtering preserves edges better (it weights neighbours
+    #     by both spatial distance and intensity similarity) but is slower
+    #     and has two parameters (sigma_color, sigma_space) to tune — is the
+    #     extra cost worth it here?
+    #   - should this run before or after CLAHE? Running CLAHE first can
+    #     amplify noise it just contrast-stretched, which may argue for
+    #     denoising first instead — try both and compare.
+    denoised = contrast_enhanced.copy()  # placeholder — replace once this step is implemented
 
-    # Step 5: oriented Gabor filtering (Hong et al., 1998) — TODO
+    # Step 3: ridge orientation field estimation (supporting calculation,
+    # not one of the three primary techniques) — used to steer Step 4.
+    theta_field, coherence_field = orientation_field(denoised)
+
+    # Step 4: oriented Gabor filtering (P6 — weak/inconsistent ridge
+    # orientation) — TODO
     # Idea: for each block, build a Gabor kernel oriented along theta_field
     # at that block (cv2.getGaborKernel(ksize, sigma, theta, lambd, gamma)),
     # convolve that block (or a local neighbourhood) with its own kernel, and
@@ -65,7 +89,7 @@ def enhance(image, params=None):
     #   - how do you handle block edges without visible seams?
     #   - should low-coherence blocks (noisy/ambiguous orientation) be
     #     filtered less aggressively, or skipped?
-    enhanced = contrast_enhanced  # placeholder — replace once Gabor step is implemented
+    enhanced = denoised  # placeholder — replace once Gabor step is implemented
 
     return enhanced
 

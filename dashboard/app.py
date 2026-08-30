@@ -43,10 +43,10 @@ import pipeline_c  # noqa: E402
 import pipeline_d  # noqa: E402
 
 PIPELINES = {
-    "Pipeline A — CLAHE + Gabor": ("pipeline_a", pipeline_a),
-    "Pipeline B — Wavelet + Threshold + Morphology": ("pipeline_b", pipeline_b),
-    "Pipeline C — Coherence Diffusion + Log-Gabor": ("pipeline_c", pipeline_c),
-    "Pipeline D — STFT": ("pipeline_d", pipeline_d),
+    "Pipeline A — CLAHE + Median/Bilateral + Gabor": ("pipeline_a", pipeline_a),
+    "Pipeline B — Wavelet Contrast + Wavelet Denoising + Morphology": ("pipeline_b", pipeline_b),
+    "Pipeline C — Homomorphic + Coherence Diffusion + Log-Gabor": ("pipeline_c", pipeline_c),
+    "Pipeline D — FFT Emphasis + Wiener/Notch + STFT": ("pipeline_d", pipeline_d),
 }
 
 

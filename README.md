@@ -1,28 +1,56 @@
 # Pipeline Scaffold — Setup
 
+**Updated 30 August 2026** — the shared segmentation/normalisation module has
+been dropped and every pipeline now targets the same three problems (P1
+contrast, P2 noise, P6 orientation), each with three distinct techniques.
+See `Dataset_Problem_Analysis_and_Revised_Pipelines.md` (or the `.docx`),
+Sections 5–6, for the full reasoning — this was a lecturer-mandated pivot so
+that all four pipelines are directly comparable and no technique repeats
+across pipelines.
+
 ## What's here
 
 ```
 src/
   utils/config.py       shared paths (dataset location, NFIQ2 exe) — same on every machine
-  utils/common.py       shared segmentation / normalisation / orientation-field / NFIQ2 helpers
-  pipeline_a/pipeline_a.py   Member A — CLAHE + Gabor
-  pipeline_b/pipeline_b.py   Member B — Wavelet + Adaptive Thresholding + Morphology
-  pipeline_c/pipeline_c.py   Member C — Coherence Diffusion + 2D Log-Gabor
-  pipeline_d/pipeline_d.py   Member D — STFT
+  utils/common.py       shared orientation-field + NFIQ2 helpers
+                         (segment() and normalize_image() still exist here
+                         but are no longer called by any pipeline — see the
+                         "Why no shared segmentation/normalisation" note below)
+  pipeline_a/pipeline_a.py   Member A — CLAHE + Median/Bilateral + Gabor
+  pipeline_b/pipeline_b.py   Member B — Wavelet Contrast + Wavelet Denoising + Morphology
+  pipeline_c/pipeline_c.py   Member C — Homomorphic + Coherence Diffusion + Log-Gabor (done)
+  pipeline_d/pipeline_d.py   Member D — FFT Emphasis + Wiener/Notch + STFT
 dashboard/app.py         Streamlit app wiring all four pipelines + NFIQ2 together
 ```
 
 Every `pipeline_X.py` has an `enhance(image, params=None)` function — that is
 the one function each member needs to finish. See
-`Team_Member_Starter_Packets.docx` for what each pipeline needs to target,
-which techniques to implement, and the citations to use. The shared steps
-(segmentation, normalisation, orientation field, NFIQ2 scoring) are already
-implemented in `src/utils/common.py` — reuse them, don't rewrite them.
+`Team_Member_Starter_Packets.docx` for what each pipeline needs to target and
+which techniques to implement. Each pipeline file's own docstring also lists
+exactly which steps are already implemented as a starting point versus left
+as a `TODO` for you to research and implement. Pipeline C (mine) is fully
+implemented already — read it if you want to see what a finished
+`enhance()` looks like, but your own pipeline's core techniques still need
+to be your own work, not a copy of mine.
 
 Every pipeline file also has a `__main__` block at the bottom for a quick
 single-image test — run e.g. `python pipeline_a.py` directly to sanity-check
 your changes before touching the dashboard.
+
+### Why no shared segmentation/normalisation anymore
+
+Every pipeline used to start with Otsu block-variance segmentation and
+Hong et al. block-wise normalisation before its own technique. Those
+targeted P5 (variable background) and P7 (within-subset heterogeneity),
+which are no longer problems any pipeline is trying to solve — and since
+all four pipelines would otherwise be calling the exact same two functions
+in the exact same way, keeping them would count as a repeated technique
+across pipelines, which the lecturer explicitly does not want. `segment()`
+and `normalize_image()` are still in `common.py` in case you want them for
+your own experimentation, but they're not part of the required pipeline
+anymore — don't call them in your `enhance()` unless you have a specific
+reason tied to your own technique.
 
 ---
 
@@ -86,9 +114,12 @@ This opens in your browser automatically.
 
 ## Current state
 
-Every pipeline currently runs end-to-end (tested), but each member's core
-technique (the parts marked `TODO` in their file) is a placeholder that just
-passes the image through unchanged. This is intentional — the goal right now
-is that the plumbing (shared utilities, dashboard wiring, NFIQ2 scoring)
-already works, so each member's actual job is only to fill in their one
-`TODO` section, not to also build the integration around it.
+Pipeline C is fully implemented and tested across all four subsets.
+Pipelines A, B, and D run end-to-end (the plumbing works), but each one's
+`TODO`-marked techniques are still placeholders that pass the image through
+unchanged. That's intentional — each member's job is to research, implement,
+and be able to explain their own pipeline's TODO steps. Citations aren't
+pre-supplied for any technique except Pipeline C's Log-Gabor step (Shams et
+al., 2023, already established as LR2 for the group) — find and verify your
+own citations for whatever you implement rather than reusing anything you
+see referenced elsewhere in this scaffold.
