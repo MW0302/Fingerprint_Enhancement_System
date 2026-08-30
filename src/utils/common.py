@@ -1,19 +1,25 @@
 """
 Shared utilities for all four enhancement pipelines.
 
-Every member's pipeline should import from here instead of re-writing
-segmentation / normalisation / orientation-field code from scratch. These
-functions are adapted directly from `src/preprocessing/analyze_dataset.py`
-(the dataset-analysis script), so the numbers they produce are already
-consistent with what is reported in the analysis document.
+Updated 30 August 2026: only orientation_field() and run_nfiq2_single() are
+still part of the required pipeline. segment() and normalize_image() were
+dropped from every pipeline's enhance() during the P1/P2/P6 pivot (see
+Dataset_Problem_Analysis_and_Revised_Pipelines.md, Sections 5-6) — they
+targeted P5/P7, which are no longer in scope, and having all four pipelines
+call the same two functions the same way would have counted as a repeated
+technique across pipelines. They are left here, unused, in case you want
+them for your own experimentation — don't call them from your enhance()
+unless you have a specific reason tied to your own technique.
 
 Functions:
     segment(img)            -> foreground mask + block-variance map
+                                (no longer called by any pipeline)
     normalize_image(img)    -> block-wise / global intensity-normalised image
-                                (Hong, Wan, & Jain, 1998)
+                                (no longer called by any pipeline)
     orientation_field(img)  -> per-block ridge orientation (theta) and
-                                coherence, via structure tensor
-                                (Hong, Wan, & Jain, 1998)
+                                coherence, via structure tensor. Used
+                                internally by Pipelines A, B, and C to steer
+                                their orientation-based step.
     run_nfiq2_single(path)  -> QualityScore for one image, using the same
                                 nfiq2.exe CLI pattern already verified to
                                 work for the raw-baseline batch run
@@ -33,7 +39,8 @@ BLOCK = 16
 
 
 # ---------------------------------------------------------------------------
-# Segmentation (block-variance + Otsu) — Hong, Wan, & Jain (1998); Otsu (1979)
+# Segmentation (block-variance + Otsu) — no longer called by any pipeline;
+# kept for optional individual experimentation only.
 # ---------------------------------------------------------------------------
 
 def _block_reduce_var(img, block=BLOCK):
@@ -71,7 +78,8 @@ def _otsu_threshold(values):
 
 def segment(img, block=BLOCK):
     """Returns (fg_mask_blocks, block_var). fg_mask_blocks is a boolean array,
-    one entry per BLOCK x BLOCK block, True = fingerprint, False = background."""
+    one entry per BLOCK x BLOCK block, True = fingerprint, False = background.
+    Not called by any pipeline anymore — see the module docstring."""
     block_var = _block_reduce_var(img, block)
     thresh = _otsu_threshold(block_var)
     fg_mask_blocks = block_var > thresh
@@ -79,15 +87,15 @@ def segment(img, block=BLOCK):
 
 
 # ---------------------------------------------------------------------------
-# Block-wise intensity normalisation — Hong, Wan, & Jain (1998)
+# Block-wise intensity normalisation — no longer called by any pipeline;
+# kept for optional individual experimentation only.
 # ---------------------------------------------------------------------------
 
 def normalize_image(img, target_mean=100.0, target_var=100.0):
-    """Rescales pixel intensities so the whole image has a fixed mean/variance,
-    following the normalisation formula in Hong, Wan, & Jain (1998). This does
-    NOT change contrast/ridge structure, only puts every image on the same
-    intensity scale before later steps (useful because DB1/DB4 vary a lot in
-    how much of the frame is foreground — see P7 in the analysis document)."""
+    """Rescales pixel intensities so the whole image has a fixed mean/variance.
+    This does NOT change contrast/ridge structure, only puts every image on
+    the same intensity scale. Not called by any pipeline anymore — see the
+    module docstring."""
     img = img.astype(np.float64)
     mean = img.mean()
     var = img.var() + 1e-8
@@ -98,16 +106,18 @@ def normalize_image(img, target_mean=100.0, target_var=100.0):
 
 
 # ---------------------------------------------------------------------------
-# Ridge orientation field (structure tensor) — Hong, Wan, & Jain (1998)
+# Ridge orientation field (structure tensor) — supporting calculation used
+# internally by Pipelines A, B, and C.
 # ---------------------------------------------------------------------------
 
 def orientation_field(img, block=BLOCK):
     """Returns (theta_field, coherence_field), both shaped (H//block, W//block).
     theta_field is the dominant local ridge angle per block, in radians.
     coherence_field is 0..1 (1 = strong consistent direction, 0 = ambiguous).
-    This is the field version of the scalar coherence metric used in the
-    dataset analysis — pipelines A, C, and D all need the actual angles
-    (not just the mean coherence score) to steer their filters."""
+    Used internally by Pipelines A, B, and C, which all need the actual
+    angles (not just a mean coherence score) to steer their orientation-based
+    step (P6). Pipeline D does not use this — its STFT step estimates local
+    orientation directly from each window's frequency spectrum instead."""
     gx = cv2.Sobel(img.astype(np.float64), cv2.CV_64F, 1, 0, ksize=3)
     gy = cv2.Sobel(img.astype(np.float64), cv2.CV_64F, 0, 1, ksize=3)
     gxx, gyy, gxy = gx * gx, gy * gy, gx * gy
