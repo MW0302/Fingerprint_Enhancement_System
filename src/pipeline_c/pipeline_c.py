@@ -781,6 +781,40 @@ def enhance(image, params=None):
     # alpha (not a hard cutout, to avoid a visible seam at the fingerprint
     # boundary): background is blended back toward its normalised
     # brightness, foreground keeps the full homomorphic contrast boost.
+    #
+    # SIXTH issue, TRIED AND REJECTED (found by direct visual inspection of
+    # fresh, non-flagged output on DB1, full-batch-tested by a teammate's
+    # local run): a visible dark halo/vignette appears around the
+    # fingerprint on some DB1 images (e.g. 101_1.tif, 104_5.tif) that isn't
+    # present in the raw image — caused by `fg_mask_blocks` being only
+    # block-resolution (16x16px), so it's inherently coarser/rounder than
+    # the true (partly concave) fingerprint silhouette, making Step 1b
+    # treat a ring of genuinely-background pixels as foreground and keep
+    # the homomorphic filter's low-frequency attenuation there instead of
+    # blending it back toward the normalised image.
+    # A candidate fix — eroding a LOCAL COPY of the mask (3x3, 2 iterations)
+    # before computing `fg_alpha` ONLY, leaving `fg_mask_blocks` itself
+    # untouched for `_aggressiveness_alpha`/`_log_gabor_enhance` — was
+    # implemented and spot-checked visually on 8 images (halo visibly
+    # reduced on both flagged DB1 images, no regression seen on DB2/DB3/DB4
+    # samples). But a full 320-image NFIQ2 batch run (before/after this
+    # change) showed it made every subset WORSE, including the DB1 images
+    # it targeted: DB1_B -8.25->-9.19 (18%/80% -> 12%/85% improved/
+    # regressed), DB2_B +7.99->+6.86, DB3_B +13.78->+11.32, DB4_B
+    # +12.21->+8.24. Reason: eroding `fg_alpha`'s mask shrinks the
+    # full-contrast-boost region on EVERY image, not just the oversized-mask
+    # DB1 cases — on images where the mask already tracked the print
+    # reasonably well, it just trims real homomorphic contrast off a ring
+    # of genuine ridge detail near the boundary, which cost more NFIQ2
+    # across the board than the halo fix recovered anywhere, DB1 included.
+    # REJECTED — reverted to the plain (unmodified) `fg_mask_blocks` below.
+    # The DB1 halo remains a known, documented, visual-only cosmetic
+    # artifact (block-segmentation resolution limit) — the already-accepted
+    # numbers above (DB1_B -8.25 etc.) are with this artifact present, so
+    # leaving it alone is a strictly better trade than any mask-erosion fix
+    # tried so far. This reinforces the same conclusion as DB1's overall
+    # net-negative result: DB1's specific failure modes resist targeted
+    # local fixes without giving back gains elsewhere.
     h, w = normalized.shape
     fg_alpha = cv2.resize(fg_mask_blocks.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR)
     fg_alpha = cv2.GaussianBlur(fg_alpha, (0, 0), 8.0)
