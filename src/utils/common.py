@@ -35,6 +35,14 @@ no mean shift and no variance rescale at all); images below target_var are
 UNCHANGED from before — they still go through the original mean-shift-and-
 boost path, since that behaviour was never the problem.
 
+FIFTH revision (3 September 2026): the "UNCHANGED from before" mean-shift-
+and-boost path referenced just above turned out to have its own, separate
+bug — normalize_image() now recentres below-target images on their OWN raw
+mean instead of a fixed target_mean=100.0, with a headroom-aware cap on the
+contrast boost so this doesn't reintroduce clipping. See normalize_image()'s
+own docstring for the full investigation (a systemic scan, a rejected
+naive fix, and the validated headroom-capped fix that replaced it).
+
 Functions:
     segment(img)            -> foreground mask + block-variance map. Used by
                                 all four pipelines as preprocessing.
@@ -293,18 +301,95 @@ def normalize_image(img, target_mean=100.0, target_var=1600.0):
     106_4): 0% of pixels clipped under this version vs 8-17% under the
     first attempt. Since this function is shared preprocessing for all four
     pipelines (see module docstring), this benefits whichever of A/B/D end
-    up processing DB1-like high-contrast input too, not just Pipeline C."""
+    up processing DB1-like high-contrast input too, not just Pipeline C.
+
+    FIFTH revision (3 September 2026), headroom-capped recentring on the
+    image's OWN mean (replaces recentring on the fixed target_mean=100.0
+    below): a systemic scan (all 320 raw images) found the FOURTH revision's
+    "unchanged from before" below-target path still had a real bug of its
+    own. Any below-target image whose raw mean sits far from 100 (not just
+    DB1's four worst-regressed images checked above, but 89/320 images
+    dataset-wide, including DB1_B/101_4.tif and up to 75% of DB4_B) was
+    still being forcibly RECENTRED to target_mean=100 regardless of how far
+    that was from the image's own natural brightness — e.g. DB1_B/101_4.tif
+    (raw mean 242.4, raw std 36.5, below the std=40 pass-through line) came
+    out with mean 102.0, a 140-point brightness crush with no real contrast
+    benefit, since only its variance was actually below target, not its
+    mean.
+
+    REJECTED first fix: recentre on the image's own mean instead of
+    target_mean=100 (i.e. `mean + sign(d)*sqrt(target_var*d**2/var)` with
+    `mean` in place of `target_mean`, where `d = img - mean`; since
+    `sign(d)*sqrt(d**2) == d`, this is actually just a linear rescale
+    `mean + k*d` with `k = sqrt(target_var/var)`). This did kill the
+    brightness crush (dataset-wide, mean |raw_mean - norm_mean| dropped from
+    64.3 to 0.5 on the 89 flagged images) but introduced a WORSE new bug on
+    the near-ceiling-brightness end of DB1: boosting a near-white image
+    (raw mean ~240-247) to std=40 around ITS OWN mean leaves almost no
+    headroom before 255, so roughly half the pixel population blows past
+    the boundary and clips flat white. Verified on DB1_B/109_6.tif (raw mean
+    247.0): 85.5% of all pixels clipped to 0 or 255, versus 3.5% under the
+    FOURTH revision's target_mean=100 behaviour — recentring on the image's
+    own mean is right in principle, but only if the boost factor respects
+    how much room that mean actually has left before the 0/255 walls.
+
+    Fix (this revision): recentre on the image's own mean as above, but cap
+    the boost factor by the image's own headroom before applying it. Uses
+    the image's robust 1st/99th percentile (p1, p99) — same idea already
+    used in pipeline_c.py's _homomorphic_filter to avoid a few outlier
+    pixels distorting a rescale — to estimate how far the bulk of the image
+    can safely move before hitting the boundary, with a small margin
+    ([2, 253] instead of a hard [0, 255] wall). The boost factor actually
+    applied is whichever is SMALLER: the factor needed to reach target_var,
+    or the factor the image's own headroom can safely support. Verified
+    across all 320 images: DB1_B/109_6.tif and the 8 other DB1 images that
+    broke under the rejected fix above all land at exactly 0% clipping under
+    this version (vs. 85.5%/81.7%/etc. under the rejected fix), and the
+    dataset-wide worst-case clip fraction (5.99%, DB2_B/109_1.tif) never
+    exceeds what the FOURTH revision already produced on that same image —
+    no new clipping problem introduced anywhere.
+
+    Known, deliberate trade-off (not a bug): for the ~9-12 DB1 images whose
+    raw mean sits closest to 255 (e.g. 101_4.tif, 109_6.tif, the 110_x
+    series), the headroom cap is tight enough that they get little to no
+    contrast boost at all — a few (e.g. 101_4.tif: raw std 36.5 -> output
+    std 33.5) even end up SLIGHTLY below their own raw std, since the [2,
+    253] margin can require shrinking, not just capping, the spread to stay
+    safe. These images end up short of target_var=1600, unlike the rest of
+    the dataset. This is intentional: there is no safe way to give a
+    near-white image a full std=40 boost around its own mean without
+    clipping a large fraction of it, so this revision chooses to leave those
+    few images under-boosted rather than risk clipping them, rather than
+    trying to force full compliance with target_var everywhere.
+
+    `target_mean` is kept as a parameter only so the four pipeline_X.py
+    call sites (which all pass it explicitly) don't need to change — it is
+    no longer used by this function's logic, since every below-target image
+    now recentres on its own mean instead."""
     img = img.astype(np.float64)
-    mean = img.mean()
+    mu = img.mean()
     var = img.var() + 1e-8
     if var >= target_var:
         # Already at or above the target contrast — leave completely alone
         # (see the docstring's SECOND-attempt note above for why even a
         # mean-only shift isn't safe here).
         return np.clip(img, 0, 255).astype(np.uint8)
-    normalized = target_mean + np.sign(img - mean) * np.sqrt(
-        target_var * (img - mean) ** 2 / var
-    )
+
+    raw_std = np.sqrt(var)
+    p1, p99 = np.percentile(img, [1, 99])
+
+    # Headroom-capped boost factor (FIFTH revision — see docstring above).
+    # k_bright/k_dark: the largest scale factor that keeps the image's own
+    # robust 1st/99th percentile spread inside [2, 253] once recentred on
+    # its own mean. `else np.inf` means that side of the distribution isn't
+    # a constraint (e.g. p99 already at or below the mean).
+    k_bright = (253.0 - mu) / (p99 - mu) if p99 > mu else np.inf
+    k_dark = (mu - 2.0) / (mu - p1) if p1 < mu else np.inf
+    k_headroom = min(k_bright, k_dark)
+    k_target = np.sqrt(target_var) / raw_std
+    k_final = min(k_target, k_headroom)
+
+    normalized = mu + k_final * (img - mu)
     return np.clip(normalized, 0, 255).astype(np.uint8)
 
 
