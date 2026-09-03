@@ -43,6 +43,38 @@ contrast boost so this doesn't reintroduce clipping. See normalize_image()'s
 own docstring for the full investigation (a systemic scan, a rejected
 naive fix, and the validated headroom-capped fix that replaced it).
 
+SIXTH revision (4 September 2026): the shared target_std/target_var default
+changes again, this time from std=40 (target_var=1600) down to std=10
+(target_var=100) — a reversal of the THIRD/original choice. Once the FIFTH
+revision's headroom-capped, own-mean recentring was in place, a full
+re-validation of Pipeline A's CLAHE step (delta_p1 = post-CLAHE NFIQ2 minus
+raw NFIQ2, all 320 images) found std=40 was no longer the best choice it
+used to be — std=10 beat it on 3 of 4 DBs and overall (mean delta_p1 1.824
+vs. 1.401), most strikingly on DB3 (1.089 vs. 0.177, the exact subset
+std=40 was originally chosen to help). The mechanism std=40 was originally
+protecting against (recentring to a fixed target_mean=100 crushing
+brightness) no longer exists after the FIFTH revision, so the THIRD
+revision's original justification for std=40 no longer applies — see
+normalize_image()'s own docstring for the full sweep. Since std=10 also
+matches Hong et al.'s (1998) own textbook default (a stronger citation
+basis than the THIRD revision's "close to this dataset's typical raw std"
+heuristic), it was chosen over the also-tied std=20. This is a genuinely
+shared-default change, not a per-pipeline one: every pipeline calls
+normalize_image() with the same default (now imported from the
+DEFAULT_NORMALIZE_TARGET_STD/_VAR constants below, rather than each
+pipeline_X.py hardcoding its own literal 1.0/1600.0 copy of the value, to
+remove the "changed it in three files, forgot the fourth" risk that made
+this exact kind of drift possible in the first place) to preserve the
+group's "Fair Experimental Conditions" principle — chosen deliberately
+over letting Pipeline A alone use its own locally-better value, since a
+per-pipeline default would reopen exactly the differently-conditioned-input
+problem the THIRD revision was written to close. Pipeline C's own
+technique parameters (gamma_high, diffusion iterations/kappa, add_gain,
+and the coherence thresholds that drive their alpha-adaptive scaling) were
+tuned against the std=40 Step 0 output and were re-tuned against the new
+std=10 output as part of this same change — see pipeline_c.py's own
+revision history for that re-tuning.
+
 Functions:
     segment(img)            -> foreground mask + block-variance map. Used by
                                 all four pipelines as preprocessing.
@@ -68,6 +100,16 @@ import numpy as np
 from config import NFIQ2_EXE  # noqa: E402
 
 BLOCK = 16
+
+# Shared normalize_image() defaults (SIXTH revision — see module docstring).
+# All four pipeline_X.py files import these rather than each hardcoding its
+# own literal copy of the target value in a params.get(..., <literal>) call
+# — four independent copies of the same number is exactly what let this
+# default drift out of sync with reality once before (see module docstring).
+# Change the shared default in exactly one place: here.
+DEFAULT_NORMALIZE_TARGET_MEAN = 100.0
+DEFAULT_NORMALIZE_TARGET_STD = 10.0
+DEFAULT_NORMALIZE_TARGET_VAR = DEFAULT_NORMALIZE_TARGET_STD ** 2  # 100.0
 
 
 # ---------------------------------------------------------------------------
@@ -231,29 +273,56 @@ def segment(img, block=BLOCK, fill_holes=True):
 # pipelines (see module docstring).
 # ---------------------------------------------------------------------------
 
-def normalize_image(img, target_mean=100.0, target_var=1600.0):
+def normalize_image(img, target_mean=DEFAULT_NORMALIZE_TARGET_MEAN, target_var=DEFAULT_NORMALIZE_TARGET_VAR):
     """Rescales pixel intensities so the whole image has a fixed mean/variance.
     This does NOT change contrast/ridge structure (it's a monotonic per-pixel
     rescale, so relative ridge/valley ordering is preserved) — it only puts
     every image on the same intensity scale. Used by all four pipelines as a
     preprocessing step (see module docstring).
 
-    target_var=1600 (i.e. target std=40) was chosen empirically for this
-    dataset, NOT Hong et al.'s (1998) own textbook reference values (they use
-    a much smaller target_var=100, i.e. std=10). That reference value turned
-    out to actively hurt this project: tested with Pipeline A's CLAHE step,
-    normalizing to std=10 first and then running CLAHE (clip_limit=2.0)
-    produced roughly a third less contrast than running CLAHE on the raw
-    image directly (std 17 vs 49 on DB3_B/108_6.tif) — CLAHE's clip_limit
-    deliberately caps how much local contrast it will manufacture, so it
-    can't fully recover from a heavily pre-compressed input. std=40 was
-    picked because it's close to this dataset's own typical raw std (roughly
-    40-70 across subsets — see the analysis document, Section 3), so
-    normalisation still standardises every image onto a common baseline
-    (the actual point of this step) without pre-crushing the dynamic range
-    every pipeline's own contrast technique needs to work with. If your
-    pipeline's technique still behaves oddly on this baseline, test it
-    explicitly rather than assuming normalisation is neutral for you too.
+    HISTORICAL NOTE (kept for the record — see SIXTH revision below for the
+    current, reversed default): target_var=1600 (i.e. target std=40) was
+    originally chosen empirically for this dataset, NOT Hong et al.'s (1998)
+    own textbook reference values (they use a much smaller target_var=100,
+    i.e. std=10). That reference value seemed to actively hurt this project
+    at the time: tested with Pipeline A's CLAHE step, normalizing to std=10
+    first and then running CLAHE (clip_limit=2.0) produced roughly a third
+    less contrast than running CLAHE on the raw image directly (std 17 vs 49
+    on DB3_B/108_6.tif) — CLAHE's clip_limit deliberately caps how much local
+    contrast it will manufacture, so it seemed unable to recover from a
+    heavily pre-compressed input. std=40 was picked because it's close to
+    this dataset's own typical raw std (roughly 40-70 across subsets — see
+    the analysis document, Section 3), so normalisation would still
+    standardise every image onto a common baseline without pre-crushing the
+    dynamic range every pipeline's own contrast technique needs to work
+    with.
+
+    SIXTH revision (4 September 2026) — std=40 REVERSED back to std=10: the
+    single-image, output-std-only test above never accounted for a separate
+    fact, only found once the FIFTH revision's headroom-capped, own-mean
+    recentring was in place: that original std=17-vs-49 result was actually
+    caused by the (now-fixed) mean-crush bug, not by variance-boosting
+    itself. Once recentring on the image's own mean was fixed, a full
+    320-image, all-4-DB re-validation of Pipeline A's CLAHE step (delta_p1 =
+    post-CLAHE NFIQ2 minus raw NFIQ2) found std=40 was no longer the better
+    choice — std=10 beat it on 3 of 4 DBs and overall (mean delta_p1 1.824
+    vs. 1.401), most strikingly on DB3 (1.089 vs. 0.177), the exact subset
+    std=40 was originally chosen to protect. At std=10, this dataset's
+    images (raw std typically 20+) almost all clear the pass-through
+    threshold below and are left untouched by this function entirely — Step
+    0 preprocessing is now close to a no-op for most images, which is by
+    design: CLAHE (and Pipeline C's own techniques, retuned alongside this
+    change — see pipeline_c.py) work better on each image's own genuine
+    contrast than on a pre-boosted one. std=10 was chosen over the
+    also-tied std=20 (identical effect across this dataset, since no image's
+    raw std falls between them) because it matches Hong et al.'s own
+    textbook value, a stronger citation basis than the THIRD revision's
+    "close to this dataset's typical raw std" heuristic. This is a shared
+    default (DEFAULT_NORMALIZE_TARGET_STD/_VAR above), deliberately kept
+    identical across all four pipelines rather than let Pipeline A alone use
+    its own locally-better value, to preserve the "Fair Experimental
+    Conditions" principle (see module docstring) — every pipeline still
+    starts from the same conditioned input.
 
     PASS-THROUGH fix (30 August 2026, SECOND attempt — see below for why the
     first one didn't work): an image whose own raw variance already meets

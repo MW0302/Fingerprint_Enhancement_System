@@ -77,6 +77,44 @@ per image instead of one fixed setting for everyone — see the module-level
 comment above _COHERENCE_FULL_GENTLE, just below the imports, for the full
 mechanism and the real correlation data behind it.
 
+A sixth issue, found after common.py's normalize_image() default changed
+from target_var=1600 (std=40) to target_var=100 (std=10) (4 September
+2026 — see common.py's own SIXTH revision for why: that std=40 default
+turned out to only have looked necessary because of the mean-crush bug
+FIFTH-revision-fixed there, not because of variance-boosting itself). At
+std=10, every image in this dataset already clears the pass-through
+threshold (raw std is never below ~22 here), so normalize_image() is now a
+full no-op for all 320 images — Step 0 no longer pre-boosts DB3's
+naturally-low contrast toward std=40, and no longer pre-cushions DB1's
+naturally-high contrast either. This directly changed what Step 1
+(homomorphic filtering) sees as input for every image, and a full-batch
+re-run with every one of this pipeline's parameters left untouched showed
+it: DB2/DB3/DB4 all improved on their own just from Step 0 changing
+(DB3_B especially: +13.78 -> +17.05 mean delta), but DB1_B got slightly
+WORSE (-6.84 -> -7.47) — the gentle end of _HOMOMORPHIC_GAMMA_HIGH_RANGE
+(1.2) still applied a mild boost even to DB1's cleanest, highest-coherence
+images, and without Step 0's old cushioning that boost now landed on
+genuinely raw (not pre-softened) high-contrast input. Fixed by lowering
+that gentle endpoint to 1.0 — the true no-op point for gamma_high (no
+high-frequency boost at all, only gamma_low's fixed illumination
+suppression still runs) — and re-validated with a full batch: DB1_B
+-7.47 -> -6.39 (the best DB1_B result found across this project's entire
+tuning history), DB2_B +10.07 -> +11.43, with DB3_B/DB4_B essentially
+unchanged (+17.25/+15.59, within noise of the pre-change +17.05/+15.68).
+The aggressive endpoint (2.0) and every other parameter (diffusion
+iterations/kappa, Log-Gabor add_gain, the coherence thresholds themselves)
+were checked and left alone: mean foreground coherence on the new,
+effectively-raw Step 0 output correlates with raw NFIQ2 at r=0.720 (DB
+means 0.67/0.70/0.57/0.54), nearly identical to the r=0.72 this scheme was
+originally built on, since orientation_field()'s coherence measure is
+largely invariant to a monotonic intensity rescale — so the alpha-adaptive
+scaling itself didn't need retuning, only the one range it was scaling
+that was directly exposed to Step 0's raw-vs-normalised input shift.
+Diffusion and Log-Gabor are comparatively insulated from this because they
+run on _homomorphic_filter's own percentile-rescaled output, which is
+already restandardised to a consistent 0-255 range regardless of what
+Step 0 handed it.
+
 Normalisation and segmentation are PREPROCESSING here, not a fourth primary
 technique: like orientation_field() (a supporting calculation used
 internally, see below), they condition the image for the three techniques
@@ -125,7 +163,10 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import orientation_field, normalize_image, segment  # noqa: E402
+from common import (  # noqa: E402
+    orientation_field, normalize_image, segment,
+    DEFAULT_NORMALIZE_TARGET_MEAN, DEFAULT_NORMALIZE_TARGET_VAR,
+)
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -204,7 +245,14 @@ _COHERENCE_FULL_AGGRESSIVE = 0.50  # foreground coherence at/below this -> alpha
 # value chosen so the technique still visibly runs (it's still one of this
 # pipeline's three graded techniques) without actively damaging a print
 # that was already clean.
-_HOMOMORPHIC_GAMMA_HIGH_RANGE = (1.2, 2.0)
+_HOMOMORPHIC_GAMMA_HIGH_RANGE = (1.0, 2.0)  # gentle endpoint 1.2 -> 1.0 (4 Sep
+# 2026, "a sixth issue" above) once normalize_image()'s shared default
+# dropped to std=10 and stopped cushioning DB1's naturally high contrast:
+# gamma_high=1.0 is the true no-op point (no high-frequency boost at all),
+# whereas 1.2 still mildly over-boosted DB1's cleanest images once they
+# started arriving genuinely raw instead of pre-softened. Full-batch
+# verified: DB1_B -7.47 -> -6.39, DB2_B +10.07 -> +11.43, DB3_B/DB4_B
+# unchanged within noise (+17.05->+17.25 / +15.68->+15.59).
 # Diffusion's aggressive endpoint was pulled back from (25, 25.0) to (15,
 # 15.0) for one revision, then RESTORED to (25, 25.0) here after a real
 # 320-image, all-four-DB batch run showed the pullback wasn't paying for
@@ -225,6 +273,13 @@ _HOMOMORPHIC_GAMMA_HIGH_RANGE = (1.2, 2.0)
 # target_var in common.py instead, which crushes DB1's naturally higher raw
 # contrast before any of these three techniques even run — softening these
 # three parameters can't reach a problem that happens upstream of them).
+# UPDATE (4 September 2026): that upstream problem is fixed now — see "a
+# sixth issue" above — and normalize_image() no longer touches DB1 at all
+# (100% pass-through at the new std=10 default). DB1's residual regression
+# after that fix traced to _HOMOMORPHIC_GAMMA_HIGH_RANGE instead (see its
+# own comment above), not to diffusion/Log-Gabor here — this paragraph's
+# original conclusion (soften ranges elsewhere != DB1's real problem) still
+# held, just for a different, now-fixed upstream cause.
 _DIFFUSION_ITERATIONS_RANGE = (8, 25)
 _DIFFUSION_KAPPA_RANGE = (10.0, 25.0)
 _LOG_GABOR_ADD_GAIN_RANGE = (0.8, 2.5)
@@ -724,8 +779,8 @@ def enhance(image, params=None):
     # Normalisation -> Segmentation -> ... pipeline order.
     normalized = normalize_image(
         image,
-        target_mean=params.get("normalize_target_mean", 100.0),
-        target_var=params.get("normalize_target_var", 1600.0),
+        target_mean=params.get("normalize_target_mean", DEFAULT_NORMALIZE_TARGET_MEAN),
+        target_var=params.get("normalize_target_var", DEFAULT_NORMALIZE_TARGET_VAR),
     )
 
     # Step 0b: Otsu/block-variance segmentation (Hong, Wan, & Jain, 1998) —
