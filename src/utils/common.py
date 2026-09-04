@@ -35,6 +35,46 @@ no mean shift and no variance rescale at all); images below target_var are
 UNCHANGED from before — they still go through the original mean-shift-and-
 boost path, since that behaviour was never the problem.
 
+FIFTH revision (3 September 2026): the "UNCHANGED from before" mean-shift-
+and-boost path referenced just above turned out to have its own, separate
+bug — normalize_image() now recentres below-target images on their OWN raw
+mean instead of a fixed target_mean=100.0, with a headroom-aware cap on the
+contrast boost so this doesn't reintroduce clipping. See normalize_image()'s
+own docstring for the full investigation (a systemic scan, a rejected
+naive fix, and the validated headroom-capped fix that replaced it).
+
+SIXTH revision (4 September 2026): the shared target_std/target_var default
+changes again, this time from std=40 (target_var=1600) down to std=10
+(target_var=100) — a reversal of the THIRD/original choice. Once the FIFTH
+revision's headroom-capped, own-mean recentring was in place, a full
+re-validation of Pipeline A's CLAHE step (delta_p1 = post-CLAHE NFIQ2 minus
+raw NFIQ2, all 320 images) found std=40 was no longer the best choice it
+used to be — std=10 beat it on 3 of 4 DBs and overall (mean delta_p1 1.824
+vs. 1.401), most strikingly on DB3 (1.089 vs. 0.177, the exact subset
+std=40 was originally chosen to help). The mechanism std=40 was originally
+protecting against (recentring to a fixed target_mean=100 crushing
+brightness) no longer exists after the FIFTH revision, so the THIRD
+revision's original justification for std=40 no longer applies — see
+normalize_image()'s own docstring for the full sweep. Since std=10 also
+matches Hong et al.'s (1998) own textbook default (a stronger citation
+basis than the THIRD revision's "close to this dataset's typical raw std"
+heuristic), it was chosen over the also-tied std=20. This is a genuinely
+shared-default change, not a per-pipeline one: every pipeline calls
+normalize_image() with the same default (now imported from the
+DEFAULT_NORMALIZE_TARGET_STD/_VAR constants below, rather than each
+pipeline_X.py hardcoding its own literal 1.0/1600.0 copy of the value, to
+remove the "changed it in three files, forgot the fourth" risk that made
+this exact kind of drift possible in the first place) to preserve the
+group's "Fair Experimental Conditions" principle — chosen deliberately
+over letting Pipeline A alone use its own locally-better value, since a
+per-pipeline default would reopen exactly the differently-conditioned-input
+problem the THIRD revision was written to close. Pipeline C's own
+technique parameters (gamma_high, diffusion iterations/kappa, add_gain,
+and the coherence thresholds that drive their alpha-adaptive scaling) were
+tuned against the std=40 Step 0 output and were re-tuned against the new
+std=10 output as part of this same change — see pipeline_c.py's own
+revision history for that re-tuning.
+
 Functions:
     segment(img)            -> foreground mask + block-variance map. Used by
                                 all four pipelines as preprocessing.
@@ -60,6 +100,16 @@ import numpy as np
 from config import NFIQ2_EXE  # noqa: E402
 
 BLOCK = 16
+
+# Shared normalize_image() defaults (SIXTH revision — see module docstring).
+# All four pipeline_X.py files import these rather than each hardcoding its
+# own literal copy of the target value in a params.get(..., <literal>) call
+# — four independent copies of the same number is exactly what let this
+# default drift out of sync with reality once before (see module docstring).
+# Change the shared default in exactly one place: here.
+DEFAULT_NORMALIZE_TARGET_MEAN = 100.0
+DEFAULT_NORMALIZE_TARGET_STD = 10.0
+DEFAULT_NORMALIZE_TARGET_VAR = DEFAULT_NORMALIZE_TARGET_STD ** 2  # 100.0
 
 
 # ---------------------------------------------------------------------------
@@ -223,29 +273,56 @@ def segment(img, block=BLOCK, fill_holes=True):
 # pipelines (see module docstring).
 # ---------------------------------------------------------------------------
 
-def normalize_image(img, target_mean=100.0, target_var=1600.0):
+def normalize_image(img, target_mean=DEFAULT_NORMALIZE_TARGET_MEAN, target_var=DEFAULT_NORMALIZE_TARGET_VAR):
     """Rescales pixel intensities so the whole image has a fixed mean/variance.
     This does NOT change contrast/ridge structure (it's a monotonic per-pixel
     rescale, so relative ridge/valley ordering is preserved) — it only puts
     every image on the same intensity scale. Used by all four pipelines as a
     preprocessing step (see module docstring).
 
-    target_var=1600 (i.e. target std=40) was chosen empirically for this
-    dataset, NOT Hong et al.'s (1998) own textbook reference values (they use
-    a much smaller target_var=100, i.e. std=10). That reference value turned
-    out to actively hurt this project: tested with Pipeline A's CLAHE step,
-    normalizing to std=10 first and then running CLAHE (clip_limit=2.0)
-    produced roughly a third less contrast than running CLAHE on the raw
-    image directly (std 17 vs 49 on DB3_B/108_6.tif) — CLAHE's clip_limit
-    deliberately caps how much local contrast it will manufacture, so it
-    can't fully recover from a heavily pre-compressed input. std=40 was
-    picked because it's close to this dataset's own typical raw std (roughly
-    40-70 across subsets — see the analysis document, Section 3), so
-    normalisation still standardises every image onto a common baseline
-    (the actual point of this step) without pre-crushing the dynamic range
-    every pipeline's own contrast technique needs to work with. If your
-    pipeline's technique still behaves oddly on this baseline, test it
-    explicitly rather than assuming normalisation is neutral for you too.
+    HISTORICAL NOTE (kept for the record — see SIXTH revision below for the
+    current, reversed default): target_var=1600 (i.e. target std=40) was
+    originally chosen empirically for this dataset, NOT Hong et al.'s (1998)
+    own textbook reference values (they use a much smaller target_var=100,
+    i.e. std=10). That reference value seemed to actively hurt this project
+    at the time: tested with Pipeline A's CLAHE step, normalizing to std=10
+    first and then running CLAHE (clip_limit=2.0) produced roughly a third
+    less contrast than running CLAHE on the raw image directly (std 17 vs 49
+    on DB3_B/108_6.tif) — CLAHE's clip_limit deliberately caps how much local
+    contrast it will manufacture, so it seemed unable to recover from a
+    heavily pre-compressed input. std=40 was picked because it's close to
+    this dataset's own typical raw std (roughly 40-70 across subsets — see
+    the analysis document, Section 3), so normalisation would still
+    standardise every image onto a common baseline without pre-crushing the
+    dynamic range every pipeline's own contrast technique needs to work
+    with.
+
+    SIXTH revision (4 September 2026) — std=40 REVERSED back to std=10: the
+    single-image, output-std-only test above never accounted for a separate
+    fact, only found once the FIFTH revision's headroom-capped, own-mean
+    recentring was in place: that original std=17-vs-49 result was actually
+    caused by the (now-fixed) mean-crush bug, not by variance-boosting
+    itself. Once recentring on the image's own mean was fixed, a full
+    320-image, all-4-DB re-validation of Pipeline A's CLAHE step (delta_p1 =
+    post-CLAHE NFIQ2 minus raw NFIQ2) found std=40 was no longer the better
+    choice — std=10 beat it on 3 of 4 DBs and overall (mean delta_p1 1.824
+    vs. 1.401), most strikingly on DB3 (1.089 vs. 0.177), the exact subset
+    std=40 was originally chosen to protect. At std=10, this dataset's
+    images (raw std typically 20+) almost all clear the pass-through
+    threshold below and are left untouched by this function entirely — Step
+    0 preprocessing is now close to a no-op for most images, which is by
+    design: CLAHE (and Pipeline C's own techniques, retuned alongside this
+    change — see pipeline_c.py) work better on each image's own genuine
+    contrast than on a pre-boosted one. std=10 was chosen over the
+    also-tied std=20 (identical effect across this dataset, since no image's
+    raw std falls between them) because it matches Hong et al.'s own
+    textbook value, a stronger citation basis than the THIRD revision's
+    "close to this dataset's typical raw std" heuristic. This is a shared
+    default (DEFAULT_NORMALIZE_TARGET_STD/_VAR above), deliberately kept
+    identical across all four pipelines rather than let Pipeline A alone use
+    its own locally-better value, to preserve the "Fair Experimental
+    Conditions" principle (see module docstring) — every pipeline still
+    starts from the same conditioned input.
 
     PASS-THROUGH fix (30 August 2026, SECOND attempt — see below for why the
     first one didn't work): an image whose own raw variance already meets
@@ -293,18 +370,95 @@ def normalize_image(img, target_mean=100.0, target_var=1600.0):
     106_4): 0% of pixels clipped under this version vs 8-17% under the
     first attempt. Since this function is shared preprocessing for all four
     pipelines (see module docstring), this benefits whichever of A/B/D end
-    up processing DB1-like high-contrast input too, not just Pipeline C."""
+    up processing DB1-like high-contrast input too, not just Pipeline C.
+
+    FIFTH revision (3 September 2026), headroom-capped recentring on the
+    image's OWN mean (replaces recentring on the fixed target_mean=100.0
+    below): a systemic scan (all 320 raw images) found the FOURTH revision's
+    "unchanged from before" below-target path still had a real bug of its
+    own. Any below-target image whose raw mean sits far from 100 (not just
+    DB1's four worst-regressed images checked above, but 89/320 images
+    dataset-wide, including DB1_B/101_4.tif and up to 75% of DB4_B) was
+    still being forcibly RECENTRED to target_mean=100 regardless of how far
+    that was from the image's own natural brightness — e.g. DB1_B/101_4.tif
+    (raw mean 242.4, raw std 36.5, below the std=40 pass-through line) came
+    out with mean 102.0, a 140-point brightness crush with no real contrast
+    benefit, since only its variance was actually below target, not its
+    mean.
+
+    REJECTED first fix: recentre on the image's own mean instead of
+    target_mean=100 (i.e. `mean + sign(d)*sqrt(target_var*d**2/var)` with
+    `mean` in place of `target_mean`, where `d = img - mean`; since
+    `sign(d)*sqrt(d**2) == d`, this is actually just a linear rescale
+    `mean + k*d` with `k = sqrt(target_var/var)`). This did kill the
+    brightness crush (dataset-wide, mean |raw_mean - norm_mean| dropped from
+    64.3 to 0.5 on the 89 flagged images) but introduced a WORSE new bug on
+    the near-ceiling-brightness end of DB1: boosting a near-white image
+    (raw mean ~240-247) to std=40 around ITS OWN mean leaves almost no
+    headroom before 255, so roughly half the pixel population blows past
+    the boundary and clips flat white. Verified on DB1_B/109_6.tif (raw mean
+    247.0): 85.5% of all pixels clipped to 0 or 255, versus 3.5% under the
+    FOURTH revision's target_mean=100 behaviour — recentring on the image's
+    own mean is right in principle, but only if the boost factor respects
+    how much room that mean actually has left before the 0/255 walls.
+
+    Fix (this revision): recentre on the image's own mean as above, but cap
+    the boost factor by the image's own headroom before applying it. Uses
+    the image's robust 1st/99th percentile (p1, p99) — same idea already
+    used in pipeline_c.py's _homomorphic_filter to avoid a few outlier
+    pixels distorting a rescale — to estimate how far the bulk of the image
+    can safely move before hitting the boundary, with a small margin
+    ([2, 253] instead of a hard [0, 255] wall). The boost factor actually
+    applied is whichever is SMALLER: the factor needed to reach target_var,
+    or the factor the image's own headroom can safely support. Verified
+    across all 320 images: DB1_B/109_6.tif and the 8 other DB1 images that
+    broke under the rejected fix above all land at exactly 0% clipping under
+    this version (vs. 85.5%/81.7%/etc. under the rejected fix), and the
+    dataset-wide worst-case clip fraction (5.99%, DB2_B/109_1.tif) never
+    exceeds what the FOURTH revision already produced on that same image —
+    no new clipping problem introduced anywhere.
+
+    Known, deliberate trade-off (not a bug): for the ~9-12 DB1 images whose
+    raw mean sits closest to 255 (e.g. 101_4.tif, 109_6.tif, the 110_x
+    series), the headroom cap is tight enough that they get little to no
+    contrast boost at all — a few (e.g. 101_4.tif: raw std 36.5 -> output
+    std 33.5) even end up SLIGHTLY below their own raw std, since the [2,
+    253] margin can require shrinking, not just capping, the spread to stay
+    safe. These images end up short of target_var=1600, unlike the rest of
+    the dataset. This is intentional: there is no safe way to give a
+    near-white image a full std=40 boost around its own mean without
+    clipping a large fraction of it, so this revision chooses to leave those
+    few images under-boosted rather than risk clipping them, rather than
+    trying to force full compliance with target_var everywhere.
+
+    `target_mean` is kept as a parameter only so the four pipeline_X.py
+    call sites (which all pass it explicitly) don't need to change — it is
+    no longer used by this function's logic, since every below-target image
+    now recentres on its own mean instead."""
     img = img.astype(np.float64)
-    mean = img.mean()
+    mu = img.mean()
     var = img.var() + 1e-8
     if var >= target_var:
         # Already at or above the target contrast — leave completely alone
         # (see the docstring's SECOND-attempt note above for why even a
         # mean-only shift isn't safe here).
         return np.clip(img, 0, 255).astype(np.uint8)
-    normalized = target_mean + np.sign(img - mean) * np.sqrt(
-        target_var * (img - mean) ** 2 / var
-    )
+
+    raw_std = np.sqrt(var)
+    p1, p99 = np.percentile(img, [1, 99])
+
+    # Headroom-capped boost factor (FIFTH revision — see docstring above).
+    # k_bright/k_dark: the largest scale factor that keeps the image's own
+    # robust 1st/99th percentile spread inside [2, 253] once recentred on
+    # its own mean. `else np.inf` means that side of the distribution isn't
+    # a constraint (e.g. p99 already at or below the mean).
+    k_bright = (253.0 - mu) / (p99 - mu) if p99 > mu else np.inf
+    k_dark = (mu - 2.0) / (mu - p1) if p1 < mu else np.inf
+    k_headroom = min(k_bright, k_dark)
+    k_target = np.sqrt(target_var) / raw_std
+    k_final = min(k_target, k_headroom)
+
+    normalized = mu + k_final * (img - mu)
     return np.clip(normalized, 0, 255).astype(np.uint8)
 
 

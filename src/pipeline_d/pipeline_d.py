@@ -46,7 +46,13 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
-from common import BLOCK, normalize_image, segment  # noqa: E402
+from common import (  # noqa: E402
+    BLOCK,
+    DEFAULT_NORMALIZE_TARGET_MEAN,
+    DEFAULT_NORMALIZE_TARGET_VAR,
+    normalize_image,
+    segment,
+)
 from config import RAW_DIR  # noqa: E402
 
 import cv2
@@ -336,8 +342,8 @@ def enhance(image, params=None):
     # technique estimates orientation and frequency jointly on its own.
     normalized = normalize_image(
         image,
-        target_mean=params.get("normalize_target_mean", 100.0),
-        target_var=params.get("normalize_target_var", 1600.0),
+        target_mean=params.get("normalize_target_mean", DEFAULT_NORMALIZE_TARGET_MEAN),
+        target_var=params.get("normalize_target_var", DEFAULT_NORMALIZE_TARGET_VAR),
     )
     fg_mask_blocks, _block_var = segment(normalized)
 
