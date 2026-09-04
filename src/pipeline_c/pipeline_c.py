@@ -239,6 +239,18 @@ _COHERENCE_FULL_GENTLE = 0.68   # foreground coherence at/above this -> alpha=0 
 # top of that cost more (blanket, dataset-wide) than it fixed (a handful of
 # borderline images).
 _COHERENCE_FULL_AGGRESSIVE = 0.50  # foreground coherence at/below this -> alpha=1 (current DB3-tuned settings)
+# RE-VALIDATED (4 September 2026), both this and _COHERENCE_FULL_GENTLE below,
+# following the parameter audit in docs/pipeline_c_parameter_audit.md: full
+# 320-image, 4-DB sweep of _COHERENCE_FULL_AGGRESSIVE over {0.45, 0.50, 0.55,
+# 0.60, 0.65} (gentle fixed at 0.68) found 0.50 -- the value already in use --
+# beats every other candidate on overall mean delta_total (9.445, vs. 9.235 at
+# 0.45 and a monotonic decline above 0.50 down to 7.824 at 0.65). Then, with
+# aggressive fixed at that confirmed 0.50, a second sweep of
+# _COHERENCE_FULL_GENTLE over {0.55, 0.60, 0.65, 0.68, 0.75} found 0.68 --
+# also already in use -- likewise best (9.445; DB3 keeps climbing with a
+# higher gentle threshold, 13.1 -> 18.25, but DB1/DB2 start losing ground past
+# 0.68, netting a lower overall past that point). Both thresholds confirmed
+# optimal as-is among the candidates tested -- no change made.
 
 # (gentle, aggressive) endpoints for each adaptive parameter. "aggressive"
 # is exactly this session's DB3-tuned default; "gentle" is a light-touch
