@@ -55,6 +55,113 @@ import cv2
 import numpy as np
 
 
+def _clahe_contrast(image, clip_limit=2.0, grid_size=8):
+    """Stage 1: improve local contrast with CLAHE."""
+    grid_size = max(1, int(grid_size))
+    clahe = cv2.createCLAHE(
+        clipLimit=max(float(clip_limit), 0.0),
+        tileGridSize=(grid_size, grid_size),
+    )
+    return clahe.apply(np.clip(image, 0, 255).astype(np.uint8))
+
+
+def _bilateral_denoise(image, diameter=5, sigma_color=35.0, sigma_space=5.0):
+    """Stage 2: suppress noise while retaining ridge/valley edges."""
+    diameter = max(1, int(diameter))
+    if diameter % 2 == 0:
+        diameter += 1
+    return cv2.bilateralFilter(
+        np.clip(image, 0, 255).astype(np.uint8),
+        diameter,
+        max(float(sigma_color), 0.0),
+        max(float(sigma_space), 0.0),
+    )
+
+
+def _oriented_gabor_filter(
+    image,
+    theta_field,
+    coherence_field,
+    fg_mask_blocks,
+    kernel_size=17,
+    sigma=4.0,
+    wavelength=8.0,
+    gamma=0.5,
+    strength=0.7,
+    orientation_bins=16,
+    coherence_floor=0.2,
+):
+    """Stage 3: add ridge-aligned Gabor responses without block seams.
+
+    A small bank of whole-image responses is computed and selected using an
+    upsampled orientation field.  This avoids stitching independently
+    filtered blocks, while coherence and segmentation prevent uncertain or
+    background regions from receiving a strong artificial ridge pattern.
+    """
+    source = np.clip(image, 0, 255).astype(np.uint8)
+    h, w = source.shape
+    kernel_size = max(3, int(kernel_size))
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    orientation_bins = max(1, int(orientation_bins))
+
+    # Ridge directions are pi-periodic. OpenCV's theta describes the Gabor
+    # carrier normal, hence the additional pi/2 rotation from ridge angle.
+    bin_angles = np.arange(orientation_bins, dtype=np.float32) * np.pi / orientation_bins
+    responses = []
+    for ridge_angle in bin_angles:
+        kernel = cv2.getGaborKernel(
+            (kernel_size, kernel_size),
+            max(float(sigma), 1e-6),
+            float(ridge_angle + np.pi / 2),
+            max(float(wavelength), 1e-6),
+            max(float(gamma), 1e-6),
+            psi=0,
+            ktype=cv2.CV_32F,
+        )
+        kernel -= kernel.mean()
+        norm = np.sum(np.abs(kernel))
+        if norm > 0:
+            kernel /= norm
+        responses.append(cv2.filter2D(source, cv2.CV_32F, kernel, borderType=cv2.BORDER_REFLECT))
+    responses = np.stack(responses)
+
+    # Interpolate the pi-periodic ridge direction through its double-angle
+    # vector representation. Directly resizing theta would average angles on
+    # opposite sides of the -pi/2 / pi/2 wrap boundary incorrectly.
+    cos2_theta = cv2.resize(
+        np.cos(2.0 * theta_field).astype(np.float32),
+        (w, h),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    sin2_theta = cv2.resize(
+        np.sin(2.0 * theta_field).astype(np.float32),
+        (w, h),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    theta = 0.5 * np.arctan2(sin2_theta, cos2_theta)
+    bin_index = np.rint(np.mod(theta, np.pi) * orientation_bins / np.pi).astype(np.int32)
+    bin_index %= orientation_bins
+    selected = np.take_along_axis(responses, bin_index[None, ...], axis=0)[0]
+
+    coherence = cv2.resize(
+        np.clip(coherence_field, 0.0, 1.0).astype(np.float32),
+        (w, h),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    foreground = cv2.resize(
+        fg_mask_blocks.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR
+    )
+    confidence = np.clip(
+        (coherence - float(coherence_floor)) / max(1.0 - float(coherence_floor), 1e-6),
+        0.0,
+        1.0,
+    )
+    gain = np.clip(foreground, 0.0, 1.0) * confidence * float(strength)
+    enhanced = source.astype(np.float32) + gain * selected
+    return np.clip(enhanced, 0, 255).astype(np.uint8)
+
+
 def enhance(image, params=None):
     """
     image: 2D grayscale numpy array (e.g. from cv2.imread(path, cv2.IMREAD_GRAYSCALE))
@@ -75,42 +182,42 @@ def enhance(image, params=None):
     )
     fg_mask_blocks, _block_var = segment(normalized)
 
-    # Step 1: CLAHE (P1 — low global contrast)
-    clip_limit = params.get("clahe_clip", 2.0)
-    grid_size = params.get("clahe_grid", 8)
-    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(grid_size, grid_size))
-    contrast_enhanced = clahe.apply(normalized)
+    # Stage 1: CLAHE (P1 — low global contrast). This named cumulative
+    # output is intentionally retained for later step-wise ablation.
+    contrast_enhanced = _clahe_contrast(
+        normalized,
+        clip_limit=params.get("clahe_clip", 2.0),
+        grid_size=params.get("clahe_grid", 8),
+    )
 
-    # Step 2: median / bilateral filtering (P2 — high random noise) — TODO
-    # DB3's noise level is roughly 3-4x every other subset (see the analysis
-    # document, Section 3). Ask yourself:
-    #   - median filtering is simple and edge-preserving for salt-and-pepper
-    #     style noise, but can blur fine ridge detail if the kernel is too
-    #     large — what kernel size keeps ridges intact?
-    #   - bilateral filtering preserves edges better (it weights neighbours
-    #     by both spatial distance and intensity similarity) but is slower
-    #     and has two parameters (sigma_color, sigma_space) to tune — is the
-    #     extra cost worth it here?
-    #   - should this run before or after CLAHE? Running CLAHE first can
-    #     amplify noise it just contrast-stretched, which may argue for
-    #     denoising first instead — try both and compare.
-    denoised = contrast_enhanced.copy()  # placeholder — replace once this step is implemented
+    # Stage 2: bilateral denoising (P2 — high random noise), applied to the
+    # Stage 1 result so this output represents techniques 1+2 cumulatively.
+    denoised = _bilateral_denoise(
+        contrast_enhanced,
+        diameter=params.get("bilateral_diameter", 5),
+        sigma_color=params.get("bilateral_sigma_color", 35.0),
+        sigma_space=params.get("bilateral_sigma_space", 5.0),
+    )
 
     # Step 3: ridge orientation field estimation (supporting calculation,
     # not one of the three primary techniques) — used to steer Step 4.
     theta_field, coherence_field = orientation_field(denoised)
 
-    # Step 4: oriented Gabor filtering (P6 — weak/inconsistent ridge
-    # orientation) — TODO
-    # Idea: for each block, build a Gabor kernel oriented along theta_field
-    # at that block (cv2.getGaborKernel(ksize, sigma, theta, lambd, gamma)),
-    # convolve that block (or a local neighbourhood) with its own kernel, and
-    # stitch the results back together. Ask yourself:
-    #   - what wavelength (lambd) matches typical ridge spacing in this dataset?
-    #   - how do you handle block edges without visible seams?
-    #   - should low-coherence blocks (noisy/ambiguous orientation) be
-    #     filtered less aggressively, or skipped?
-    enhanced = denoised  # placeholder — replace once Gabor step is implemented
+    # Stage 3: oriented Gabor filtering (P6). This is the cumulative final
+    # stage (techniques 1+2+3) and remains enhance()'s public result.
+    enhanced = _oriented_gabor_filter(
+        denoised,
+        theta_field,
+        coherence_field,
+        fg_mask_blocks,
+        kernel_size=params.get("gabor_kernel_size", 17),
+        sigma=params.get("gabor_sigma", 4.0),
+        wavelength=params.get("gabor_wavelength", 8.0),
+        gamma=params.get("gabor_gamma", 0.5),
+        strength=params.get("gabor_strength", 0.7),
+        orientation_bins=params.get("gabor_orientation_bins", 16),
+        coherence_floor=params.get("gabor_coherence_floor", 0.2),
+    )
 
     return enhanced
 

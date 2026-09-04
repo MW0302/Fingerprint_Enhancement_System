@@ -1,0 +1,56 @@
+{
+  "nfiq2_executable": "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe",
+  "nfiq2_version": "2.3.0 (Date: 202409131504, Commit: 76b8c4e)",
+  "shared_cli": [
+    "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe",
+    "-i",
+    "<image_path>",
+    "-a",
+    "-F",
+    "-o",
+    "<temp_csv>"
+  ],
+  "execution": "serial",
+  "source_samples": "data\\pipeline_a_stagewise_visual_pilot_current_defaults_20260904\\samples.csv",
+  "previous_A_results": "data\\pipeline_a_16_sample_cumulative_nfiq2_v2_3_0_20260904\\per_image_cumulative_scores.csv",
+  "shared_step0": {
+    "target_mean": 100.0,
+    "target_std": 10.0,
+    "target_var": 100.0
+  },
+  "fixed": {
+    "clahe_grid_size": 8,
+    "bilateral_diameter": 5,
+    "bilateral_sigma_space": 5.0,
+    "gabor_kernel_size": 17,
+    "gabor_sigma": 4.0,
+    "gabor_wavelength": 8.0,
+    "gabor_gamma": 0.5,
+    "gabor_orientation_bins": 16,
+    "gabor_coherence_floor": 0.2,
+    "orientation_interpolation": "double-angle"
+  },
+  "configurations": {
+    "A": {
+      "clahe_clip": 2.0,
+      "bilateral_sigma_color": 35.0,
+      "gabor_strength": 0.7
+    },
+    "B": {
+      "clahe_clip": 1.5,
+      "bilateral_sigma_color": 35.0,
+      "gabor_strength": 0.7
+    },
+    "C": {
+      "clahe_clip": 2.0,
+      "bilateral_sigma_color": 25.0,
+      "gabor_strength": 0.7
+    },
+    "D": {
+      "clahe_clip": 2.0,
+      "bilateral_sigma_color": 35.0,
+      "gabor_strength": 0.4
+    }
+  },
+  "constraints": "No combinations, dynamic selection, expanded search, or default changes"
+}
