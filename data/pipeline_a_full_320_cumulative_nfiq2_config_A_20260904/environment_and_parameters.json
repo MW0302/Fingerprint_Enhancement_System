@@ -1,0 +1,43 @@
+{
+  "created": "2026-09-04T19:07:10.575860",
+  "git_head": "b6f0aa63d600ab70f0c8bacfca60367709a082a4",
+  "file_sha256": {
+    "pipeline_a.py": "7e32ec034a278994d93d093d88b68f43aacb76651347c6d53bd23295d3e1a750",
+    "common.py": "019e4f80656b99e6ca646df03547123390bb835220f2309466f663741699cbde"
+  },
+  "dataset_counts": {
+    "DB1_B": 80,
+    "DB2_B": 80,
+    "DB3_B": 80,
+    "DB4_B": 80
+  },
+  "parameters": {
+    "normalize_target_mean": 100.0,
+    "normalize_target_var": 100.0,
+    "clahe_clip": 2.0,
+    "clahe_grid": 8,
+    "bilateral_diameter": 5,
+    "bilateral_sigma_color": 35.0,
+    "bilateral_sigma_space": 5.0,
+    "gabor_kernel_size": 17,
+    "gabor_sigma": 4.0,
+    "gabor_wavelength": 8.0,
+    "gabor_gamma": 0.5,
+    "gabor_strength": 0.7,
+    "gabor_orientation_bins": 16,
+    "gabor_coherence_floor": 0.2
+  },
+  "nfiq2_exe": "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe",
+  "nfiq2_version_checks": [
+    {
+      "args": [
+        "--version"
+      ],
+      "returncode": 1,
+      "stdout": "Welcome to NFIQ2\n\n      Please provide individual files or directories to the command line.\n            If you would like to use one of the flags listed below,\n              please include them before any standard arguments.\n\nCurrently implemented flags and their functions: \n-i [file/directory path]: Processing provided Images and Directories\n-f [batch file path]: Processing provided batch files\n-o [file path]: Saving all output to a specified file\n-j [# of threads]: Enables Multi-Threading for Batch and RecordStore processes\n-m [model info file]: Path to alternate model info file \n-a: Displays actionable quality scores about each processed image\n-v: Displays individual quality score information about each processed image\n-b: Displays native quality measure values mapped for 39794-2 quality blocks\n-q: Displays individual quality speed timings about each processed image\n-d: Displays additional debug information as each score gets computed\n-F: Forces computation to occur. Tool does not prompt user with yes/no options\n-r: Recursive file scanning if a directory is provided\n\nVersion Info\n------------\nBiometric Evaluation: 12.0\nFingerJet: 5.2.1\nOpenCV: 4.10.0\nNFIQ 2: 2.3.0 (Date: 202409131504, Commit: 76b8c4e)\n\nUser Provided Undefined Flag or Defined Flag without Required Argument\nPlease Only Use Defined Flags and make sure to provide required arguments",
+      "stderr": "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe: invalid option -- '-'\nUndefinedFlagError: Undefined Flag Used"
+    }
+  ],
+  "scoring": "run_nfiq2_single; -i <original-size grayscale uint8 TIFF> -a -F -o <csv>; serial",
+  "test_set_note": "All 320 images include the 16 development pilot images; not an independent test set."
+}

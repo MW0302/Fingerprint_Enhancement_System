@@ -1,0 +1,13 @@
+Version command attempted:
+C:\Program Files\NFIQ 2\bin\nfiq2.exe --version
+
+Note: NFIQ2 2.3.0 does not accept the GNU-style --version flag. It returned
+UndefinedFlagError but printed the following executable-internal Version Info:
+
+Biometric Evaluation: 12.0
+FingerJet: 5.2.1
+OpenCV: 4.10.0
+NFIQ 2: 2.3.0 (Date: 202409131504, Commit: 76b8c4e)
+
+The version gate was therefore confirmed from the executable's own output,
+not inferred from an installer filename.

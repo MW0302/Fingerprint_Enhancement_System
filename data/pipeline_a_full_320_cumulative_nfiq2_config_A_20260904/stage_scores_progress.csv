@@ -1,0 +1,1601 @@
+database,filename,stage,nfiq2,error,scored_path,height,width,dtype
+DB1_B,101_1.tif,raw,65.0,,data\raw\DB1_B\101_1.tif,374,388,uint8
+DB1_B,101_1.tif,step0,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_1.tif,stage1,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_1.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_1.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_2.tif,raw,43.0,,data\raw\DB1_B\101_2.tif,374,388,uint8
+DB1_B,101_2.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_2.tif,stage1,46.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_2.tif,stage2,46.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_2.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_3.tif,raw,58.0,,data\raw\DB1_B\101_3.tif,374,388,uint8
+DB1_B,101_3.tif,step0,58.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_3.tif,stage1,58.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_3.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_3.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_4.tif,raw,30.0,,data\raw\DB1_B\101_4.tif,374,388,uint8
+DB1_B,101_4.tif,step0,30.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_4.tif,stage1,38.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_4.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_4.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_5.tif,raw,25.0,,data\raw\DB1_B\101_5.tif,374,388,uint8
+DB1_B,101_5.tif,step0,25.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_5.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_5.tif,stage2,29.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_5.tif,stage3,31.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_6.tif,raw,86.0,,data\raw\DB1_B\101_6.tif,374,388,uint8
+DB1_B,101_6.tif,step0,86.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_6.tif,stage1,83.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_6.tif,stage2,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_6.tif,stage3,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_7.tif,raw,65.0,,data\raw\DB1_B\101_7.tif,374,388,uint8
+DB1_B,101_7.tif,step0,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_7.tif,stage1,54.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_7.tif,stage2,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_7.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_8.tif,raw,38.0,,data\raw\DB1_B\101_8.tif,374,388,uint8
+DB1_B,101_8.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_8.tif,stage1,46.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_8.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,101_8.tif,stage3,42.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_1.tif,raw,66.0,,data\raw\DB1_B\102_1.tif,374,388,uint8
+DB1_B,102_1.tif,step0,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_1.tif,stage1,81.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_1.tif,stage2,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_1.tif,stage3,78.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_2.tif,raw,69.0,,data\raw\DB1_B\102_2.tif,374,388,uint8
+DB1_B,102_2.tif,step0,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_2.tif,stage1,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_2.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_2.tif,stage3,57.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_3.tif,raw,53.0,,data\raw\DB1_B\102_3.tif,374,388,uint8
+DB1_B,102_3.tif,step0,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_3.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_3.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_3.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_4.tif,raw,84.0,,data\raw\DB1_B\102_4.tif,374,388,uint8
+DB1_B,102_4.tif,step0,84.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_4.tif,stage1,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_4.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_4.tif,stage3,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_5.tif,raw,49.0,,data\raw\DB1_B\102_5.tif,374,388,uint8
+DB1_B,102_5.tif,step0,49.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_5.tif,stage1,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_5.tif,stage2,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_5.tif,stage3,50.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_6.tif,raw,87.0,,data\raw\DB1_B\102_6.tif,374,388,uint8
+DB1_B,102_6.tif,step0,87.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_6.tif,stage1,88.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_6.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_6.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_7.tif,raw,31.0,,data\raw\DB1_B\102_7.tif,374,388,uint8
+DB1_B,102_7.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_7.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_7.tif,stage2,47.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_7.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_8.tif,raw,47.0,,data\raw\DB1_B\102_8.tif,374,388,uint8
+DB1_B,102_8.tif,step0,47.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_8.tif,stage1,45.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_8.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,102_8.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_1.tif,raw,62.0,,data\raw\DB1_B\103_1.tif,374,388,uint8
+DB1_B,103_1.tif,step0,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_1.tif,stage1,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_1.tif,stage2,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_1.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_2.tif,raw,67.0,,data\raw\DB1_B\103_2.tif,374,388,uint8
+DB1_B,103_2.tif,step0,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_2.tif,stage1,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_2.tif,stage2,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_2.tif,stage3,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_3.tif,raw,70.0,,data\raw\DB1_B\103_3.tif,374,388,uint8
+DB1_B,103_3.tif,step0,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_3.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_3.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_3.tif,stage3,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_4.tif,raw,31.0,,data\raw\DB1_B\103_4.tif,374,388,uint8
+DB1_B,103_4.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_4.tif,stage1,32.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_4.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_4.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_5.tif,raw,67.0,,data\raw\DB1_B\103_5.tif,374,388,uint8
+DB1_B,103_5.tif,step0,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_5.tif,stage1,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_5.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_5.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_6.tif,raw,76.0,,data\raw\DB1_B\103_6.tif,374,388,uint8
+DB1_B,103_6.tif,step0,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_6.tif,stage1,82.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_6.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_6.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_7.tif,raw,59.0,,data\raw\DB1_B\103_7.tif,374,388,uint8
+DB1_B,103_7.tif,step0,59.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_7.tif,stage1,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_7.tif,stage2,59.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_7.tif,stage3,63.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_8.tif,raw,42.0,,data\raw\DB1_B\103_8.tif,374,388,uint8
+DB1_B,103_8.tif,step0,42.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_8.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_8.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,103_8.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_1.tif,raw,79.0,,data\raw\DB1_B\104_1.tif,374,388,uint8
+DB1_B,104_1.tif,step0,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_1.tif,stage1,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_1.tif,stage2,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_1.tif,stage3,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_2.tif,raw,74.0,,data\raw\DB1_B\104_2.tif,374,388,uint8
+DB1_B,104_2.tif,step0,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_2.tif,stage1,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_2.tif,stage2,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_2.tif,stage3,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_3.tif,raw,74.0,,data\raw\DB1_B\104_3.tif,374,388,uint8
+DB1_B,104_3.tif,step0,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_3.tif,stage1,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_3.tif,stage2,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_3.tif,stage3,63.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_4.tif,raw,73.0,,data\raw\DB1_B\104_4.tif,374,388,uint8
+DB1_B,104_4.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_4.tif,stage1,88.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_4.tif,stage2,84.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_4.tif,stage3,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_5.tif,raw,66.0,,data\raw\DB1_B\104_5.tif,374,388,uint8
+DB1_B,104_5.tif,step0,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_5.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_5.tif,stage2,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_5.tif,stage3,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_6.tif,raw,63.0,,data\raw\DB1_B\104_6.tif,374,388,uint8
+DB1_B,104_6.tif,step0,63.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_6.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_6.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_6.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_7.tif,raw,76.0,,data\raw\DB1_B\104_7.tif,374,388,uint8
+DB1_B,104_7.tif,step0,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_7.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_7.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_7.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_8.tif,raw,69.0,,data\raw\DB1_B\104_8.tif,374,388,uint8
+DB1_B,104_8.tif,step0,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_8.tif,stage1,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_8.tif,stage2,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,104_8.tif,stage3,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_1.tif,raw,48.0,,data\raw\DB1_B\105_1.tif,374,388,uint8
+DB1_B,105_1.tif,step0,48.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_1.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_1.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_1.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_2.tif,raw,80.0,,data\raw\DB1_B\105_2.tif,374,388,uint8
+DB1_B,105_2.tif,step0,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_2.tif,stage1,86.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_2.tif,stage2,87.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_2.tif,stage3,83.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_3.tif,raw,77.0,,data\raw\DB1_B\105_3.tif,374,388,uint8
+DB1_B,105_3.tif,step0,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_3.tif,stage1,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_3.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_3.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_4.tif,raw,55.0,,data\raw\DB1_B\105_4.tif,374,388,uint8
+DB1_B,105_4.tif,step0,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_4.tif,stage1,59.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_4.tif,stage2,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_4.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_5.tif,raw,64.0,,data\raw\DB1_B\105_5.tif,374,388,uint8
+DB1_B,105_5.tif,step0,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_5.tif,stage1,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_5.tif,stage2,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_5.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_6.tif,raw,50.0,,data\raw\DB1_B\105_6.tif,374,388,uint8
+DB1_B,105_6.tif,step0,50.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_6.tif,stage1,46.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_6.tif,stage2,44.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_6.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_7.tif,raw,73.0,,data\raw\DB1_B\105_7.tif,374,388,uint8
+DB1_B,105_7.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_7.tif,stage1,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_7.tif,stage2,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_7.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_8.tif,raw,64.0,,data\raw\DB1_B\105_8.tif,374,388,uint8
+DB1_B,105_8.tif,step0,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_8.tif,stage1,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_8.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,105_8.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_1.tif,raw,81.0,,data\raw\DB1_B\106_1.tif,374,388,uint8
+DB1_B,106_1.tif,step0,81.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_1.tif,stage1,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_1.tif,stage2,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_1.tif,stage3,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_2.tif,raw,73.0,,data\raw\DB1_B\106_2.tif,374,388,uint8
+DB1_B,106_2.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_2.tif,stage1,89.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_2.tif,stage2,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_2.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_3.tif,raw,79.0,,data\raw\DB1_B\106_3.tif,374,388,uint8
+DB1_B,106_3.tif,step0,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_3.tif,stage1,83.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_3.tif,stage2,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_3.tif,stage3,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_4.tif,raw,77.0,,data\raw\DB1_B\106_4.tif,374,388,uint8
+DB1_B,106_4.tif,step0,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_4.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_4.tif,stage2,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_4.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_5.tif,raw,71.0,,data\raw\DB1_B\106_5.tif,374,388,uint8
+DB1_B,106_5.tif,step0,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_5.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_5.tif,stage2,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_5.tif,stage3,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_6.tif,raw,72.0,,data\raw\DB1_B\106_6.tif,374,388,uint8
+DB1_B,106_6.tif,step0,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_6.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_6.tif,stage2,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_6.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_7.tif,raw,76.0,,data\raw\DB1_B\106_7.tif,374,388,uint8
+DB1_B,106_7.tif,step0,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_7.tif,stage1,82.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_7.tif,stage2,83.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_7.tif,stage3,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_8.tif,raw,71.0,,data\raw\DB1_B\106_8.tif,374,388,uint8
+DB1_B,106_8.tif,step0,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_8.tif,stage1,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_8.tif,stage2,78.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,106_8.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_1.tif,raw,71.0,,data\raw\DB1_B\107_1.tif,374,388,uint8
+DB1_B,107_1.tif,step0,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_1.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_1.tif,stage2,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_1.tif,stage3,85.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_2.tif,raw,74.0,,data\raw\DB1_B\107_2.tif,374,388,uint8
+DB1_B,107_2.tif,step0,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_2.tif,stage1,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_2.tif,stage2,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_2.tif,stage3,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_3.tif,raw,54.0,,data\raw\DB1_B\107_3.tif,374,388,uint8
+DB1_B,107_3.tif,step0,54.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_3.tif,stage1,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_3.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_3.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_4.tif,raw,73.0,,data\raw\DB1_B\107_4.tif,374,388,uint8
+DB1_B,107_4.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_4.tif,stage1,84.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_4.tif,stage2,63.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_4.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_5.tif,raw,60.0,,data\raw\DB1_B\107_5.tif,374,388,uint8
+DB1_B,107_5.tif,step0,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_5.tif,stage1,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_5.tif,stage2,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_5.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_6.tif,raw,73.0,,data\raw\DB1_B\107_6.tif,374,388,uint8
+DB1_B,107_6.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_6.tif,stage1,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_6.tif,stage2,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_6.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_7.tif,raw,76.0,,data\raw\DB1_B\107_7.tif,374,388,uint8
+DB1_B,107_7.tif,step0,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_7.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_7.tif,stage2,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_7.tif,stage3,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_8.tif,raw,51.0,,data\raw\DB1_B\107_8.tif,374,388,uint8
+DB1_B,107_8.tif,step0,51.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_8.tif,stage1,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_8.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,107_8.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_1.tif,raw,71.0,,data\raw\DB1_B\108_1.tif,374,388,uint8
+DB1_B,108_1.tif,step0,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_1.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_1.tif,stage2,78.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_1.tif,stage3,81.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_2.tif,raw,79.0,,data\raw\DB1_B\108_2.tif,374,388,uint8
+DB1_B,108_2.tif,step0,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_2.tif,stage1,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_2.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_2.tif,stage3,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_3.tif,raw,82.0,,data\raw\DB1_B\108_3.tif,374,388,uint8
+DB1_B,108_3.tif,step0,82.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_3.tif,stage1,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_3.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_3.tif,stage3,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_4.tif,raw,75.0,,data\raw\DB1_B\108_4.tif,374,388,uint8
+DB1_B,108_4.tif,step0,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_4.tif,stage1,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_4.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_4.tif,stage3,81.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_5.tif,raw,44.0,,data\raw\DB1_B\108_5.tif,374,388,uint8
+DB1_B,108_5.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_5.tif,stage1,71.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_5.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_5.tif,stage3,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_6.tif,raw,78.0,,data\raw\DB1_B\108_6.tif,374,388,uint8
+DB1_B,108_6.tif,step0,78.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_6.tif,stage1,82.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_6.tif,stage2,85.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_6.tif,stage3,85.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_7.tif,raw,68.0,,data\raw\DB1_B\108_7.tif,374,388,uint8
+DB1_B,108_7.tif,step0,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_7.tif,stage1,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_7.tif,stage2,76.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_7.tif,stage3,92.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_8.tif,raw,79.0,,data\raw\DB1_B\108_8.tif,374,388,uint8
+DB1_B,108_8.tif,step0,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_8.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_8.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,108_8.tif,stage3,90.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_1.tif,raw,42.0,,data\raw\DB1_B\109_1.tif,374,388,uint8
+DB1_B,109_1.tif,step0,42.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_1.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_1.tif,stage2,49.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_1.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_2.tif,raw,67.0,,data\raw\DB1_B\109_2.tif,374,388,uint8
+DB1_B,109_2.tif,step0,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_2.tif,stage1,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_2.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_2.tif,stage3,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_3.tif,raw,37.0,,data\raw\DB1_B\109_3.tif,374,388,uint8
+DB1_B,109_3.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_3.tif,stage1,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_3.tif,stage2,54.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_3.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_4.tif,raw,27.0,,data\raw\DB1_B\109_4.tif,374,388,uint8
+DB1_B,109_4.tif,step0,27.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_4.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_4.tif,stage2,27.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_4.tif,stage3,33.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_5.tif,raw,57.0,,data\raw\DB1_B\109_5.tif,374,388,uint8
+DB1_B,109_5.tif,step0,57.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_5.tif,stage1,68.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_5.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_5.tif,stage3,74.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_6.tif,raw,15.0,,data\raw\DB1_B\109_6.tif,374,388,uint8
+DB1_B,109_6.tif,step0,15.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_6.tif,stage1,28.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_6.tif,stage2,24.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_6.tif,stage3,33.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_7.tif,raw,65.0,,data\raw\DB1_B\109_7.tif,374,388,uint8
+DB1_B,109_7.tif,step0,65.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_7.tif,stage1,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_7.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_7.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_8.tif,raw,33.0,,data\raw\DB1_B\109_8.tif,374,388,uint8
+DB1_B,109_8.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_8.tif,stage1,48.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_8.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,109_8.tif,stage3,57.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_1.tif,raw,49.0,,data\raw\DB1_B\110_1.tif,374,388,uint8
+DB1_B,110_1.tif,step0,49.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_1.tif,stage1,51.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_1.tif,stage2,57.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_1.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_2.tif,raw,53.0,,data\raw\DB1_B\110_2.tif,374,388,uint8
+DB1_B,110_2.tif,step0,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_2.tif,stage1,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_2.tif,stage2,60.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_2.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_3.tif,raw,53.0,,data\raw\DB1_B\110_3.tif,374,388,uint8
+DB1_B,110_3.tif,step0,53.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_3.tif,stage1,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_3.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_3.tif,stage3,77.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_4.tif,raw,51.0,,data\raw\DB1_B\110_4.tif,374,388,uint8
+DB1_B,110_4.tif,step0,51.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_4.tif,stage1,73.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_4.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_4.tif,stage3,67.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_5.tif,raw,55.0,,data\raw\DB1_B\110_5.tif,374,388,uint8
+DB1_B,110_5.tif,step0,55.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_5.tif,stage1,58.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_5.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_5.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_6.tif,raw,54.0,,data\raw\DB1_B\110_6.tif,374,388,uint8
+DB1_B,110_6.tif,step0,54.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_6.tif,stage1,57.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_6.tif,stage2,58.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_6.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_7.tif,raw,81.0,,data\raw\DB1_B\110_7.tif,374,388,uint8
+DB1_B,110_7.tif,step0,81.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_7.tif,stage1,84.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_7.tif,stage2,80.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_7.tif,stage3,79.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_8.tif,raw,61.0,,data\raw\DB1_B\110_8.tif,374,388,uint8
+DB1_B,110_8.tif,step0,61.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_8.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_8.tif,stage2,82.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB1_B,110_8.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,374,388,uint8
+DB2_B,101_1.tif,raw,71.0,,data\raw\DB2_B\101_1.tif,560,296,uint8
+DB2_B,101_1.tif,step0,71.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_1.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_1.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_1.tif,stage3,74.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_2.tif,raw,70.0,,data\raw\DB2_B\101_2.tif,560,296,uint8
+DB2_B,101_2.tif,step0,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_2.tif,stage1,84.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_2.tif,stage2,77.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_2.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_3.tif,raw,59.0,,data\raw\DB2_B\101_3.tif,560,296,uint8
+DB2_B,101_3.tif,step0,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_3.tif,stage1,65.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_3.tif,stage2,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_3.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_4.tif,raw,68.0,,data\raw\DB2_B\101_4.tif,560,296,uint8
+DB2_B,101_4.tif,step0,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_4.tif,stage1,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_4.tif,stage2,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_4.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_5.tif,raw,75.0,,data\raw\DB2_B\101_5.tif,560,296,uint8
+DB2_B,101_5.tif,step0,75.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_5.tif,stage1,80.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_5.tif,stage2,72.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_5.tif,stage3,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_6.tif,raw,63.0,,data\raw\DB2_B\101_6.tif,560,296,uint8
+DB2_B,101_6.tif,step0,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_6.tif,stage1,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_6.tif,stage2,71.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_6.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_7.tif,raw,21.0,,data\raw\DB2_B\101_7.tif,560,296,uint8
+DB2_B,101_7.tif,step0,21.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_7.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_7.tif,stage2,39.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_7.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_8.tif,raw,21.0,,data\raw\DB2_B\101_8.tif,560,296,uint8
+DB2_B,101_8.tif,step0,21.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_8.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_8.tif,stage2,29.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,101_8.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_1.tif,raw,68.0,,data\raw\DB2_B\102_1.tif,560,296,uint8
+DB2_B,102_1.tif,step0,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_1.tif,stage1,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_1.tif,stage2,73.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_1.tif,stage3,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_2.tif,raw,63.0,,data\raw\DB2_B\102_2.tif,560,296,uint8
+DB2_B,102_2.tif,step0,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_2.tif,stage1,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_2.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_2.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_3.tif,raw,63.0,,data\raw\DB2_B\102_3.tif,560,296,uint8
+DB2_B,102_3.tif,step0,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_3.tif,stage1,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_3.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_3.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_4.tif,raw,60.0,,data\raw\DB2_B\102_4.tif,560,296,uint8
+DB2_B,102_4.tif,step0,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_4.tif,stage1,67.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_4.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_4.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_5.tif,raw,73.0,,data\raw\DB2_B\102_5.tif,560,296,uint8
+DB2_B,102_5.tif,step0,73.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_5.tif,stage1,85.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_5.tif,stage2,84.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_5.tif,stage3,78.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_6.tif,raw,66.0,,data\raw\DB2_B\102_6.tif,560,296,uint8
+DB2_B,102_6.tif,step0,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_6.tif,stage1,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_6.tif,stage2,74.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_6.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_7.tif,raw,78.0,,data\raw\DB2_B\102_7.tif,560,296,uint8
+DB2_B,102_7.tif,step0,78.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_7.tif,stage1,86.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_7.tif,stage2,65.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_7.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_8.tif,raw,57.0,,data\raw\DB2_B\102_8.tif,560,296,uint8
+DB2_B,102_8.tif,step0,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_8.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_8.tif,stage2,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,102_8.tif,stage3,76.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_1.tif,raw,56.0,,data\raw\DB2_B\103_1.tif,560,296,uint8
+DB2_B,103_1.tif,step0,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_1.tif,stage1,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_1.tif,stage2,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_1.tif,stage3,65.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_2.tif,raw,48.0,,data\raw\DB2_B\103_2.tif,560,296,uint8
+DB2_B,103_2.tif,step0,48.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_2.tif,stage1,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_2.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_2.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_3.tif,raw,56.0,,data\raw\DB2_B\103_3.tif,560,296,uint8
+DB2_B,103_3.tif,step0,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_3.tif,stage1,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_3.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_3.tif,stage3,67.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_4.tif,raw,55.0,,data\raw\DB2_B\103_4.tif,560,296,uint8
+DB2_B,103_4.tif,step0,55.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_4.tif,stage1,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_4.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_4.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_5.tif,raw,40.0,,data\raw\DB2_B\103_5.tif,560,296,uint8
+DB2_B,103_5.tif,step0,40.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_5.tif,stage1,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_5.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_5.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_6.tif,raw,48.0,,data\raw\DB2_B\103_6.tif,560,296,uint8
+DB2_B,103_6.tif,step0,48.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_6.tif,stage1,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_6.tif,stage2,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_6.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_7.tif,raw,49.0,,data\raw\DB2_B\103_7.tif,560,296,uint8
+DB2_B,103_7.tif,step0,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_7.tif,stage1,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_7.tif,stage2,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_7.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_8.tif,raw,38.0,,data\raw\DB2_B\103_8.tif,560,296,uint8
+DB2_B,103_8.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_8.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_8.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,103_8.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_1.tif,raw,58.0,,data\raw\DB2_B\104_1.tif,560,296,uint8
+DB2_B,104_1.tif,step0,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_1.tif,stage1,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_1.tif,stage2,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_1.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_2.tif,raw,64.0,,data\raw\DB2_B\104_2.tif,560,296,uint8
+DB2_B,104_2.tif,step0,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_2.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_2.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_2.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_3.tif,raw,82.0,,data\raw\DB2_B\104_3.tif,560,296,uint8
+DB2_B,104_3.tif,step0,82.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_3.tif,stage1,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_3.tif,stage2,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_3.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_4.tif,raw,65.0,,data\raw\DB2_B\104_4.tif,560,296,uint8
+DB2_B,104_4.tif,step0,65.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_4.tif,stage1,50.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_4.tif,stage2,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_4.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_5.tif,raw,54.0,,data\raw\DB2_B\104_5.tif,560,296,uint8
+DB2_B,104_5.tif,step0,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_5.tif,stage1,48.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_5.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_5.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_6.tif,raw,61.0,,data\raw\DB2_B\104_6.tif,560,296,uint8
+DB2_B,104_6.tif,step0,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_6.tif,stage1,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_6.tif,stage2,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_6.tif,stage3,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_7.tif,raw,69.0,,data\raw\DB2_B\104_7.tif,560,296,uint8
+DB2_B,104_7.tif,step0,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_7.tif,stage1,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_7.tif,stage2,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_7.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_8.tif,raw,17.0,,data\raw\DB2_B\104_8.tif,560,296,uint8
+DB2_B,104_8.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_8.tif,stage1,18.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_8.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,104_8.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_1.tif,raw,62.0,,data\raw\DB2_B\105_1.tif,560,296,uint8
+DB2_B,105_1.tif,step0,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_1.tif,stage1,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_1.tif,stage2,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_1.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_2.tif,raw,63.0,,data\raw\DB2_B\105_2.tif,560,296,uint8
+DB2_B,105_2.tif,step0,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_2.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_2.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_2.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_3.tif,raw,59.0,,data\raw\DB2_B\105_3.tif,560,296,uint8
+DB2_B,105_3.tif,step0,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_3.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_3.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_3.tif,stage3,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_4.tif,raw,56.0,,data\raw\DB2_B\105_4.tif,560,296,uint8
+DB2_B,105_4.tif,step0,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_4.tif,stage1,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_4.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_4.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_5.tif,raw,31.0,,data\raw\DB2_B\105_5.tif,560,296,uint8
+DB2_B,105_5.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_5.tif,stage1,21.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_5.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_5.tif,stage3,30.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_6.tif,raw,52.0,,data\raw\DB2_B\105_6.tif,560,296,uint8
+DB2_B,105_6.tif,step0,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_6.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_6.tif,stage2,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_6.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_7.tif,raw,32.0,,data\raw\DB2_B\105_7.tif,560,296,uint8
+DB2_B,105_7.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_7.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_7.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_7.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_8.tif,raw,38.0,,data\raw\DB2_B\105_8.tif,560,296,uint8
+DB2_B,105_8.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_8.tif,stage1,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_8.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,105_8.tif,stage3,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_1.tif,raw,44.0,,data\raw\DB2_B\106_1.tif,560,296,uint8
+DB2_B,106_1.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_1.tif,stage1,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_1.tif,stage2,67.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_1.tif,stage3,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_2.tif,raw,68.0,,data\raw\DB2_B\106_2.tif,560,296,uint8
+DB2_B,106_2.tif,step0,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_2.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_2.tif,stage2,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_2.tif,stage3,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_3.tif,raw,66.0,,data\raw\DB2_B\106_3.tif,560,296,uint8
+DB2_B,106_3.tif,step0,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_3.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_3.tif,stage2,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_3.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_4.tif,raw,52.0,,data\raw\DB2_B\106_4.tif,560,296,uint8
+DB2_B,106_4.tif,step0,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_4.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_4.tif,stage2,47.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_4.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_5.tif,raw,55.0,,data\raw\DB2_B\106_5.tif,560,296,uint8
+DB2_B,106_5.tif,step0,55.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_5.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_5.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_5.tif,stage3,65.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_6.tif,raw,43.0,,data\raw\DB2_B\106_6.tif,560,296,uint8
+DB2_B,106_6.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_6.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_6.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_6.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_7.tif,raw,59.0,,data\raw\DB2_B\106_7.tif,560,296,uint8
+DB2_B,106_7.tif,step0,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_7.tif,stage1,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_7.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_7.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_8.tif,raw,50.0,,data\raw\DB2_B\106_8.tif,560,296,uint8
+DB2_B,106_8.tif,step0,50.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_8.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_8.tif,stage2,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,106_8.tif,stage3,73.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_1.tif,raw,36.0,,data\raw\DB2_B\107_1.tif,560,296,uint8
+DB2_B,107_1.tif,step0,36.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_1.tif,stage1,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_1.tif,stage2,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_1.tif,stage3,71.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_2.tif,raw,64.0,,data\raw\DB2_B\107_2.tif,560,296,uint8
+DB2_B,107_2.tif,step0,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_2.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_2.tif,stage2,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_2.tif,stage3,71.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_3.tif,raw,74.0,,data\raw\DB2_B\107_3.tif,560,296,uint8
+DB2_B,107_3.tif,step0,74.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_3.tif,stage1,75.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_3.tif,stage2,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_3.tif,stage3,82.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_4.tif,raw,64.0,,data\raw\DB2_B\107_4.tif,560,296,uint8
+DB2_B,107_4.tif,step0,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_4.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_4.tif,stage2,71.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_4.tif,stage3,70.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_5.tif,raw,34.0,,data\raw\DB2_B\107_5.tif,560,296,uint8
+DB2_B,107_5.tif,step0,34.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_5.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_5.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_5.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_6.tif,raw,33.0,,data\raw\DB2_B\107_6.tif,560,296,uint8
+DB2_B,107_6.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_6.tif,stage1,45.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_6.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_6.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_7.tif,raw,53.0,,data\raw\DB2_B\107_7.tif,560,296,uint8
+DB2_B,107_7.tif,step0,53.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_7.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_7.tif,stage2,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_7.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_8.tif,raw,66.0,,data\raw\DB2_B\107_8.tif,560,296,uint8
+DB2_B,107_8.tif,step0,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_8.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_8.tif,stage2,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,107_8.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_1.tif,raw,61.0,,data\raw\DB2_B\108_1.tif,560,296,uint8
+DB2_B,108_1.tif,step0,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_1.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_1.tif,stage2,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_1.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_2.tif,raw,58.0,,data\raw\DB2_B\108_2.tif,560,296,uint8
+DB2_B,108_2.tif,step0,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_2.tif,stage1,69.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_2.tif,stage2,80.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_2.tif,stage3,80.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_3.tif,raw,46.0,,data\raw\DB2_B\108_3.tif,560,296,uint8
+DB2_B,108_3.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_3.tif,stage1,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_3.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_3.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_4.tif,raw,55.0,,data\raw\DB2_B\108_4.tif,560,296,uint8
+DB2_B,108_4.tif,step0,55.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_4.tif,stage1,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_4.tif,stage2,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_4.tif,stage3,66.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_5.tif,raw,52.0,,data\raw\DB2_B\108_5.tif,560,296,uint8
+DB2_B,108_5.tif,step0,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_5.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_5.tif,stage2,49.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_5.tif,stage3,57.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_6.tif,raw,58.0,,data\raw\DB2_B\108_6.tif,560,296,uint8
+DB2_B,108_6.tif,step0,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_6.tif,stage1,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_6.tif,stage2,58.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_6.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_7.tif,raw,68.0,,data\raw\DB2_B\108_7.tif,560,296,uint8
+DB2_B,108_7.tif,step0,68.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_7.tif,stage1,64.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_7.tif,stage2,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_7.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_8.tif,raw,35.0,,data\raw\DB2_B\108_8.tif,560,296,uint8
+DB2_B,108_8.tif,step0,35.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_8.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_8.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,108_8.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_1.tif,raw,32.0,,data\raw\DB2_B\109_1.tif,560,296,uint8
+DB2_B,109_1.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_1.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_1.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_1.tif,stage3,23.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_2.tif,raw,47.0,,data\raw\DB2_B\109_2.tif,560,296,uint8
+DB2_B,109_2.tif,step0,47.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_2.tif,stage1,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_2.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_2.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_3.tif,raw,48.0,,data\raw\DB2_B\109_3.tif,560,296,uint8
+DB2_B,109_3.tif,step0,48.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_3.tif,stage1,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_3.tif,stage2,61.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_3.tif,stage3,62.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_4.tif,raw,41.0,,data\raw\DB2_B\109_4.tif,560,296,uint8
+DB2_B,109_4.tif,step0,41.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_4.tif,stage1,63.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_4.tif,stage2,54.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_4.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_5.tif,raw,52.0,,data\raw\DB2_B\109_5.tif,560,296,uint8
+DB2_B,109_5.tif,step0,52.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_5.tif,stage1,50.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_5.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_5.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_6.tif,raw,17.0,,data\raw\DB2_B\109_6.tif,560,296,uint8
+DB2_B,109_6.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_6.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_6.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_6.tif,stage3,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_7.tif,raw,21.0,,data\raw\DB2_B\109_7.tif,560,296,uint8
+DB2_B,109_7.tif,step0,21.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_7.tif,stage1,29.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_7.tif,stage2,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_7.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_8.tif,raw,9.0,,data\raw\DB2_B\109_8.tif,560,296,uint8
+DB2_B,109_8.tif,step0,9.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_8.tif,stage1,16.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_8.tif,stage2,10.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,109_8.tif,stage3,14.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_1.tif,raw,47.0,,data\raw\DB2_B\110_1.tif,560,296,uint8
+DB2_B,110_1.tif,step0,47.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_1.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_1.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_1.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_2.tif,raw,43.0,,data\raw\DB2_B\110_2.tif,560,296,uint8
+DB2_B,110_2.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_2.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_2.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_2.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_3.tif,raw,33.0,,data\raw\DB2_B\110_3.tif,560,296,uint8
+DB2_B,110_3.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_3.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_3.tif,stage2,44.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_3.tif,stage3,42.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_4.tif,raw,30.0,,data\raw\DB2_B\110_4.tif,560,296,uint8
+DB2_B,110_4.tif,step0,30.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_4.tif,stage1,32.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_4.tif,stage2,26.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_4.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_5.tif,raw,33.0,,data\raw\DB2_B\110_5.tif,560,296,uint8
+DB2_B,110_5.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_5.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_5.tif,stage2,28.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_5.tif,stage3,31.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_6.tif,raw,24.0,,data\raw\DB2_B\110_6.tif,560,296,uint8
+DB2_B,110_6.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_6.tif,stage1,27.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_6.tif,stage2,17.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_6.tif,stage3,29.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_7.tif,raw,26.0,,data\raw\DB2_B\110_7.tif,560,296,uint8
+DB2_B,110_7.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_7.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_7.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_7.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_8.tif,raw,10.0,,data\raw\DB2_B\110_8.tif,560,296,uint8
+DB2_B,110_8.tif,step0,10.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_8.tif,stage1,8.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_8.tif,stage2,15.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB2_B,110_8.tif,stage3,23.0,,temporary original-size grayscale uint8 TIFF,560,296,uint8
+DB3_B,101_1.tif,raw,40.0,,data\raw\DB3_B\101_1.tif,300,300,uint8
+DB3_B,101_1.tif,step0,40.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_1.tif,stage1,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_1.tif,stage2,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_1.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_2.tif,raw,32.0,,data\raw\DB3_B\101_2.tif,300,300,uint8
+DB3_B,101_2.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_2.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_2.tif,stage2,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_2.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_3.tif,raw,38.0,,data\raw\DB3_B\101_3.tif,300,300,uint8
+DB3_B,101_3.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_3.tif,stage1,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_3.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_3.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_4.tif,raw,17.0,,data\raw\DB3_B\101_4.tif,300,300,uint8
+DB3_B,101_4.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_4.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_4.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_4.tif,stage3,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_5.tif,raw,42.0,,data\raw\DB3_B\101_5.tif,300,300,uint8
+DB3_B,101_5.tif,step0,42.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_5.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_5.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_5.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_6.tif,raw,38.0,,data\raw\DB3_B\101_6.tif,300,300,uint8
+DB3_B,101_6.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_6.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_6.tif,stage2,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_6.tif,stage3,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_7.tif,raw,30.0,,data\raw\DB3_B\101_7.tif,300,300,uint8
+DB3_B,101_7.tif,step0,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_7.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_7.tif,stage2,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_7.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_8.tif,raw,20.0,,data\raw\DB3_B\101_8.tif,300,300,uint8
+DB3_B,101_8.tif,step0,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_8.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_8.tif,stage2,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,101_8.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_1.tif,raw,21.0,,data\raw\DB3_B\102_1.tif,300,300,uint8
+DB3_B,102_1.tif,step0,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_1.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_1.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_1.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_2.tif,raw,19.0,,data\raw\DB3_B\102_2.tif,300,300,uint8
+DB3_B,102_2.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_2.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_2.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_2.tif,stage3,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_3.tif,raw,21.0,,data\raw\DB3_B\102_3.tif,300,300,uint8
+DB3_B,102_3.tif,step0,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_3.tif,stage1,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_3.tif,stage2,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_3.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_4.tif,raw,26.0,,data\raw\DB3_B\102_4.tif,300,300,uint8
+DB3_B,102_4.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_4.tif,stage1,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_4.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_4.tif,stage3,50.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_5.tif,raw,44.0,,data\raw\DB3_B\102_5.tif,300,300,uint8
+DB3_B,102_5.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_5.tif,stage1,41.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_5.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_5.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_6.tif,raw,45.0,,data\raw\DB3_B\102_6.tif,300,300,uint8
+DB3_B,102_6.tif,step0,45.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_6.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_6.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_6.tif,stage3,72.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_7.tif,raw,12.0,,data\raw\DB3_B\102_7.tif,300,300,uint8
+DB3_B,102_7.tif,step0,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_7.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_7.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_7.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_8.tif,raw,15.0,,data\raw\DB3_B\102_8.tif,300,300,uint8
+DB3_B,102_8.tif,step0,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_8.tif,stage1,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_8.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,102_8.tif,stage3,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_1.tif,raw,30.0,,data\raw\DB3_B\103_1.tif,300,300,uint8
+DB3_B,103_1.tif,step0,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_1.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_1.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_1.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_2.tif,raw,28.0,,data\raw\DB3_B\103_2.tif,300,300,uint8
+DB3_B,103_2.tif,step0,28.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_2.tif,stage1,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_2.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_2.tif,stage3,50.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_3.tif,raw,36.0,,data\raw\DB3_B\103_3.tif,300,300,uint8
+DB3_B,103_3.tif,step0,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_3.tif,stage1,51.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_3.tif,stage2,27.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_3.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_4.tif,raw,52.0,,data\raw\DB3_B\103_4.tif,300,300,uint8
+DB3_B,103_4.tif,step0,52.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_4.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_4.tif,stage2,55.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_4.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_5.tif,raw,38.0,,data\raw\DB3_B\103_5.tif,300,300,uint8
+DB3_B,103_5.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_5.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_5.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_5.tif,stage3,40.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_6.tif,raw,14.0,,data\raw\DB3_B\103_6.tif,300,300,uint8
+DB3_B,103_6.tif,step0,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_6.tif,stage1,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_6.tif,stage2,41.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_6.tif,stage3,57.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_7.tif,raw,28.0,,data\raw\DB3_B\103_7.tif,300,300,uint8
+DB3_B,103_7.tif,step0,28.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_7.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_7.tif,stage2,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_7.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_8.tif,raw,20.0,,data\raw\DB3_B\103_8.tif,300,300,uint8
+DB3_B,103_8.tif,step0,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_8.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_8.tif,stage2,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,103_8.tif,stage3,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_1.tif,raw,34.0,,data\raw\DB3_B\104_1.tif,300,300,uint8
+DB3_B,104_1.tif,step0,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_1.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_1.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_1.tif,stage3,41.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_2.tif,raw,34.0,,data\raw\DB3_B\104_2.tif,300,300,uint8
+DB3_B,104_2.tif,step0,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_2.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_2.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_2.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_3.tif,raw,19.0,,data\raw\DB3_B\104_3.tif,300,300,uint8
+DB3_B,104_3.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_3.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_3.tif,stage2,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_3.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_4.tif,raw,18.0,,data\raw\DB3_B\104_4.tif,300,300,uint8
+DB3_B,104_4.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_4.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_4.tif,stage2,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_4.tif,stage3,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_5.tif,raw,39.0,,data\raw\DB3_B\104_5.tif,300,300,uint8
+DB3_B,104_5.tif,step0,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_5.tif,stage1,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_5.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_5.tif,stage3,64.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_6.tif,raw,26.0,,data\raw\DB3_B\104_6.tif,300,300,uint8
+DB3_B,104_6.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_6.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_6.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_6.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_7.tif,raw,23.0,,data\raw\DB3_B\104_7.tif,300,300,uint8
+DB3_B,104_7.tif,step0,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_7.tif,stage1,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_7.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_7.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_8.tif,raw,26.0,,data\raw\DB3_B\104_8.tif,300,300,uint8
+DB3_B,104_8.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_8.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_8.tif,stage2,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,104_8.tif,stage3,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_1.tif,raw,15.0,,data\raw\DB3_B\105_1.tif,300,300,uint8
+DB3_B,105_1.tif,step0,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_1.tif,stage1,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_1.tif,stage2,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_1.tif,stage3,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_2.tif,raw,20.0,,data\raw\DB3_B\105_2.tif,300,300,uint8
+DB3_B,105_2.tif,step0,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_2.tif,stage1,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_2.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_2.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_3.tif,raw,18.0,,data\raw\DB3_B\105_3.tif,300,300,uint8
+DB3_B,105_3.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_3.tif,stage1,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_3.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_3.tif,stage3,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_4.tif,raw,48.0,,data\raw\DB3_B\105_4.tif,300,300,uint8
+DB3_B,105_4.tif,step0,48.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_4.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_4.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_4.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_5.tif,raw,35.0,,data\raw\DB3_B\105_5.tif,300,300,uint8
+DB3_B,105_5.tif,step0,35.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_5.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_5.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_5.tif,stage3,49.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_6.tif,raw,33.0,,data\raw\DB3_B\105_6.tif,300,300,uint8
+DB3_B,105_6.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_6.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_6.tif,stage2,48.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_6.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_7.tif,raw,32.0,,data\raw\DB3_B\105_7.tif,300,300,uint8
+DB3_B,105_7.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_7.tif,stage1,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_7.tif,stage2,29.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_7.tif,stage3,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_8.tif,raw,32.0,,data\raw\DB3_B\105_8.tif,300,300,uint8
+DB3_B,105_8.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_8.tif,stage1,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_8.tif,stage2,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,105_8.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_1.tif,raw,34.0,,data\raw\DB3_B\106_1.tif,300,300,uint8
+DB3_B,106_1.tif,step0,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_1.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_1.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_1.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_2.tif,raw,32.0,,data\raw\DB3_B\106_2.tif,300,300,uint8
+DB3_B,106_2.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_2.tif,stage1,29.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_2.tif,stage2,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_2.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_3.tif,raw,29.0,,data\raw\DB3_B\106_3.tif,300,300,uint8
+DB3_B,106_3.tif,step0,29.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_3.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_3.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_3.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_4.tif,raw,40.0,,data\raw\DB3_B\106_4.tif,300,300,uint8
+DB3_B,106_4.tif,step0,40.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_4.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_4.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_4.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_5.tif,raw,19.0,,data\raw\DB3_B\106_5.tif,300,300,uint8
+DB3_B,106_5.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_5.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_5.tif,stage2,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_5.tif,stage3,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_6.tif,raw,22.0,,data\raw\DB3_B\106_6.tif,300,300,uint8
+DB3_B,106_6.tif,step0,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_6.tif,stage1,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_6.tif,stage2,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_6.tif,stage3,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_7.tif,raw,14.0,,data\raw\DB3_B\106_7.tif,300,300,uint8
+DB3_B,106_7.tif,step0,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_7.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_7.tif,stage2,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_7.tif,stage3,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_8.tif,raw,9.0,,data\raw\DB3_B\106_8.tif,300,300,uint8
+DB3_B,106_8.tif,step0,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_8.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_8.tif,stage2,6.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,106_8.tif,stage3,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_1.tif,raw,29.0,,data\raw\DB3_B\107_1.tif,300,300,uint8
+DB3_B,107_1.tif,step0,29.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_1.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_1.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_1.tif,stage3,42.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_2.tif,raw,14.0,,data\raw\DB3_B\107_2.tif,300,300,uint8
+DB3_B,107_2.tif,step0,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_2.tif,stage1,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_2.tif,stage2,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_2.tif,stage3,28.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_3.tif,raw,16.0,,data\raw\DB3_B\107_3.tif,300,300,uint8
+DB3_B,107_3.tif,step0,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_3.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_3.tif,stage2,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_3.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_4.tif,raw,32.0,,data\raw\DB3_B\107_4.tif,300,300,uint8
+DB3_B,107_4.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_4.tif,stage1,28.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_4.tif,stage2,30.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_4.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_5.tif,raw,26.0,,data\raw\DB3_B\107_5.tif,300,300,uint8
+DB3_B,107_5.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_5.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_5.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_5.tif,stage3,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_6.tif,raw,16.0,,data\raw\DB3_B\107_6.tif,300,300,uint8
+DB3_B,107_6.tif,step0,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_6.tif,stage1,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_6.tif,stage2,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_6.tif,stage3,41.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_7.tif,raw,12.0,,data\raw\DB3_B\107_7.tif,300,300,uint8
+DB3_B,107_7.tif,step0,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_7.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_7.tif,stage2,7.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_7.tif,stage3,6.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_8.tif,raw,9.0,,data\raw\DB3_B\107_8.tif,300,300,uint8
+DB3_B,107_8.tif,step0,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_8.tif,stage1,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_8.tif,stage2,7.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,107_8.tif,stage3,7.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_1.tif,raw,33.0,,data\raw\DB3_B\108_1.tif,300,300,uint8
+DB3_B,108_1.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_1.tif,stage1,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_1.tif,stage2,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_1.tif,stage3,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_2.tif,raw,24.0,,data\raw\DB3_B\108_2.tif,300,300,uint8
+DB3_B,108_2.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_2.tif,stage1,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_2.tif,stage2,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_2.tif,stage3,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_3.tif,raw,5.0,,data\raw\DB3_B\108_3.tif,300,300,uint8
+DB3_B,108_3.tif,step0,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_3.tif,stage1,6.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_3.tif,stage2,6.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_3.tif,stage3,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_4.tif,raw,9.0,,data\raw\DB3_B\108_4.tif,300,300,uint8
+DB3_B,108_4.tif,step0,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_4.tif,stage1,2.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_4.tif,stage2,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_4.tif,stage3,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_5.tif,raw,27.0,,data\raw\DB3_B\108_5.tif,300,300,uint8
+DB3_B,108_5.tif,step0,27.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_5.tif,stage1,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_5.tif,stage2,26.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_5.tif,stage3,36.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_6.tif,raw,37.0,,data\raw\DB3_B\108_6.tif,300,300,uint8
+DB3_B,108_6.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_6.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_6.tif,stage2,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_6.tif,stage3,28.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_7.tif,raw,18.0,,data\raw\DB3_B\108_7.tif,300,300,uint8
+DB3_B,108_7.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_7.tif,stage1,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_7.tif,stage2,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_7.tif,stage3,27.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_8.tif,raw,19.0,,data\raw\DB3_B\108_8.tif,300,300,uint8
+DB3_B,108_8.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_8.tif,stage1,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_8.tif,stage2,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,108_8.tif,stage3,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_1.tif,raw,11.0,,data\raw\DB3_B\109_1.tif,300,300,uint8
+DB3_B,109_1.tif,step0,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_1.tif,stage1,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_1.tif,stage2,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_1.tif,stage3,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_2.tif,raw,17.0,,data\raw\DB3_B\109_2.tif,300,300,uint8
+DB3_B,109_2.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_2.tif,stage1,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_2.tif,stage2,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_2.tif,stage3,25.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_3.tif,raw,15.0,,data\raw\DB3_B\109_3.tif,300,300,uint8
+DB3_B,109_3.tif,step0,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_3.tif,stage1,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_3.tif,stage2,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_3.tif,stage3,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_4.tif,raw,20.0,,data\raw\DB3_B\109_4.tif,300,300,uint8
+DB3_B,109_4.tif,step0,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_4.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_4.tif,stage2,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_4.tif,stage3,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_5.tif,raw,31.0,,data\raw\DB3_B\109_5.tif,300,300,uint8
+DB3_B,109_5.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_5.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_5.tif,stage2,46.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_5.tif,stage3,53.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_6.tif,raw,38.0,,data\raw\DB3_B\109_6.tif,300,300,uint8
+DB3_B,109_6.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_6.tif,stage1,43.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_6.tif,stage2,39.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_6.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_7.tif,raw,11.0,,data\raw\DB3_B\109_7.tif,300,300,uint8
+DB3_B,109_7.tif,step0,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_7.tif,stage1,14.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_7.tif,stage2,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_7.tif,stage3,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_8.tif,raw,16.0,,data\raw\DB3_B\109_8.tif,300,300,uint8
+DB3_B,109_8.tif,step0,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_8.tif,stage1,23.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_8.tif,stage2,20.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,109_8.tif,stage3,22.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_1.tif,raw,12.0,,data\raw\DB3_B\110_1.tif,300,300,uint8
+DB3_B,110_1.tif,step0,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_1.tif,stage1,8.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_1.tif,stage2,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_1.tif,stage3,10.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_2.tif,raw,17.0,,data\raw\DB3_B\110_2.tif,300,300,uint8
+DB3_B,110_2.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_2.tif,stage1,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_2.tif,stage2,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_2.tif,stage3,8.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_3.tif,raw,11.0,,data\raw\DB3_B\110_3.tif,300,300,uint8
+DB3_B,110_3.tif,step0,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_3.tif,stage1,1.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_3.tif,stage2,0.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_3.tif,stage3,0.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_4.tif,raw,19.0,,data\raw\DB3_B\110_4.tif,300,300,uint8
+DB3_B,110_4.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_4.tif,stage1,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_4.tif,stage2,16.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_4.tif,stage3,21.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_5.tif,raw,,Error: NFIQ2 computeUnifiedQualityScore returned an error code: Could not create feature set from raw data: FRFXLL_ERR_FB_TOO_SMALL_AREA: Fingerprint area is too small. Most likely this is because the tip of the finger is presented.,data\raw\DB3_B\110_5.tif,300,300,uint8
+DB3_B,110_5.tif,step0,,Error: NFIQ2 computeUnifiedQualityScore returned an error code: Could not create feature set from raw data: FRFXLL_ERR_FB_TOO_SMALL_AREA: Fingerprint area is too small. Most likely this is because the tip of the finger is presented.,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_5.tif,stage1,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_5.tif,stage2,8.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_5.tif,stage3,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_6.tif,raw,18.0,,data\raw\DB3_B\110_6.tif,300,300,uint8
+DB3_B,110_6.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_6.tif,stage1,13.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_6.tif,stage2,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_6.tif,stage3,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_7.tif,raw,17.0,,data\raw\DB3_B\110_7.tif,300,300,uint8
+DB3_B,110_7.tif,step0,17.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_7.tif,stage1,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_7.tif,stage2,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_7.tif,stage3,9.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_8.tif,raw,11.0,,data\raw\DB3_B\110_8.tif,300,300,uint8
+DB3_B,110_8.tif,step0,11.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_8.tif,stage1,12.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_8.tif,stage2,5.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB3_B,110_8.tif,stage3,15.0,,temporary original-size grayscale uint8 TIFF,300,300,uint8
+DB4_B,101_1.tif,raw,39.0,,data\raw\DB4_B\101_1.tif,384,288,uint8
+DB4_B,101_1.tif,step0,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_1.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_1.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_1.tif,stage3,58.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_2.tif,raw,39.0,,data\raw\DB4_B\101_2.tif,384,288,uint8
+DB4_B,101_2.tif,step0,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_2.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_2.tif,stage2,41.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_2.tif,stage3,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_3.tif,raw,42.0,,data\raw\DB4_B\101_3.tif,384,288,uint8
+DB4_B,101_3.tif,step0,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_3.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_3.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_3.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_4.tif,raw,50.0,,data\raw\DB4_B\101_4.tif,384,288,uint8
+DB4_B,101_4.tif,step0,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_4.tif,stage1,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_4.tif,stage2,55.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_4.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_5.tif,raw,37.0,,data\raw\DB4_B\101_5.tif,384,288,uint8
+DB4_B,101_5.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_5.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_5.tif,stage2,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_5.tif,stage3,41.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_6.tif,raw,37.0,,data\raw\DB4_B\101_6.tif,384,288,uint8
+DB4_B,101_6.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_6.tif,stage1,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_6.tif,stage2,54.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_6.tif,stage3,68.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_7.tif,raw,37.0,,data\raw\DB4_B\101_7.tif,384,288,uint8
+DB4_B,101_7.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_7.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_7.tif,stage2,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_7.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_8.tif,raw,35.0,,data\raw\DB4_B\101_8.tif,384,288,uint8
+DB4_B,101_8.tif,step0,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_8.tif,stage1,30.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_8.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,101_8.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_1.tif,raw,44.0,,data\raw\DB4_B\102_1.tif,384,288,uint8
+DB4_B,102_1.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_1.tif,stage1,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_1.tif,stage2,51.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_1.tif,stage3,60.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_2.tif,raw,42.0,,data\raw\DB4_B\102_2.tif,384,288,uint8
+DB4_B,102_2.tif,step0,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_2.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_2.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_2.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_3.tif,raw,27.0,,data\raw\DB4_B\102_3.tif,384,288,uint8
+DB4_B,102_3.tif,step0,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_3.tif,stage1,21.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_3.tif,stage2,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_3.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_4.tif,raw,38.0,,data\raw\DB4_B\102_4.tif,384,288,uint8
+DB4_B,102_4.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_4.tif,stage1,56.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_4.tif,stage2,56.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_4.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_5.tif,raw,29.0,,data\raw\DB4_B\102_5.tif,384,288,uint8
+DB4_B,102_5.tif,step0,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_5.tif,stage1,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_5.tif,stage2,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_5.tif,stage3,51.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_6.tif,raw,46.0,,data\raw\DB4_B\102_6.tif,384,288,uint8
+DB4_B,102_6.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_6.tif,stage1,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_6.tif,stage2,52.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_6.tif,stage3,70.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_7.tif,raw,31.0,,data\raw\DB4_B\102_7.tif,384,288,uint8
+DB4_B,102_7.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_7.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_7.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_7.tif,stage3,61.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_8.tif,raw,51.0,,data\raw\DB4_B\102_8.tif,384,288,uint8
+DB4_B,102_8.tif,step0,51.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_8.tif,stage1,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_8.tif,stage2,54.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,102_8.tif,stage3,56.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_1.tif,raw,44.0,,data\raw\DB4_B\103_1.tif,384,288,uint8
+DB4_B,103_1.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_1.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_1.tif,stage2,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_1.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_2.tif,raw,43.0,,data\raw\DB4_B\103_2.tif,384,288,uint8
+DB4_B,103_2.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_2.tif,stage1,52.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_2.tif,stage2,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_2.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_3.tif,raw,46.0,,data\raw\DB4_B\103_3.tif,384,288,uint8
+DB4_B,103_3.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_3.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_3.tif,stage2,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_3.tif,stage3,49.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_4.tif,raw,34.0,,data\raw\DB4_B\103_4.tif,384,288,uint8
+DB4_B,103_4.tif,step0,34.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_4.tif,stage1,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_4.tif,stage2,41.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_4.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_5.tif,raw,44.0,,data\raw\DB4_B\103_5.tif,384,288,uint8
+DB4_B,103_5.tif,step0,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_5.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_5.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_5.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_6.tif,raw,38.0,,data\raw\DB4_B\103_6.tif,384,288,uint8
+DB4_B,103_6.tif,step0,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_6.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_6.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_6.tif,stage3,55.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_7.tif,raw,43.0,,data\raw\DB4_B\103_7.tif,384,288,uint8
+DB4_B,103_7.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_7.tif,stage1,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_7.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_7.tif,stage3,49.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_8.tif,raw,39.0,,data\raw\DB4_B\103_8.tif,384,288,uint8
+DB4_B,103_8.tif,step0,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_8.tif,stage1,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_8.tif,stage2,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,103_8.tif,stage3,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_1.tif,raw,20.0,,data\raw\DB4_B\104_1.tif,384,288,uint8
+DB4_B,104_1.tif,step0,20.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_1.tif,stage1,15.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_1.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_1.tif,stage3,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_2.tif,raw,40.0,,data\raw\DB4_B\104_2.tif,384,288,uint8
+DB4_B,104_2.tif,step0,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_2.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_2.tif,stage2,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_2.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_3.tif,raw,46.0,,data\raw\DB4_B\104_3.tif,384,288,uint8
+DB4_B,104_3.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_3.tif,stage1,49.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_3.tif,stage2,49.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_3.tif,stage3,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_4.tif,raw,45.0,,data\raw\DB4_B\104_4.tif,384,288,uint8
+DB4_B,104_4.tif,step0,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_4.tif,stage1,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_4.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_4.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_5.tif,raw,46.0,,data\raw\DB4_B\104_5.tif,384,288,uint8
+DB4_B,104_5.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_5.tif,stage1,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_5.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_5.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_6.tif,raw,31.0,,data\raw\DB4_B\104_6.tif,384,288,uint8
+DB4_B,104_6.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_6.tif,stage1,34.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_6.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_6.tif,stage3,54.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_7.tif,raw,33.0,,data\raw\DB4_B\104_7.tif,384,288,uint8
+DB4_B,104_7.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_7.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_7.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_7.tif,stage3,61.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_8.tif,raw,36.0,,data\raw\DB4_B\104_8.tif,384,288,uint8
+DB4_B,104_8.tif,step0,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_8.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_8.tif,stage2,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,104_8.tif,stage3,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_1.tif,raw,19.0,,data\raw\DB4_B\105_1.tif,384,288,uint8
+DB4_B,105_1.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_1.tif,stage1,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_1.tif,stage2,20.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_1.tif,stage3,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_2.tif,raw,24.0,,data\raw\DB4_B\105_2.tif,384,288,uint8
+DB4_B,105_2.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_2.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_2.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_2.tif,stage3,52.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_3.tif,raw,29.0,,data\raw\DB4_B\105_3.tif,384,288,uint8
+DB4_B,105_3.tif,step0,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_3.tif,stage1,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_3.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_3.tif,stage3,50.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_4.tif,raw,27.0,,data\raw\DB4_B\105_4.tif,384,288,uint8
+DB4_B,105_4.tif,step0,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_4.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_4.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_4.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_5.tif,raw,33.0,,data\raw\DB4_B\105_5.tif,384,288,uint8
+DB4_B,105_5.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_5.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_5.tif,stage2,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_5.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_6.tif,raw,26.0,,data\raw\DB4_B\105_6.tif,384,288,uint8
+DB4_B,105_6.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_6.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_6.tif,stage2,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_6.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_7.tif,raw,29.0,,data\raw\DB4_B\105_7.tif,384,288,uint8
+DB4_B,105_7.tif,step0,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_7.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_7.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_7.tif,stage3,49.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_8.tif,raw,30.0,,data\raw\DB4_B\105_8.tif,384,288,uint8
+DB4_B,105_8.tif,step0,30.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_8.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_8.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,105_8.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_1.tif,raw,14.0,,data\raw\DB4_B\106_1.tif,384,288,uint8
+DB4_B,106_1.tif,step0,14.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_1.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_1.tif,stage2,8.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_1.tif,stage3,20.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_2.tif,raw,24.0,,data\raw\DB4_B\106_2.tif,384,288,uint8
+DB4_B,106_2.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_2.tif,stage1,25.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_2.tif,stage2,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_2.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_3.tif,raw,24.0,,data\raw\DB4_B\106_3.tif,384,288,uint8
+DB4_B,106_3.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_3.tif,stage1,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_3.tif,stage2,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_3.tif,stage3,44.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_4.tif,raw,37.0,,data\raw\DB4_B\106_4.tif,384,288,uint8
+DB4_B,106_4.tif,step0,37.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_4.tif,stage1,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_4.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_4.tif,stage3,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_5.tif,raw,19.0,,data\raw\DB4_B\106_5.tif,384,288,uint8
+DB4_B,106_5.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_5.tif,stage1,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_5.tif,stage2,22.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_5.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_6.tif,raw,23.0,,data\raw\DB4_B\106_6.tif,384,288,uint8
+DB4_B,106_6.tif,step0,23.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_6.tif,stage1,28.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_6.tif,stage2,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_6.tif,stage3,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_7.tif,raw,26.0,,data\raw\DB4_B\106_7.tif,384,288,uint8
+DB4_B,106_7.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_7.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_7.tif,stage2,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_7.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_8.tif,raw,28.0,,data\raw\DB4_B\106_8.tif,384,288,uint8
+DB4_B,106_8.tif,step0,28.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_8.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_8.tif,stage2,25.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,106_8.tif,stage3,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_1.tif,raw,31.0,,data\raw\DB4_B\107_1.tif,384,288,uint8
+DB4_B,107_1.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_1.tif,stage1,25.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_1.tif,stage2,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_1.tif,stage3,57.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_2.tif,raw,33.0,,data\raw\DB4_B\107_2.tif,384,288,uint8
+DB4_B,107_2.tif,step0,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_2.tif,stage1,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_2.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_2.tif,stage3,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_3.tif,raw,32.0,,data\raw\DB4_B\107_3.tif,384,288,uint8
+DB4_B,107_3.tif,step0,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_3.tif,stage1,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_3.tif,stage2,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_3.tif,stage3,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_4.tif,raw,26.0,,data\raw\DB4_B\107_4.tif,384,288,uint8
+DB4_B,107_4.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_4.tif,stage1,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_4.tif,stage2,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_4.tif,stage3,45.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_5.tif,raw,46.0,,data\raw\DB4_B\107_5.tif,384,288,uint8
+DB4_B,107_5.tif,step0,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_5.tif,stage1,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_5.tif,stage2,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_5.tif,stage3,48.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_6.tif,raw,47.0,,data\raw\DB4_B\107_6.tif,384,288,uint8
+DB4_B,107_6.tif,step0,47.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_6.tif,stage1,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_6.tif,stage2,40.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_6.tif,stage3,59.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_7.tif,raw,18.0,,data\raw\DB4_B\107_7.tif,384,288,uint8
+DB4_B,107_7.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_7.tif,stage1,23.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_7.tif,stage2,30.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_7.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_8.tif,raw,18.0,,data\raw\DB4_B\107_8.tif,384,288,uint8
+DB4_B,107_8.tif,step0,18.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_8.tif,stage1,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_8.tif,stage2,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,107_8.tif,stage3,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_1.tif,raw,31.0,,data\raw\DB4_B\108_1.tif,384,288,uint8
+DB4_B,108_1.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_1.tif,stage1,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_1.tif,stage2,39.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_1.tif,stage3,35.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_2.tif,raw,23.0,,data\raw\DB4_B\108_2.tif,384,288,uint8
+DB4_B,108_2.tif,step0,23.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_2.tif,stage1,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_2.tif,stage2,4.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_2.tif,stage3,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_3.tif,raw,8.0,,data\raw\DB4_B\108_3.tif,384,288,uint8
+DB4_B,108_3.tif,step0,8.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_3.tif,stage1,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_3.tif,stage2,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_3.tif,stage3,1.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_4.tif,raw,26.0,,data\raw\DB4_B\108_4.tif,384,288,uint8
+DB4_B,108_4.tif,step0,26.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_4.tif,stage1,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_4.tif,stage2,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_4.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_5.tif,raw,11.0,,data\raw\DB4_B\108_5.tif,384,288,uint8
+DB4_B,108_5.tif,step0,11.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_5.tif,stage1,4.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_5.tif,stage2,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_5.tif,stage3,10.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_6.tif,raw,5.0,,data\raw\DB4_B\108_6.tif,384,288,uint8
+DB4_B,108_6.tif,step0,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_6.tif,stage1,2.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_6.tif,stage2,2.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_6.tif,stage3,4.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_7.tif,raw,28.0,,data\raw\DB4_B\108_7.tif,384,288,uint8
+DB4_B,108_7.tif,step0,28.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_7.tif,stage1,16.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_7.tif,stage2,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_7.tif,stage3,38.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_8.tif,raw,43.0,,data\raw\DB4_B\108_8.tif,384,288,uint8
+DB4_B,108_8.tif,step0,43.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_8.tif,stage1,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_8.tif,stage2,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,108_8.tif,stage3,32.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_1.tif,raw,12.0,,data\raw\DB4_B\109_1.tif,384,288,uint8
+DB4_B,109_1.tif,step0,12.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_1.tif,stage1,16.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_1.tif,stage2,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_1.tif,stage3,28.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_2.tif,raw,19.0,,data\raw\DB4_B\109_2.tif,384,288,uint8
+DB4_B,109_2.tif,step0,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_2.tif,stage1,22.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_2.tif,stage2,19.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_2.tif,stage3,46.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_3.tif,raw,24.0,,data\raw\DB4_B\109_3.tif,384,288,uint8
+DB4_B,109_3.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_3.tif,stage1,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_3.tif,stage2,34.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_3.tif,stage3,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_4.tif,raw,5.0,,data\raw\DB4_B\109_4.tif,384,288,uint8
+DB4_B,109_4.tif,step0,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_4.tif,stage1,1.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_4.tif,stage2,2.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_4.tif,stage3,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_5.tif,raw,24.0,,data\raw\DB4_B\109_5.tif,384,288,uint8
+DB4_B,109_5.tif,step0,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_5.tif,stage1,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_5.tif,stage2,34.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_5.tif,stage3,29.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_6.tif,raw,9.0,,data\raw\DB4_B\109_6.tif,384,288,uint8
+DB4_B,109_6.tif,step0,9.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_6.tif,stage1,7.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_6.tif,stage2,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_6.tif,stage3,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_7.tif,raw,14.0,,data\raw\DB4_B\109_7.tif,384,288,uint8
+DB4_B,109_7.tif,step0,14.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_7.tif,stage1,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_7.tif,stage2,12.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_7.tif,stage3,13.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_8.tif,raw,31.0,,data\raw\DB4_B\109_8.tif,384,288,uint8
+DB4_B,109_8.tif,step0,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_8.tif,stage1,30.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_8.tif,stage2,36.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,109_8.tif,stage3,31.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_1.tif,raw,5.0,,data\raw\DB4_B\110_1.tif,384,288,uint8
+DB4_B,110_1.tif,step0,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_1.tif,stage1,7.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_1.tif,stage2,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_1.tif,stage3,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_2.tif,raw,12.0,,data\raw\DB4_B\110_2.tif,384,288,uint8
+DB4_B,110_2.tif,step0,12.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_2.tif,stage1,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_2.tif,stage2,6.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_2.tif,stage3,13.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_3.tif,raw,3.0,,data\raw\DB4_B\110_3.tif,384,288,uint8
+DB4_B,110_3.tif,step0,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_3.tif,stage1,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_3.tif,stage2,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_3.tif,stage3,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_4.tif,raw,3.0,,data\raw\DB4_B\110_4.tif,384,288,uint8
+DB4_B,110_4.tif,step0,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_4.tif,stage1,0.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_4.tif,stage2,3.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_4.tif,stage3,1.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_5.tif,raw,5.0,,data\raw\DB4_B\110_5.tif,384,288,uint8
+DB4_B,110_5.tif,step0,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_5.tif,stage1,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_5.tif,stage2,9.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_5.tif,stage3,5.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_6.tif,raw,8.0,,data\raw\DB4_B\110_6.tif,384,288,uint8
+DB4_B,110_6.tif,step0,8.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_6.tif,stage1,10.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_6.tif,stage2,7.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_6.tif,stage3,13.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_7.tif,raw,15.0,,data\raw\DB4_B\110_7.tif,384,288,uint8
+DB4_B,110_7.tif,step0,15.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_7.tif,stage1,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_7.tif,stage2,16.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_7.tif,stage3,42.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_8.tif,raw,22.0,,data\raw\DB4_B\110_8.tif,384,288,uint8
+DB4_B,110_8.tif,step0,22.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_8.tif,stage1,24.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_8.tif,stage2,27.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8
+DB4_B,110_8.tif,stage3,33.0,,temporary original-size grayscale uint8 TIFF,384,288,uint8

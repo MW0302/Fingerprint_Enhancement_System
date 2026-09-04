@@ -1,0 +1,50 @@
+{
+  "nfiq2_executable": "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe",
+  "nfiq2_version": "2.3.0",
+  "nfiq2_version_output": {
+    "Biometric Evaluation": "12.0",
+    "FingerJet": "5.2.1",
+    "OpenCV": "4.10.0",
+    "NFIQ 2": "2.3.0 (Date: 202409131504, Commit: 76b8c4e)"
+  },
+  "shared_cli": [
+    "C:\\Program Files\\NFIQ 2\\bin\\nfiq2.exe",
+    "-i",
+    "<image_path>",
+    "-a",
+    "-F",
+    "-o",
+    "<temp_csv>"
+  ],
+  "scoring_helper": "src/utils/common.py::run_nfiq2_single",
+  "execution": "serial",
+  "stage_format": "original-size 2D grayscale uint8 TIFF via cv2.imwrite",
+  "source_samples": "data\\pipeline_a_stagewise_visual_pilot_current_defaults_20260904\\samples.csv",
+  "shared_step0": {
+    "normalize_target_mean": 100.0,
+    "normalize_target_std": 10.0,
+    "normalize_target_var": 100.0
+  },
+  "clahe": {
+    "clip_limit": 2.0,
+    "grid_size": 8
+  },
+  "bilateral": {
+    "diameter": 5,
+    "sigma_color": 35.0,
+    "sigma_space": 5.0
+  },
+  "orientation_field": {
+    "block": 16
+  },
+  "gabor": {
+    "kernel_size": 17,
+    "sigma": 4.0,
+    "wavelength": 8.0,
+    "gamma": 0.5,
+    "strength": 0.7,
+    "orientation_bins": 16,
+    "coherence_floor": 0.2,
+    "orientation_interpolation": "double-angle"
+  }
+}
