@@ -1,9 +1,54 @@
 # Dataset — each teammate keeps their own local copy here; never push 320 images to GitHub.
 data/raw/
-data/processed/
 
-# Regenerable outputs / figures — keep the repo to code only.
-results/
+# Generated per-image outputs (enhanced .tif files) stay local/regenerable.
+# Exception, added deliberately per pipeline once its tuning is actually
+# finalised (not a blanket un-ignore): each pipeline's own FINAL locked-in
+# NFIQ2 batch_results.csv, at the path the Batch tab in dashboard/app.py
+# already writes it to (data/processed/<pipeline>/<db>/batch_results.csv)
+# — so dashboard/results_loader.py's fallback source works without any
+# code change. This does NOT re-include the enhanced .tif images sitting
+# in the same folders, nor any of the *_before_*/*_exp*/-suffixed
+# superseded-tuning-round backup directories (they don't match the exact
+# pipeline_a/b/c/d names below).
+data/processed/*
+!data/processed/pipeline_a/
+!data/processed/pipeline_b/
+!data/processed/pipeline_c/
+!data/processed/pipeline_d/
+data/processed/pipeline_a/*
+data/processed/pipeline_b/*
+data/processed/pipeline_c/*
+data/processed/pipeline_d/*
+!data/processed/pipeline_a/*/
+!data/processed/pipeline_b/*/
+!data/processed/pipeline_c/*/
+!data/processed/pipeline_d/*/
+data/processed/pipeline_a/*/*
+data/processed/pipeline_b/*/*
+data/processed/pipeline_c/*/*
+data/processed/pipeline_d/*/*
+!data/processed/pipeline_a/*/batch_results.csv
+!data/processed/pipeline_b/*/batch_results.csv
+!data/processed/pipeline_c/*/batch_results.csv
+!data/processed/pipeline_d/*/batch_results.csv
+
+# Regenerable outputs / figures — keep the repo to code only. Exception,
+# same reasoning as above: a pipeline's own FINAL result CSV(s) (per-image
+# scores + summary/aggregate table), once actually finalised. Every sweep/
+# tuning-round/experiment CSV (e.g. results/coherence_sweep_*.csv,
+# results/log_gabor_add_gain_sweep_*.csv, anything *_before_*.csv) stays
+# ignored — only the exact final filenames below are ever un-ignored.
+results/*
+!results/pipeline_c_ablation.csv
+!results/pipeline_c_ablation_summary.csv
+# Pipeline D's own ablation tool (scripts/pipeline_d_ablation.py) writes to
+# a subdirectory rather than a flat file — same exception pattern, applied
+# one level deeper, ready for whenever that pipeline's results are final.
+!results/pipeline_d_ablation/
+results/pipeline_d_ablation/*
+!results/pipeline_d_ablation/pipeline_d_ablation.csv
+!results/pipeline_d_ablation/pipeline_d_ablation_summary.csv
 *.png
 *.jpg
 *.jpeg
