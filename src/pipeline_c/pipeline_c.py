@@ -294,7 +294,18 @@ _HOMOMORPHIC_GAMMA_HIGH_RANGE = (1.0, 2.0)  # gentle endpoint 1.2 -> 1.0 (4 Sep
 # held, just for a different, now-fixed upstream cause.
 _DIFFUSION_ITERATIONS_RANGE = (8, 25)
 _DIFFUSION_KAPPA_RANGE = (10.0, 25.0)
-_LOG_GABOR_ADD_GAIN_RANGE = (0.8, 2.5)
+_LOG_GABOR_ADD_GAIN_RANGE = (1.2, 1.5)
+# gentle=1.2, aggressive=1.5: best in tested grid {1.5,2.0,2.5,3.0,3.5} x
+# {0.4,0.6,0.8,1.0,1.2}, but aggressive trended monotonically better toward
+# the lower bound across all three sweep rounds -- this is a boundary
+# approximation, not a confirmed extremum. Not pursued further (time
+# constraint, 4 September 2026). If revisited: extend the grid below 1.5,
+# but do not let aggressive drop below gentle (breaks the "more coherence +
+# less noise = more gain" design assumption _aggressiveness_alpha depends
+# on). Across every (gentle, aggressive) combination swept, delta_p6 (this
+# step's own marginal NFIQ2 contribution, stage3 - stage2) was NEGATIVE
+# overall every time -- Log-Gabor never became a net-positive contributor
+# in this dataset regardless of add_gain, this tuning pass included.
 
 
 def _aggressiveness_alpha(coherence_field, fg_mask_blocks):
