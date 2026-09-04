@@ -36,10 +36,12 @@ differing preprocessing. The earlier "light morphological clean-up" step
 is still dropped — it was never one of the three shared problems.
 
 Steps 0a-0b (normalisation, segmentation) are implemented as shared
-preprocessing. Steps 1-2 (FFT high-frequency emphasis and frequency-domain
-Wiener filtering) are implemented. Step 3 (STFT-based ridge reconstruction)
-remains a TODO. Find and verify an appropriate citation for each implemented
-technique rather than assuming one is already settled.
+preprocessing. Steps 1-3 are implemented as three separate internal helpers:
+FFT high-frequency emphasis, frequency-domain Wiener filtering, and STFT-based
+joint orientation-frequency ridge reconstruction. This separation supports a
+later cumulative-ablation wrapper without making hybrid selection part of this
+module. The estimator, spectral mask, inverse transform, and weighted
+overlap-add are integral parts of the single counted STFT technique.
 """
 
 import os
@@ -325,6 +327,307 @@ def _frequency_domain_wiener_filter(
     return np.clip(np.rint(output), 0, 255).astype(np.uint8)
 
 
+def _stft_orientation_frequency_reconstruct(
+    image,
+    fg_mask_blocks,
+    window_size,
+    overlap_ratio,
+    frequency_low,
+    frequency_high,
+    radial_bandwidth,
+    angular_bandwidth,
+    min_reliability,
+    reconstruction_blend,
+    pad_mode,
+):
+    """Reconstruct reliable local ridge spectra using overlapping 2D STFTs.
+
+    Each locally mean-centred, square-root Hann-windowed spectrum supplies a
+    joint probabilistic estimate of its ridge orientation and frequency. The
+    estimate uses all energy in ``frequency_low`` to ``frequency_high``
+    cycles/pixel rather than a single peak bin. A smooth, conjugate-symmetric
+    radial/angular mask is then applied within the same STFT reconstruction.
+
+    Reliability continuously blends the transfer function back towards the
+    identity, so uncertain, curved, damaged, or low-energy windows are left
+    conservative. Square-root Hann synthesis and denominator-normalised
+    weighted overlap-add avoid block seams and preserve local brightness. The
+    shared foreground mask is never multiplied into the image before an FFT;
+    it only gates estimation and the final reconstructed pixels. Incomplete
+    right/bottom ``BLOCK`` remainders consequently retain the input exactly.
+    """
+    image_float = np.asarray(image, dtype=np.float64)
+    if image_float.ndim != 2 or image_float.size == 0:
+        raise ValueError("image must be a non-empty 2D grayscale array")
+
+    mask = np.asarray(fg_mask_blocks)
+    if mask.ndim != 2 or mask.size == 0:
+        raise ValueError("fg_mask_blocks must be a non-empty 2D array")
+
+    if isinstance(window_size, (bool, np.bool_)) or not isinstance(
+        window_size, (int, np.integer)
+    ):
+        raise ValueError("window_size must be an even integer of at least 8")
+    if window_size < 8 or window_size % 2:
+        raise ValueError("window_size must be an even integer of at least 8")
+
+    scalar_parameters = (
+        overlap_ratio,
+        frequency_low,
+        frequency_high,
+        radial_bandwidth,
+        angular_bandwidth,
+        min_reliability,
+        reconstruction_blend,
+    )
+    if not all(
+        np.isscalar(value)
+        and not np.iscomplexobj(value)
+        and np.isfinite(value)
+        for value in scalar_parameters
+    ):
+        raise ValueError("STFT reconstruction scalar parameters must be finite")
+    if not 0 <= overlap_ratio < 1:
+        raise ValueError("overlap_ratio must satisfy 0 <= overlap_ratio < 1")
+    if not 0 <= frequency_low < frequency_high <= 0.5:
+        raise ValueError(
+            "frequencies must satisfy 0 <= low < high <= 0.5 cycles/pixel"
+        )
+    if radial_bandwidth <= 0:
+        raise ValueError("radial_bandwidth must be greater than zero")
+    if not 0 < angular_bandwidth <= 90:
+        raise ValueError("angular_bandwidth must satisfy 0 < value <= 90 degrees")
+    if not 0 <= min_reliability <= 1:
+        raise ValueError("min_reliability must be between zero and one")
+    if not 0 <= reconstruction_blend <= 1:
+        raise ValueError("reconstruction_blend must be between zero and one")
+    if pad_mode != "reflect":
+        raise ValueError("pad_mode must be 'reflect'")
+
+    hop = int(round(window_size * (1.0 - overlap_ratio)))
+    if hop < 1:
+        raise ValueError("overlap_ratio must produce a hop of at least one pixel")
+
+    image_float = np.nan_to_num(
+        image_float,
+        nan=0.0,
+        posinf=255.0,
+        neginf=0.0,
+    )
+    input_range = np.clip(image_float, 0.0, 255.0)
+    rows, cols = input_range.shape
+
+    # Small images cannot provide a full analysis window or legal reflect
+    # padding. They remain a conservative pass-through.
+    if min(rows, cols) < window_size:
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+
+    expected_mask_shape = (rows // BLOCK, cols // BLOCK)
+    if mask.shape != expected_mask_shape:
+        raise ValueError(
+            "fg_mask_blocks shape must match the image's complete BLOCK geometry"
+        )
+    mask = mask.astype(bool, copy=False)
+    if (
+        not np.any(mask)
+        or np.isclose(np.var(input_range), 0.0)
+        or reconstruction_blend == 0
+        or min_reliability == 1
+    ):
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+
+    foreground = np.zeros((rows, cols), dtype=bool)
+    expanded_mask = np.repeat(np.repeat(mask, BLOCK, axis=0), BLOCK, axis=1)
+    covered_rows = expected_mask_shape[0] * BLOCK
+    covered_cols = expected_mask_shape[1] * BLOCK
+    foreground[:covered_rows, :covered_cols] = expanded_mask
+
+    pad = window_size // 2
+    if pad >= rows or pad >= cols:
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+    padded = np.pad(input_range, ((pad, pad), (pad, pad)), mode=pad_mode)
+    padded_foreground = np.pad(
+        foreground.astype(np.float64),
+        ((pad, pad), (pad, pad)),
+        mode="constant",
+        constant_values=0.0,
+    )
+    real_support = np.pad(
+        np.ones((rows, cols), dtype=np.float64),
+        ((pad, pad), (pad, pad)),
+        mode="constant",
+        constant_values=0.0,
+    )
+
+    hann_1d = np.hanning(window_size)
+    analysis_window = np.sqrt(np.outer(hann_1d, hann_1d))
+    synthesis_window = analysis_window
+    window_product = analysis_window * synthesis_window
+    window_weight = float(np.sum(window_product))
+    epsilon = np.finfo(np.float64).eps
+    if window_weight <= epsilon:
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+
+    fy = np.fft.fftshift(np.fft.fftfreq(window_size))[:, np.newaxis]
+    fx = np.fft.fftshift(np.fft.fftfreq(window_size))[np.newaxis, :]
+    radial_frequency = np.hypot(fy, fx)
+    spectral_angle = np.arctan2(fy, fx)
+    ridge_band = (
+        (radial_frequency >= frequency_low)
+        & (radial_frequency <= frequency_high)
+    )
+    non_dc = radial_frequency >= max(1.0 / window_size, frequency_low)
+    if not np.any(ridge_band):
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+
+    padded_rows, padded_cols = padded.shape
+    row_starts = list(range(0, padded_rows - window_size + 1, hop))
+    col_starts = list(range(0, padded_cols - window_size + 1, hop))
+    final_row_start = padded_rows - window_size
+    final_col_start = padded_cols - window_size
+    if row_starts[-1] != final_row_start:
+        row_starts.append(final_row_start)
+    if col_starts[-1] != final_col_start:
+        col_starts.append(final_col_start)
+
+    numerator = np.zeros_like(padded, dtype=np.float64)
+    denominator = np.zeros_like(padded, dtype=np.float64)
+    reliable_windows = 0
+    angular_sigma = np.deg2rad(angular_bandwidth)
+    radial_scale = max((frequency_high - frequency_low) / 4.0, epsilon)
+
+    for row_start in row_starts:
+        row_slice = slice(row_start, row_start + window_size)
+        for col_start in col_starts:
+            col_slice = slice(col_start, col_start + window_size)
+            patch = padded[row_slice, col_slice]
+            local_mean = float(np.mean(patch))
+            identity_patch = patch * window_product
+            reconstructed_patch = identity_patch
+
+            foreground_support = float(
+                np.sum(padded_foreground[row_slice, col_slice] * window_product)
+                / window_weight
+            )
+            if foreground_support >= 0.5:
+                tapered = (patch - local_mean) * analysis_window
+                spectrum = np.fft.fftshift(np.fft.fft2(tapered))
+                power = np.abs(spectrum) ** 2
+                band_power = np.where(ridge_band, power, 0.0)
+                total_band_power = float(np.sum(band_power))
+                total_non_dc_power = float(np.sum(power[non_dc]))
+
+                if total_band_power > epsilon and total_non_dc_power > epsilon:
+                    probability = band_power / total_band_power
+                    doubled_axis = np.sum(
+                        probability * np.exp(2j * spectral_angle)
+                    )
+                    angular_reliability = float(np.abs(doubled_axis))
+                    axis_angle = 0.5 * float(np.angle(doubled_axis))
+                    ridge_orientation = (axis_angle + np.pi / 2.0) % np.pi
+                    estimated_frequency = float(
+                        np.sum(probability * radial_frequency)
+                    )
+                    radial_variance = float(
+                        np.sum(
+                            probability
+                            * (radial_frequency - estimated_frequency) ** 2
+                        )
+                    )
+                    radial_std = np.sqrt(max(0.0, radial_variance))
+                    radial_reliability = float(
+                        np.clip(1.0 - radial_std / radial_scale, 0.0, 1.0)
+                    )
+                    band_fraction = float(
+                        np.clip(total_band_power / total_non_dc_power, 0.0, 1.0)
+                    )
+                    reliability = (
+                        angular_reliability
+                        * radial_reliability
+                        * np.sqrt(band_fraction)
+                    )
+
+                    if reliability > min_reliability:
+                        reliability_ramp = np.clip(
+                            (reliability - min_reliability)
+                            / (1.0 - min_reliability),
+                            0.0,
+                            1.0,
+                        )
+                        edge_support = float(
+                            np.sum(real_support[row_slice, col_slice] * window_product)
+                            / window_weight
+                        )
+                        reconstruction_strength = (
+                            reconstruction_blend
+                            * reliability_ramp
+                            * edge_support
+                        )
+
+                        radial_mask = np.exp(
+                            -(
+                                (radial_frequency - estimated_frequency) ** 2
+                            )
+                            / (2.0 * radial_bandwidth**2)
+                        )
+                        spectral_axis = ridge_orientation - np.pi / 2.0
+                        axis_distance = np.abs(
+                            (
+                                spectral_angle
+                                - spectral_axis
+                                + np.pi / 2.0
+                            )
+                            % np.pi
+                            - np.pi / 2.0
+                        )
+                        angular_mask = np.exp(
+                            -(axis_distance**2) / (2.0 * angular_sigma**2)
+                        )
+                        spectral_mask = radial_mask * angular_mask
+                        transfer = (
+                            1.0 - reconstruction_strength
+                            + reconstruction_strength * spectral_mask
+                        )
+
+                        reconstructed_complex = np.fft.ifft2(
+                            np.fft.ifftshift(spectrum * transfer)
+                        )
+                        imaginary_residual = float(
+                            np.max(np.abs(reconstructed_complex.imag))
+                        )
+                        real_scale = max(
+                            1.0,
+                            float(np.max(np.abs(reconstructed_complex.real))),
+                        )
+                        if imaginary_residual <= 1e-10 * real_scale:
+                            restored_tapered = (
+                                reconstructed_complex.real
+                                + local_mean * analysis_window
+                            )
+                            reconstructed_patch = (
+                                restored_tapered * synthesis_window
+                            )
+                            reliable_windows += 1
+
+            numerator[row_slice, col_slice] += reconstructed_patch
+            denominator[row_slice, col_slice] += window_product
+
+    if reliable_windows == 0:
+        return np.clip(np.rint(input_range), 0, 255).astype(np.uint8)
+
+    reconstructed_padded = np.divide(
+        numerator,
+        denominator,
+        out=padded.copy(),
+        where=denominator > epsilon,
+    )
+    reconstructed = reconstructed_padded[pad : pad + rows, pad : pad + cols]
+    output = input_range.copy()
+    output[foreground] = reconstructed[foreground]
+    output = np.nan_to_num(output, nan=0.0, posinf=255.0, neginf=0.0)
+    return np.clip(np.rint(output), 0, 255).astype(np.uint8)
+
+
 def enhance(image, params=None):
     """
     image: 2D grayscale numpy array
@@ -390,19 +693,22 @@ def enhance(image, params=None):
     )
 
     # Step 3: STFT-based joint orientation-frequency ridge reconstruction
-    # (P6 — weak/inconsistent ridge orientation) — TODO
-    # Core idea: slide a window over the image, take a 2D FFT of each window
-    # (np.fft.fft2), and from its spectrum jointly estimate:
-    #   - local ridge orientation (angle of the dominant frequency peak)
-    #   - local ridge frequency (distance of the peak from the origin)
-    #   - local energy (peak magnitude)
-    # then reconstruct/enhance each window using this information and stitch
-    # the windows back together (with overlap to avoid seams). Ask yourself:
-    #   - what window size balances "local enough" against "enough ridges
-    #     inside the window to get a clean frequency peak"?
-    #   - how much should windows overlap, and how do you blend the overlap
-    #     region to avoid visible block seams?
-    enhanced = denoised  # placeholder — replace once this step is implemented
+    # (P6 — weak/inconsistent ridge orientation). Its estimator, smooth
+    # spectral mask, inverse FFT, and weighted overlap-add are one counted
+    # STFT reconstruction technique. No shared orientation field is used.
+    enhanced = _stft_orientation_frequency_reconstruct(
+        denoised,
+        fg_mask_blocks,
+        window_size=params.get("stft_window_size", 32),
+        overlap_ratio=params.get("stft_overlap_ratio", 0.75),
+        frequency_low=params.get("stft_frequency_low", 0.04),
+        frequency_high=params.get("stft_frequency_high", 0.25),
+        radial_bandwidth=params.get("stft_radial_bandwidth", 0.025),
+        angular_bandwidth=params.get("stft_angular_bandwidth", 20.0),
+        min_reliability=params.get("stft_min_reliability", 0.12),
+        reconstruction_blend=params.get("stft_reconstruction_blend", 0.25),
+        pad_mode=params.get("stft_pad_mode", "reflect"),
+    )
 
     return enhanced
 
