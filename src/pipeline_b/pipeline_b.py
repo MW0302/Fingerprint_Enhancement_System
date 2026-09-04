@@ -44,10 +44,10 @@ binarisation), not a binarised output. NFIQ2 expects greyscale input — see
 the caution in the analysis document, Section 6, Pipeline B.
 
 Steps 0a-0b (normalisation, segmentation) are implemented as shared
-preprocessing. All three numbered steps below are still TODOs:
-wavelet-domain contrast enhancement, wavelet shrinkage denoising, and
-orientation-steered morphological processing are the techniques you are
-responsible for researching and implementing yourself.
+preprocessing. Stage 1 wavelet-domain contrast enhancement is implemented as
+a separately callable function for cumulative ablation. Stages 2 and 3 remain
+TODO placeholders: wavelet shrinkage denoising and orientation-steered
+morphological processing are not implemented in this revision.
 """
 
 import os
@@ -62,6 +62,98 @@ from config import RAW_DIR  # noqa: E402
 
 import cv2
 import numpy as np
+import pywt
+
+
+def _wavelet_contrast(
+    image,
+    fg_mask_blocks=None,
+    wavelet="db4",
+    level=3,
+    coarse_gain=1.60,
+    fine_gain=1.00,
+    coefficient_floor_percentile=25.0,
+    blend=1.0,
+):
+    """Stage 1: enhance ridge detail in a multilevel wavelet representation.
+
+    The approximation coefficients are retained unchanged so the operation
+    does not become a second global intensity-normalisation step. Detail
+    coefficients are amplified with a magnitude-adaptive mapping: strong
+    structural coefficients approach the requested gain, while very small
+    coefficients (which are more likely to be noise) remain close to their
+    original magnitude. Coarser and finer detail levels have separate gains
+    because fine-scale amplification is the most likely to boost noise before
+    Pipeline B's later shrinkage-denoising stage.
+
+    If the shared segmentation mask is provided, only foreground pixels
+    receive the reconstructed detail increment. The function always returns
+    a grayscale uint8 array with the same shape as ``image``.
+    """
+    source = np.clip(image, 0, 255).astype(np.float32)
+    if source.ndim != 2:
+        raise ValueError("_wavelet_contrast expects a 2D grayscale image")
+
+    wavelet_obj = pywt.Wavelet(str(wavelet))
+    requested_level = max(1, int(level))
+    max_level = pywt.dwtn_max_level(source.shape, wavelet_obj)
+    actual_level = min(requested_level, max_level)
+    if actual_level < 1:
+        return source.astype(np.uint8)
+
+    coarse_gain = max(1.0, float(coarse_gain))
+    fine_gain = max(1.0, float(fine_gain))
+    floor_percentile = float(np.clip(coefficient_floor_percentile, 0.0, 100.0))
+    blend = float(np.clip(blend, 0.0, 1.0))
+
+    coeffs = pywt.wavedec2(
+        source,
+        wavelet_obj,
+        mode="symmetric",
+        level=actual_level,
+    )
+    mapped_coeffs = [coeffs[0]]
+
+    # wavedec2 returns detail tuples from coarsest to finest. Interpolate the
+    # requested gains in that same order so level changes remain predictable.
+    level_gains = np.linspace(coarse_gain, fine_gain, actual_level)
+    for details, gain in zip(coeffs[1:], level_gains):
+        mapped_details = []
+        for band in details:
+            magnitude = np.abs(band)
+            nonzero = magnitude[magnitude > 0]
+            floor = (
+                float(np.percentile(nonzero, floor_percentile))
+                if nonzero.size
+                else 0.0
+            )
+            if floor <= 1e-12:
+                reliability = (magnitude > 0).astype(np.float32)
+            else:
+                reliability = magnitude / (magnitude + floor)
+            scale = 1.0 + (float(gain) - 1.0) * reliability
+            mapped_details.append(band * scale)
+        mapped_coeffs.append(tuple(mapped_details))
+
+    reconstructed = pywt.waverec2(
+        mapped_coeffs,
+        wavelet_obj,
+        mode="symmetric",
+    )[: source.shape[0], : source.shape[1]]
+    increment = reconstructed.astype(np.float32) - source
+
+    if fg_mask_blocks is None:
+        foreground = np.ones_like(source, dtype=np.float32)
+    else:
+        foreground = cv2.resize(
+            np.asarray(fg_mask_blocks, dtype=np.float32),
+            (source.shape[1], source.shape[0]),
+            interpolation=cv2.INTER_LINEAR,
+        )
+        foreground = np.clip(foreground, 0.0, 1.0)
+
+    enhanced = source + foreground * blend * increment
+    return np.clip(np.rint(enhanced), 0, 255).astype(np.uint8)
 
 
 def enhance(image, params=None):
@@ -84,19 +176,20 @@ def enhance(image, params=None):
     )
     fg_mask_blocks, _block_var = segment(normalized)
 
-    # Step 1: wavelet decomposition + detail-coefficient contrast
-    # enhancement (P1 — low global contrast) — TODO
-    # A common Python starting point is PyWavelets (`pip install PyWavelets`):
-    #   import pywt
-    #   coeffs = pywt.wavedec2(normalized, 'db4', level=2)
-    #   ... scale up the magnitude of the detail coefficients (cH, cV, cD)
-    #       at one or more levels to sharpen local contrast ...
-    #   contrast_enhanced = pywt.waverec2(coeffs, 'db4')
-    # Ask yourself: which levels benefit most from boosting? Too aggressive
-    # a boost will amplify noise before Step 2 has a chance to remove it —
-    # is a mild boost here, relying on Step 2 to clean up afterwards, the
-    # right order, or should denoising come first?
-    contrast_enhanced = normalized.copy()  # placeholder — replace once this step is implemented
+    # Stage 1: wavelet detail-coefficient contrast enhancement (P1). Kept as
+    # a separately callable function for cumulative stage-wise ablation.
+    contrast_enhanced = _wavelet_contrast(
+        normalized,
+        fg_mask_blocks=fg_mask_blocks,
+        wavelet=params.get("wavelet", "db4"),
+        level=params.get("wavelet_level", 3),
+        coarse_gain=params.get("wavelet_coarse_gain", 1.60),
+        fine_gain=params.get("wavelet_fine_gain", 1.00),
+        coefficient_floor_percentile=params.get(
+            "wavelet_coefficient_floor_percentile", 25.0
+        ),
+        blend=params.get("wavelet_contrast_blend", 1.0),
+    )
 
     # Step 2: wavelet decomposition + soft-threshold shrinkage denoising
     # (P2 — high random noise) — TODO

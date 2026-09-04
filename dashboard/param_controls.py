@@ -41,13 +41,33 @@ def render_pipeline_a_controls():
 
 
 def render_pipeline_b_controls():
-    st.info(
-        "Pipeline B has no tunable parameters yet — Steps 1-3 are still "
-        "TODO placeholders that don't read any params (only the shared "
-        "Step 0 normalize_target_mean/var apply, and they're not exposed "
-        "here since there's no technique yet for them to visibly affect)."
+    params = _shared_normalize_controls("b")
+    st.caption("Stage 1 — wavelet detail-coefficient contrast")
+    params["wavelet"] = st.selectbox(
+        "wavelet", ["db4", "db2", "sym4", "coif1"], index=0, key="b_wavelet"
     )
-    return {}
+    params["wavelet_level"] = st.slider(
+        "wavelet_level", 1, 4, 3, 1, key="b_wavelet_level"
+    )
+    params["wavelet_coarse_gain"] = st.slider(
+        "wavelet_coarse_gain", 1.0, 2.0, 1.60, 0.05, key="b_wavelet_coarse_gain"
+    )
+    params["wavelet_fine_gain"] = st.slider(
+        "wavelet_fine_gain", 1.0, 1.5, 1.00, 0.05, key="b_wavelet_fine_gain"
+    )
+    params["wavelet_coefficient_floor_percentile"] = st.slider(
+        "wavelet_coefficient_floor_percentile",
+        0.0,
+        100.0,
+        25.0,
+        5.0,
+        key="b_wavelet_floor",
+    )
+    params["wavelet_contrast_blend"] = st.slider(
+        "wavelet_contrast_blend", 0.0, 1.0, 1.0, 0.05, key="b_wavelet_blend"
+    )
+    st.info("Pipeline B Stages 2 and 3 remain TODO; only Stage 1 parameters are exposed.")
+    return params
 
 
 def render_pipeline_c_controls():
