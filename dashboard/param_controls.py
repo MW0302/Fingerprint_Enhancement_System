@@ -82,7 +82,25 @@ def render_pipeline_b_controls():
     params["denoise_minimum_scale_factor"] = st.slider(
         "denoise_minimum_scale_factor", 0.0, 1.0, 0.10, 0.05, key="b_denoise_minimum"
     )
-    st.info("Pipeline B Stage 3 remains TODO; only Stage 1 and Stage 2 parameters are exposed.")
+    st.caption("Stage 3 — orientation-steered grayscale morphology")
+    params["morph_kernel_length"] = st.slider(
+        "morph_kernel_length", 3, 11, 7, 2, key="b_morph_length"
+    )
+    params["morph_orientation_bins"] = st.slider(
+        "morph_orientation_bins", 4, 20, 12, 4, key="b_morph_bins"
+    )
+    params["morph_strength"] = st.slider(
+        "morph_strength", 0.0, 1.0, 0.50, 0.05, key="b_morph_strength"
+    )
+    params["morph_coherence_floor"] = st.slider(
+        "morph_coherence_floor", 0.0, 0.8, 0.20, 0.05, key="b_morph_floor"
+    )
+    params["morph_coherence_power"] = st.slider(
+        "morph_coherence_power", 0.0, 3.0, 1.0, 0.25, key="b_morph_power"
+    )
+    params["morph_max_darkening"] = st.slider(
+        "morph_max_darkening", 0.0, 32.0, 16.0, 1.0, key="b_morph_cap"
+    )
     return params
 
 

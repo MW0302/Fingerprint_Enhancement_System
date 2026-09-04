@@ -3,8 +3,8 @@
 ## Scope
 
 This document records Pipeline B's P1 milestone. Shared Step 0 runs first,
-then `_wavelet_contrast()` produces the Stage 1 grayscale image. P2 was added
-in a later milestone and is documented separately; P6 remains unimplemented.
+then `_wavelet_contrast()` produces the Stage 1 grayscale image. P2 and P6
+were added in later milestones and are documented separately.
 
 ## Method
 

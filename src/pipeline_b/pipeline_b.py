@@ -39,16 +39,16 @@ of the morphological structuring elements in Step 3. Find your own
 citation for it and for each of the three techniques below when you write
 this up; do not assume any particular citation is already settled.
 
-CRITICAL: enhance() returns the GREYSCALE output (after denoising, before
-binarisation), not a binarised output. NFIQ2 expects greyscale input — see
+CRITICAL: enhance() returns the GREYSCALE output after all three stages, not
+a binarised output. NFIQ2 expects greyscale input — see
 the caution in the analysis document, Section 6, Pipeline B.
 
 Steps 0a-0b (normalisation, segmentation) are implemented as shared
 preprocessing. Stage 1 wavelet-domain contrast enhancement is implemented as
 a separately callable function for cumulative ablation. Stage 2 wavelet
-shrinkage denoising is also independently callable. Stage 3 remains a TODO:
-orientation-steered morphological processing is not implemented in this
-revision.
+shrinkage denoising and Stage 3 orientation-steered morphological processing
+are independently callable as well, allowing every counted technique's
+cumulative NFIQ2 contribution to be measured.
 """
 
 import os
@@ -301,6 +301,130 @@ def _wavelet_shrinkage_denoise(
     return np.clip(np.rint(denoised), 0, 255).astype(np.uint8)
 
 
+def _line_structuring_element(length, angle):
+    """Create an odd-sized one-pixel line kernel at ``angle`` radians."""
+    length = max(1, int(length))
+    if length % 2 == 0:
+        length += 1
+    kernel = np.zeros((length, length), dtype=np.uint8)
+    centre = length // 2
+    radius = length // 2
+    dx = int(round(radius * np.cos(angle)))
+    dy = int(round(radius * np.sin(angle)))
+    cv2.line(
+        kernel,
+        (centre - dx, centre - dy),
+        (centre + dx, centre + dy),
+        1,
+        1,
+        lineType=cv2.LINE_8,
+    )
+    kernel[centre, centre] = 1
+    return kernel
+
+
+def _orientation_steered_morphology(
+    image,
+    theta_field,
+    coherence_field,
+    fg_mask_blocks=None,
+    kernel_length=7,
+    orientation_bins=12,
+    strength=0.50,
+    coherence_floor=0.20,
+    coherence_power=1.0,
+    max_darkening=16.0,
+):
+    """Stage 3: coherence-gated directional grayscale ridge closing.
+
+    Fingerprint ridges are dark in the input, so the image is inverted before
+    grayscale closing. A bank of short line structuring elements follows the
+    shared local ridge-orientation field. Adjacent orientation-bin responses
+    are linearly interpolated; the doubled-angle representation avoids a seam
+    at the equivalent -90/+90 degree orientations. Coherence, segmentation,
+    strength, and a per-pixel darkening cap limit changes in uncertain areas.
+
+    The function returns only a same-shape grayscale uint8 image. It does not
+    expose or return a binary image.
+    """
+    source = np.clip(image, 0, 255).astype(np.float32)
+    if source.ndim != 2:
+        raise ValueError("_orientation_steered_morphology expects a 2D grayscale image")
+
+    theta_blocks = np.asarray(theta_field, dtype=np.float32)
+    coherence_blocks = np.asarray(coherence_field, dtype=np.float32)
+    if theta_blocks.ndim != 2 or theta_blocks.shape != coherence_blocks.shape:
+        raise ValueError("theta_field and coherence_field must be matching 2D arrays")
+
+    length = max(1, int(kernel_length))
+    bins = max(2, int(orientation_bins))
+    strength = float(np.clip(strength, 0.0, 1.0))
+    max_darkening = max(0.0, float(max_darkening))
+    if length <= 1 or strength == 0.0 or max_darkening == 0.0:
+        return source.astype(np.uint8)
+    if length % 2 == 0:
+        length += 1
+
+    height, width = source.shape
+    cos2 = cv2.resize(
+        np.cos(2.0 * theta_blocks),
+        (width, height),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    sin2 = cv2.resize(
+        np.sin(2.0 * theta_blocks),
+        (width, height),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    theta_pixels = np.mod(0.5 * np.arctan2(sin2, cos2), np.pi)
+    bin_position = theta_pixels * bins / np.pi
+    lower_bin = np.floor(bin_position).astype(np.int32) % bins
+    upper_bin = (lower_bin + 1) % bins
+    upper_weight = bin_position - np.floor(bin_position)
+
+    inverted = np.clip(np.rint(255.0 - source), 0, 255).astype(np.uint8)
+    steered_closed = np.zeros_like(source, dtype=np.float32)
+    for bin_index in range(bins):
+        angle = bin_index * np.pi / bins
+        kernel = _line_structuring_element(length, angle)
+        closed = cv2.morphologyEx(
+            inverted,
+            cv2.MORPH_CLOSE,
+            kernel,
+            borderType=cv2.BORDER_REFLECT101,
+        ).astype(np.float32)
+        weights = np.where(lower_bin == bin_index, 1.0 - upper_weight, 0.0)
+        weights += np.where(upper_bin == bin_index, upper_weight, 0.0)
+        steered_closed += weights.astype(np.float32) * closed
+
+    coherence = cv2.resize(
+        coherence_blocks,
+        (width, height),
+        interpolation=cv2.INTER_LINEAR,
+    )
+    coherence_floor = float(np.clip(coherence_floor, 0.0, 0.999999))
+    confidence = np.clip(
+        (coherence - coherence_floor) / (1.0 - coherence_floor),
+        0.0,
+        1.0,
+    )
+    confidence = np.power(confidence, max(0.0, float(coherence_power)))
+
+    if fg_mask_blocks is None:
+        foreground = np.ones_like(source, dtype=np.float32)
+    else:
+        foreground = cv2.resize(
+            np.asarray(fg_mask_blocks, dtype=np.float32),
+            (width, height),
+            interpolation=cv2.INTER_LINEAR,
+        )
+        foreground = np.clip(foreground, 0.0, 1.0)
+
+    ridge_fill = np.clip(steered_closed - inverted.astype(np.float32), 0.0, max_darkening)
+    enhanced = source - strength * confidence * foreground * ridge_fill
+    return np.clip(np.rint(enhanced), 0, 255).astype(np.uint8)
+
+
 def enhance(image, params=None):
     """
     image: 2D grayscale numpy array
@@ -352,24 +476,24 @@ def enhance(image, params=None):
         minimum_scale_factor=params.get("denoise_minimum_scale_factor", 0.10),
     )
 
-    # Step 3: ridge orientation field estimation (supporting calculation,
-    # not one of the three primary techniques) — used to steer Step 4.
-    # theta_field, coherence_field = orientation_field(denoised)
+    # Step 3: shared ridge orientation field estimation is a supporting
+    # calculation, not an additional counted technique.
+    theta_field, coherence_field = orientation_field(denoised)
 
-    # Step 4: orientation-steered morphological processing (P6 —
-    # weak/inconsistent ridge orientation) — TODO
-    # Idea: build directional structuring elements (e.g. short line-shaped
-    # kernels) oriented along theta_field at each block, and use them for
-    # local morphological closing/opening to bridge ridge gaps and remove
-    # spurs along the correct local direction rather than a single fixed
-    # global direction. cv2.morphologyEx and skimage.morphology are
-    # reasonable starting points for the per-block operations themselves.
-    # Ask yourself:
-    #   - how do you build/rotate a structuring element per block?
-    #   - how do you stitch per-block results back together without seams?
-    #   - should low-coherence blocks (ambiguous orientation) be processed
-    #     less aggressively, or skipped?
-    enhanced = denoised  # placeholder — replace once this step is implemented
+    # Stage 3: orientation-steered grayscale morphology (P6). Kept separate
+    # so Stage 3 minus Stage 2 measures this technique's contribution.
+    enhanced = _orientation_steered_morphology(
+        denoised,
+        theta_field,
+        coherence_field,
+        fg_mask_blocks=fg_mask_blocks,
+        kernel_length=params.get("morph_kernel_length", 7),
+        orientation_bins=params.get("morph_orientation_bins", 12),
+        strength=params.get("morph_strength", 0.50),
+        coherence_floor=params.get("morph_coherence_floor", 0.20),
+        coherence_power=params.get("morph_coherence_power", 1.0),
+        max_darkening=params.get("morph_max_darkening", 16.0),
+    )
 
     return enhanced
 

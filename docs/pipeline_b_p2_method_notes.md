@@ -6,7 +6,8 @@ This revision implements only Pipeline B's P2 technique after the locked P1
 output. `_wavelet_shrinkage_denoise()` performs a three-level `db4` transform,
 retains the approximation and coarser detail levels, and applies subband-wise
 BayesShrink soft thresholds to the finest horizontal, vertical, and diagonal
-details. It returns a grayscale `uint8` image; P6 remains unimplemented.
+details. It returns a grayscale `uint8` image for the separately documented
+P6 stage.
 
 The base noise standard deviation is estimated by the median absolute
 deviation of foreground coefficients in the finest diagonal subband. For

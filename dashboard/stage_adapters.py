@@ -12,9 +12,8 @@ Per pipeline:
         _clahe_contrast(), _bilateral_denoise(), _oriented_gabor_filter()
         as separately-callable module functions. This adapter just calls
         them in enhance()'s own order.
-    Pipeline B -- Stages 1 and 2 expose _wavelet_contrast() and
-        _wavelet_shrinkage_denoise(). Stage 3 is still TODO, so the adapter
-        reports the real first two cumulative stages only.
+    Pipeline B -- all three counted stages expose _wavelet_contrast(),
+        _wavelet_shrinkage_denoise(), and _orientation_steered_morphology().
     Pipeline C -- its internals are intentionally NOT exposed (validated/
         tuned, not to be touched -- see src/pipeline_c/pipeline_c.py's own
         module docstring). scripts/pipeline_c_ablation.py already solves
@@ -141,12 +140,23 @@ def get_stages_pipeline_b(image, params=None):
         noise_adaptive_power=params.get("denoise_noise_adaptive_power", 4.0),
         minimum_scale_factor=params.get("denoise_minimum_scale_factor", 0.10),
     )
+    (theta_field, coherence_field), t_orientation = _timed(orientation_field, stage2)
+    stage3, t3 = _timed(
+        pipeline_b._orientation_steered_morphology,
+        stage2,
+        theta_field,
+        coherence_field,
+        fg_mask_blocks,
+        kernel_length=params.get("morph_kernel_length", 7),
+        orientation_bins=params.get("morph_orientation_bins", 12),
+        strength=params.get("morph_strength", 0.50),
+        coherence_floor=params.get("morph_coherence_floor", 0.20),
+        coherence_power=params.get("morph_coherence_power", 1.0),
+        max_darkening=params.get("morph_max_darkening", 16.0),
+    )
     return {
         "available": True,
-        "message": (
-            "Pipeline B Stages 1 and 2 are available. Stage 3 "
-            "orientation-steered morphology remains TODO."
-        ),
+        "message": "",
         "stages": [
             {
                 "name": "Stage 1 (P1 — wavelet detail contrast)",
@@ -157,6 +167,11 @@ def get_stages_pipeline_b(image, params=None):
                 "name": "Stage 2 (P1+P2 — + wavelet shrinkage)",
                 "image": stage2,
                 "time_ms": t2,
+            },
+            {
+                "name": "Stage 3 (P1+P2+P6 — + oriented morphology)",
+                "image": stage3,
+                "time_ms": t_orientation + t3,
             },
         ],
     }

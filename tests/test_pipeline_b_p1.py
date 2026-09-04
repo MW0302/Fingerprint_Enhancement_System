@@ -1,4 +1,4 @@
-"""Regression tests for Pipeline B's independently callable P1/P2 stages."""
+"""Regression tests for Pipeline B's independently callable P1/P2/P6 stages."""
 
 import sys
 import unittest
@@ -15,6 +15,7 @@ sys.path.insert(0, str(REPO_ROOT / "src" / "utils"))
 from pipeline_b import (  # noqa: E402
     _wavelet_contrast,
     _wavelet_shrinkage_denoise,
+    _orientation_steered_morphology,
     enhance,
 )
 
@@ -92,6 +93,73 @@ class WaveletDenoiseTests(unittest.TestCase):
         colour = cv2.cvtColor(self.noisy, cv2.COLOR_GRAY2BGR)
         with self.assertRaises(ValueError):
             _wavelet_shrinkage_denoise(colour)
+
+
+class OrientationSteeredMorphologyTests(unittest.TestCase):
+    def setUp(self):
+        self.image = np.full((65, 65), 220, dtype=np.uint8)
+        self.image[31:34, 8:57] = 35
+        self.image[31:34, 31:34] = 220
+        self.theta = np.zeros((4, 4), dtype=np.float32)
+        self.coherence = np.ones((4, 4), dtype=np.float32)
+
+    def test_horizontal_orientation_fills_horizontal_ridge_gap(self):
+        actual = _orientation_steered_morphology(
+            self.image,
+            self.theta,
+            self.coherence,
+            kernel_length=7,
+            strength=1.0,
+            max_darkening=255.0,
+        )
+        self.assertLess(int(actual[32, 32]), int(self.image[32, 32]))
+
+    def test_perpendicular_orientation_does_not_fill_horizontal_gap(self):
+        vertical_theta = np.full_like(self.theta, np.pi / 2)
+        actual = _orientation_steered_morphology(
+            self.image,
+            vertical_theta,
+            self.coherence,
+            kernel_length=7,
+            strength=1.0,
+            max_darkening=255.0,
+        )
+        self.assertEqual(int(actual[32, 32]), int(self.image[32, 32]))
+
+    def test_identity_strength_is_exact(self):
+        actual = _orientation_steered_morphology(
+            self.image,
+            self.theta,
+            self.coherence,
+            strength=0.0,
+        )
+        np.testing.assert_array_equal(actual, self.image)
+
+    def test_zero_foreground_mask_leaves_image_unchanged(self):
+        actual = _orientation_steered_morphology(
+            self.image,
+            self.theta,
+            self.coherence,
+            fg_mask_blocks=np.zeros((4, 4), dtype=np.uint8),
+        )
+        np.testing.assert_array_equal(actual, self.image)
+
+    def test_preserves_grayscale_contract(self):
+        actual = _orientation_steered_morphology(
+            self.image,
+            self.theta,
+            self.coherence,
+        )
+        self.assertEqual(actual.shape, self.image.shape)
+        self.assertEqual(actual.dtype, np.uint8)
+
+    def test_rejects_mismatched_fields(self):
+        with self.assertRaises(ValueError):
+            _orientation_steered_morphology(
+                self.image,
+                self.theta,
+                np.ones((3, 4), dtype=np.float32),
+            )
 
 
 if __name__ == "__main__":

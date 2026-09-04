@@ -12,9 +12,9 @@ assumed -- see each loader's docstring for how it was confirmed):
     Pipeline A: data/pipeline_a_full_320_cumulative_nfiq2_config_*/
                 per_image_cumulative_scores.csv -- has raw/stage1/stage2/
                 stage3 NFIQ2 per image already.
-    Pipeline B: no final 320-image persisted result yet. P1 and P2 are
-                implemented and have local pilot evidence, while P6 remains
-                TODO; tuning outputs are intentionally not treated as final.
+    Pipeline B: all stages are implemented, but no final 320-image persisted
+                result exists yet. Pilot tuning outputs are intentionally not
+                treated as final.
     Pipeline C: data/processed/pipeline_c/<DB>/batch_results.csv (raw +
                 final-enhanced NFIQ2 per DB) is the validated production
                 source. results/pipeline_c_ablation.csv additionally has
@@ -102,9 +102,9 @@ def load_pipeline_a():
 def load_pipeline_b():
     """Pipeline B has no final persisted 320-image result yet.
 
-    P1 and P2 are implemented, but their ignored 16-image pilot outputs are
-    tuning evidence rather than a final Pipeline B result. P6 is still TODO,
-    so returning None remains the expected state.
+    All stages are implemented, but their ignored 16-image pilot outputs are
+    tuning evidence rather than a final Pipeline B result. Returning None
+    remains the expected state until the locked 320-image run is committed.
     """
     return None
 
