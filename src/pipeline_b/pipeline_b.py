@@ -45,9 +45,10 @@ the caution in the analysis document, Section 6, Pipeline B.
 
 Steps 0a-0b (normalisation, segmentation) are implemented as shared
 preprocessing. Stage 1 wavelet-domain contrast enhancement is implemented as
-a separately callable function for cumulative ablation. Stages 2 and 3 remain
-TODO placeholders: wavelet shrinkage denoising and orientation-steered
-morphological processing are not implemented in this revision.
+a separately callable function for cumulative ablation. Stage 2 wavelet
+shrinkage denoising is also independently callable. Stage 3 remains a TODO:
+orientation-steered morphological processing is not implemented in this
+revision.
 """
 
 import os
@@ -63,6 +64,27 @@ from config import RAW_DIR  # noqa: E402
 import cv2
 import numpy as np
 import pywt
+
+
+_IMMERKAER_NOISE_KERNEL = np.array(
+    [[1, -2, 1], [-2, 4, -2], [1, -2, 1]], dtype=np.float64
+)
+
+
+def _estimate_random_noise_sigma(image):
+    """Estimate additive noise using Immerkær's fast 3x3 operator."""
+    source = np.asarray(image, dtype=np.float64)
+    if source.ndim != 2:
+        raise ValueError("_estimate_random_noise_sigma expects a 2D grayscale image")
+    height, width = source.shape
+    if height < 3 or width < 3:
+        return 0.0
+    response = cv2.filter2D(source, -1, _IMMERKAER_NOISE_KERNEL)
+    return float(
+        np.sqrt(np.pi / 2.0)
+        * np.abs(response).sum()
+        / (6.0 * (width - 2) * (height - 2))
+    )
 
 
 def _wavelet_contrast(
@@ -156,6 +178,129 @@ def _wavelet_contrast(
     return np.clip(np.rint(enhanced), 0, 255).astype(np.uint8)
 
 
+def _wavelet_shrinkage_denoise(
+    image,
+    fg_mask_blocks=None,
+    wavelet="db4",
+    level=3,
+    threshold_scale=1.00,
+    denoise_finest_levels=1,
+    blend=1.0,
+    noise_adaptive=True,
+    noise_reference_sigma=5.0,
+    noise_adaptive_power=4.0,
+    minimum_scale_factor=0.10,
+):
+    """Stage 2: subband-adaptive BayesShrink with soft thresholding.
+
+    Noise sigma is robustly estimated from the finest diagonal-detail band
+    using its median absolute deviation. For every selected detail subband,
+    the BayesShrink threshold ``sigma_noise**2 / sigma_signal`` is computed
+    independently and scaled by ``threshold_scale`` before soft shrinkage.
+    Only the requested number of finest levels are thresholded by default so
+    coarser fingerprint ridge structure is preserved. When ``noise_adaptive``
+    is enabled, Immerkær's structure-robust image-noise estimate scales the
+    threshold strength continuously. The configured minimum factor keeps the
+    counted P2 technique active even on cleaner images.
+
+    The reconstructed denoising increment is blended only into the shared
+    foreground mask when supplied. Output is always a grayscale uint8 array
+    with the same shape as ``image``.
+    """
+    source = np.clip(image, 0, 255).astype(np.float32)
+    if source.ndim != 2:
+        raise ValueError("_wavelet_shrinkage_denoise expects a 2D grayscale image")
+
+    wavelet_obj = pywt.Wavelet(str(wavelet))
+    requested_level = max(1, int(level))
+    max_level = pywt.dwtn_max_level(source.shape, wavelet_obj)
+    actual_level = min(requested_level, max_level)
+    if actual_level < 1:
+        return source.astype(np.uint8)
+
+    threshold_scale = max(0.0, float(threshold_scale))
+    blend = float(np.clip(blend, 0.0, 1.0))
+    finest_levels = int(np.clip(denoise_finest_levels, 0, actual_level))
+    if threshold_scale == 0.0 or blend == 0.0 or finest_levels == 0:
+        return source.astype(np.uint8)
+
+    if noise_adaptive:
+        reference = max(float(noise_reference_sigma), 1e-12)
+        power = max(float(noise_adaptive_power), 0.0)
+        minimum_factor = float(np.clip(minimum_scale_factor, 0.0, 1.0))
+        measured_noise = _estimate_random_noise_sigma(source)
+        scale_factor = np.clip((measured_noise / reference) ** power, minimum_factor, 1.0)
+        threshold_scale *= float(scale_factor)
+
+    coeffs = pywt.wavedec2(
+        source,
+        wavelet_obj,
+        mode="symmetric",
+        level=actual_level,
+    )
+
+    finest_diagonal = coeffs[-1][2]
+    if fg_mask_blocks is None:
+        noise_samples = finest_diagonal.ravel()
+    else:
+        coefficient_mask = cv2.resize(
+            np.asarray(fg_mask_blocks, dtype=np.uint8),
+            (finest_diagonal.shape[1], finest_diagonal.shape[0]),
+            interpolation=cv2.INTER_NEAREST,
+        ).astype(bool)
+        noise_samples = finest_diagonal[coefficient_mask]
+        if noise_samples.size == 0:
+            noise_samples = finest_diagonal.ravel()
+    sigma_noise = float(np.median(np.abs(noise_samples))) / 0.6745
+    if sigma_noise <= 1e-12:
+        return source.astype(np.uint8)
+    noise_variance = sigma_noise * sigma_noise
+
+    mapped_coeffs = [coeffs[0]]
+    first_denoised_index = actual_level - finest_levels + 1
+    for detail_index, details in enumerate(coeffs[1:], start=1):
+        if detail_index < first_denoised_index:
+            mapped_coeffs.append(details)
+            continue
+
+        mapped_details = []
+        for band in details:
+            observed_variance = float(np.mean(np.square(band, dtype=np.float64)))
+            signal_sigma = np.sqrt(max(observed_variance - noise_variance, 0.0))
+            if signal_sigma <= 1e-12:
+                threshold = float(np.max(np.abs(band)))
+            else:
+                threshold = noise_variance / signal_sigma
+            mapped_details.append(
+                pywt.threshold(
+                    band,
+                    value=threshold_scale * threshold,
+                    mode="soft",
+                )
+            )
+        mapped_coeffs.append(tuple(mapped_details))
+
+    reconstructed = pywt.waverec2(
+        mapped_coeffs,
+        wavelet_obj,
+        mode="symmetric",
+    )[: source.shape[0], : source.shape[1]]
+    increment = reconstructed.astype(np.float32) - source
+
+    if fg_mask_blocks is None:
+        foreground = np.ones_like(source, dtype=np.float32)
+    else:
+        foreground = cv2.resize(
+            np.asarray(fg_mask_blocks, dtype=np.float32),
+            (source.shape[1], source.shape[0]),
+            interpolation=cv2.INTER_LINEAR,
+        )
+        foreground = np.clip(foreground, 0.0, 1.0)
+
+    denoised = source + foreground * blend * increment
+    return np.clip(np.rint(denoised), 0, 255).astype(np.uint8)
+
+
 def enhance(image, params=None):
     """
     image: 2D grayscale numpy array
@@ -191,19 +336,25 @@ def enhance(image, params=None):
         blend=params.get("wavelet_contrast_blend", 1.0),
     )
 
-    # Step 2: wavelet decomposition + soft-threshold shrinkage denoising
-    # (P2 — high random noise) — TODO
-    #   coeffs = pywt.wavedec2(contrast_enhanced, 'db4', level=2)
-    #   ... apply soft thresholding to the detail coefficients ...
-    #   denoised = pywt.waverec2(coeffs, 'db4')
-    # Ask yourself: which wavelet family and decomposition level suit DB3's
-    # noise level (roughly 3-4x every other subset)? How is the threshold
-    # chosen (fixed vs. adaptive per level, e.g. universal/VisuShrink)?
-    denoised = contrast_enhanced.copy()  # placeholder — replace once this step is implemented
+    # Stage 2: wavelet soft-threshold shrinkage denoising (P2). Kept separate
+    # so Stage 2 minus Stage 1 measures this technique's contribution.
+    denoised = _wavelet_shrinkage_denoise(
+        contrast_enhanced,
+        fg_mask_blocks=fg_mask_blocks,
+        wavelet=params.get("denoise_wavelet", "db4"),
+        level=params.get("denoise_wavelet_level", 3),
+        threshold_scale=params.get("denoise_threshold_scale", 1.00),
+        denoise_finest_levels=params.get("denoise_finest_levels", 1),
+        blend=params.get("denoise_blend", 1.0),
+        noise_adaptive=params.get("denoise_noise_adaptive", True),
+        noise_reference_sigma=params.get("denoise_noise_reference_sigma", 5.0),
+        noise_adaptive_power=params.get("denoise_noise_adaptive_power", 4.0),
+        minimum_scale_factor=params.get("denoise_minimum_scale_factor", 0.10),
+    )
 
     # Step 3: ridge orientation field estimation (supporting calculation,
     # not one of the three primary techniques) — used to steer Step 4.
-    theta_field, coherence_field = orientation_field(denoised)
+    # theta_field, coherence_field = orientation_field(denoised)
 
     # Step 4: orientation-steered morphological processing (P6 —
     # weak/inconsistent ridge orientation) — TODO

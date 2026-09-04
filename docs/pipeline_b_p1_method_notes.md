@@ -2,10 +2,9 @@
 
 ## Scope
 
-This revision implements only Pipeline B's P1 technique. Shared Step 0 runs
-first, then `_wavelet_contrast()` produces the Stage 1 grayscale image. P2
-wavelet shrinkage denoising and P6 orientation-steered morphology remain
-unimplemented so the three techniques can later be evaluated cumulatively.
+This document records Pipeline B's P1 milestone. Shared Step 0 runs first,
+then `_wavelet_contrast()` produces the Stage 1 grayscale image. P2 was added
+in a later milestone and is documented separately; P6 remains unimplemented.
 
 ## Method
 
@@ -14,7 +13,7 @@ transform, preserves the approximation coefficients, and adaptively amplifies
 the horizontal, vertical, and diagonal detail coefficients. The mapping gives
 larger-magnitude coefficients more of the requested gain and leaves weak
 coefficients closer to their input magnitude. This limits premature noise
-amplification before Pipeline B's future denoising stage. The reconstructed
+amplification before Pipeline B's subsequent denoising stage. The reconstructed
 detail increment is applied only inside the shared foreground mask.
 
 The default selected by the 16-image pilot is:

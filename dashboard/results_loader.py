@@ -12,9 +12,9 @@ assumed -- see each loader's docstring for how it was confirmed):
     Pipeline A: data/pipeline_a_full_320_cumulative_nfiq2_config_*/
                 per_image_cumulative_scores.csv -- has raw/stage1/stage2/
                 stage3 NFIQ2 per image already.
-    Pipeline B: nothing -- its three technique steps are still TODO
-                placeholders (see src/pipeline_b/pipeline_b.py), so there is
-                nothing to load. Expected, not an error.
+    Pipeline B: no final 320-image persisted result yet. P1 and P2 are
+                implemented and have local pilot evidence, while P6 remains
+                TODO; tuning outputs are intentionally not treated as final.
     Pipeline C: data/processed/pipeline_c/<DB>/batch_results.csv (raw +
                 final-enhanced NFIQ2 per DB) is the validated production
                 source. results/pipeline_c_ablation.csv additionally has
@@ -100,10 +100,12 @@ def load_pipeline_a():
 
 
 def load_pipeline_b():
-    """Pipeline B: no persisted results exist (steps are TODO placeholders
-    in src/pipeline_b/pipeline_b.py, confirmed by reading the file -- Steps
-    1-3 all `.copy()` their input unchanged). Always returns None; this is
-    the expected, documented state, not a bug in the loader."""
+    """Pipeline B has no final persisted 320-image result yet.
+
+    P1 and P2 are implemented, but their ignored 16-image pilot outputs are
+    tuning evidence rather than a final Pipeline B result. P6 is still TODO,
+    so returning None remains the expected state.
+    """
     return None
 
 

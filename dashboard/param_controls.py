@@ -66,7 +66,23 @@ def render_pipeline_b_controls():
     params["wavelet_contrast_blend"] = st.slider(
         "wavelet_contrast_blend", 0.0, 1.0, 1.0, 0.05, key="b_wavelet_blend"
     )
-    st.info("Pipeline B Stages 2 and 3 remain TODO; only Stage 1 parameters are exposed.")
+    st.caption("Stage 2 — noise-adaptive BayesShrink soft threshold")
+    params["denoise_threshold_scale"] = st.slider(
+        "denoise_threshold_scale", 0.0, 2.0, 1.0, 0.05, key="b_denoise_scale"
+    )
+    params["denoise_finest_levels"] = st.slider(
+        "denoise_finest_levels", 1, 3, 1, 1, key="b_denoise_levels"
+    )
+    params["denoise_noise_adaptive"] = st.checkbox(
+        "denoise_noise_adaptive", value=True, key="b_denoise_adaptive"
+    )
+    params["denoise_noise_adaptive_power"] = st.slider(
+        "denoise_noise_adaptive_power", 1.0, 6.0, 4.0, 0.5, key="b_denoise_power"
+    )
+    params["denoise_minimum_scale_factor"] = st.slider(
+        "denoise_minimum_scale_factor", 0.0, 1.0, 0.10, 0.05, key="b_denoise_minimum"
+    )
+    st.info("Pipeline B Stage 3 remains TODO; only Stage 1 and Stage 2 parameters are exposed.")
     return params
 
 

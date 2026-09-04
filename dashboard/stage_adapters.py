@@ -12,9 +12,9 @@ Per pipeline:
         _clahe_contrast(), _bilateral_denoise(), _oriented_gabor_filter()
         as separately-callable module functions. This adapter just calls
         them in enhance()'s own order.
-    Pipeline B -- Stage 1 exposes _wavelet_contrast(). Stages 2 and 3 are
-        still TODO placeholders, so the adapter shows the real Stage 1 only
-        and reports that the later cumulative stages are not yet available.
+    Pipeline B -- Stages 1 and 2 expose _wavelet_contrast() and
+        _wavelet_shrinkage_denoise(). Stage 3 is still TODO, so the adapter
+        reports the real first two cumulative stages only.
     Pipeline C -- its internals are intentionally NOT exposed (validated/
         tuned, not to be touched -- see src/pipeline_c/pipeline_c.py's own
         module docstring). scripts/pipeline_c_ablation.py already solves
@@ -127,18 +127,37 @@ def get_stages_pipeline_b(image, params=None):
         ),
         blend=params.get("wavelet_contrast_blend", 1.0),
     )
+    stage2, t2 = _timed(
+        pipeline_b._wavelet_shrinkage_denoise,
+        stage1,
+        fg_mask_blocks,
+        wavelet=params.get("denoise_wavelet", "db4"),
+        level=params.get("denoise_wavelet_level", 3),
+        threshold_scale=params.get("denoise_threshold_scale", 1.00),
+        denoise_finest_levels=params.get("denoise_finest_levels", 1),
+        blend=params.get("denoise_blend", 1.0),
+        noise_adaptive=params.get("denoise_noise_adaptive", True),
+        noise_reference_sigma=params.get("denoise_noise_reference_sigma", 5.0),
+        noise_adaptive_power=params.get("denoise_noise_adaptive_power", 4.0),
+        minimum_scale_factor=params.get("denoise_minimum_scale_factor", 0.10),
+    )
     return {
         "available": True,
         "message": (
-            "Pipeline B Stage 1 is available. Stage 2 wavelet denoising and "
-            "Stage 3 orientation-steered morphology remain TODO."
+            "Pipeline B Stages 1 and 2 are available. Stage 3 "
+            "orientation-steered morphology remains TODO."
         ),
         "stages": [
             {
                 "name": "Stage 1 (P1 — wavelet detail contrast)",
                 "image": stage1,
                 "time_ms": t0 + t_seg + t1,
-            }
+            },
+            {
+                "name": "Stage 2 (P1+P2 — + wavelet shrinkage)",
+                "image": stage2,
+                "time_ms": t2,
+            },
         ],
     }
 
