@@ -12,9 +12,8 @@ assumed -- see each loader's docstring for how it was confirmed):
     Pipeline A: data/pipeline_a_full_320_cumulative_nfiq2_config_*/
                 per_image_cumulative_scores.csv -- has raw/stage1/stage2/
                 stage3 NFIQ2 per image already.
-    Pipeline B: all stages are implemented, but no final 320-image persisted
-                result exists yet. Pilot tuning outputs are intentionally not
-                treated as final.
+    Pipeline B: results/pipeline_b_ablation.csv, the locked 320-image
+                cumulative run with raw and all three stage scores.
     Pipeline C: data/processed/pipeline_c/<DB>/batch_results.csv (raw +
                 final-enhanced NFIQ2 per DB) is the validated production
                 source. results/pipeline_c_ablation.csv additionally has
@@ -100,13 +99,28 @@ def load_pipeline_a():
 
 
 def load_pipeline_b():
-    """Pipeline B has no final persisted 320-image result yet.
-
-    All stages are implemented, but their ignored 16-image pilot outputs are
-    tuning evidence rather than a final Pipeline B result. Returning None
-    remains the expected state until the locked 320-image run is committed.
-    """
-    return None
+    """Pipeline B: locked cumulative 320-image ablation result."""
+    path = os.path.join(RESULTS_DIR, "pipeline_b_ablation.csv")
+    if not os.path.isfile(path):
+        return None
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return None
+    required = {
+        "filename", "database", "raw_nfiq2", "stage1_p1_nfiq2",
+        "stage2_p1_p2_nfiq2", "stage3_p1_p2_p6_nfiq2",
+    }
+    if not required.issubset(df.columns):
+        return None
+    return pd.DataFrame({
+        "file": df["filename"],
+        "db": df["database"],
+        "raw_nfiq2": df["raw_nfiq2"],
+        "stage1_nfiq2": df["stage1_p1_nfiq2"],
+        "stage2_nfiq2": df["stage2_p1_p2_nfiq2"],
+        "enhanced_nfiq2": df["stage3_p1_p2_p6_nfiq2"],
+    })
 
 
 def load_pipeline_c():

@@ -42,6 +42,9 @@ data/processed/pipeline_d/*/*
 results/*
 !results/pipeline_c_ablation.csv
 !results/pipeline_c_ablation_summary.csv
+!results/pipeline_b_ablation.csv
+!results/pipeline_b_ablation_summary.csv
+!results/pipeline_b_worst_regressions.csv
 # Pipeline D's own ablation tool (scripts/pipeline_d_ablation.py) writes to
 # a subdirectory rather than a flat file — same exception pattern, applied
 # one level deeper, ready for whenever that pipeline's results are final.
