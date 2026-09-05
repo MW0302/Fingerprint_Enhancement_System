@@ -155,8 +155,17 @@ def load_pipeline_c():
 def load_pipeline_d():
     """Pipeline D: results/pipeline_d_ablation/pipeline_d_ablation.csv, the
     default output path scripts/pipeline_d_ablation.py writes to (confirmed
-    by reading that script) -- IF it has actually been run and its output
-    kept locally. Not present as of this writing (see module docstring)."""
+    by reading that script). Now committed (see that file's real header):
+    database, filename, relative_path, raw_nfiq2, stage1_p1_nfiq2,
+    stage2_p1_p2_nfiq2, stage3_p1_p2_p6_nfiq2, delta_p1, delta_p2,
+    delta_p6, delta_final, processing_status, error, ... -- final score
+    column is stage3_p1_p2_p6_nfiq2, not enhanced_nfiq2/stage3_nfiq2/
+    final_nfiq2 as originally guessed before this file existed to inspect.
+    The multi-candidate lookups below are kept defensive (rather than
+    hardcoded to only this exact schema) in case a future re-run changes
+    the column names again -- they no longer need to guess for this file,
+    but there's no cost to leaving the fallback in place for the file_col/
+    db_col names, which already matched correctly on the first try."""
     path = os.path.join(RESULTS_DIR, "pipeline_d_ablation", "pipeline_d_ablation.csv")
     if not os.path.isfile(path):
         return None
@@ -164,15 +173,12 @@ def load_pipeline_d():
         df = pd.read_csv(path)
     except Exception:
         return None
-    # Column names aren't confirmed (the file has never existed locally to
-    # inspect) -- try the most likely candidates defensively rather than
-    # assuming, so this starts working the moment the file appears without
-    # needing a code change, but never crashes if the guess is wrong.
     file_col = next((c for c in ("file", "filename") if c in df.columns), None)
     db_col = next((c for c in ("db", "database") if c in df.columns), None)
     raw_col = next((c for c in ("raw_nfiq2",) if c in df.columns), None)
     enhanced_col = next(
-        (c for c in ("enhanced_nfiq2", "stage3_nfiq2", "final_nfiq2") if c in df.columns), None
+        (c for c in ("enhanced_nfiq2", "stage3_nfiq2", "final_nfiq2", "stage3_p1_p2_p6_nfiq2")
+         if c in df.columns), None
     )
     if not all((file_col, db_col, raw_col, enhanced_col)):
         return None
