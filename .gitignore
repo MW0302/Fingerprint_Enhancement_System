@@ -59,6 +59,12 @@ results/pipeline_d_ablation/*
 !results/hybrid_ablation_summary.csv
 !results/hybrid_ablation_variants.csv
 !results/hybrid_ablation_variants_summary.csv
+# Alternative Hybrid combinations (src/hybrid/hybrid_v2a.py, hybrid_v2b.py):
+# same "final locked result, not a sweep/intermediate" exception.
+!results/hybrid_v2_ablation.csv
+!results/hybrid_v2_ablation_summary.csv
+!results/hybrid_v2_ablation_variants.csv
+!results/hybrid_v2_ablation_variants_summary.csv
 *.png
 *.jpg
 *.jpeg
