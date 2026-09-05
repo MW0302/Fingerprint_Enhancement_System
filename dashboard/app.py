@@ -78,15 +78,27 @@ def run_pipeline(name, image, params=None):
     return result, None
 
 
-def safe_imread(path):
-    """cv2.imread returns None (not an exception) on a failed/corrupt read
-    — turn that into a clean st.error instead of an obscure downstream
-    crash (e.g. .shape on None)."""
-    image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+def _report_decode_failure(image, description):
+    """Shared by safe_imread()/safe_imdecode(): both cv2.imread() and
+    cv2.imdecode() return None (not an exception) on a failed/corrupt
+    read — turn that into a clean st.error instead of an obscure
+    downstream crash (e.g. .shape on None)."""
     if image is None:
-        st.error(f"Could not read image file: {path} (corrupt file, unsupported format, or missing).")
+        st.error(f"Could not read image file: {description} (corrupt file, unsupported format, or missing).")
         return None
     return image
+
+
+def safe_imread(path):
+    return _report_decode_failure(cv2.imread(path, cv2.IMREAD_GRAYSCALE), path)
+
+
+def safe_imdecode(file_bytes, description):
+    """Same defensive decode as safe_imread(), for an in-memory upload
+    (st.file_uploader) instead of a file already on disk."""
+    file_array = np.frombuffer(file_bytes, dtype=np.uint8)
+    image = cv2.imdecode(file_array, cv2.IMREAD_GRAYSCALE)
+    return _report_decode_failure(image, description)
 
 
 st.set_page_config(page_title="Fingerprint Enhancement Dashboard", layout="wide")
@@ -98,29 +110,55 @@ tab_single, tab_batch, tab_overview = st.tabs(["Single Image", "Batch", "Overvie
 # Single image tab
 # ---------------------------------------------------------------------------
 with tab_single:
-    col1, col2 = st.columns(2)
-    with col1:
-        db = st.selectbox("Database", DBS)
-    with col2:
-        pipeline_name = st.selectbox("Pipeline", list(PIPELINES.keys()))
-    pipeline_key, _ = PIPELINES[pipeline_name]
+    image_source = st.radio(
+        "Image source",
+        ["Dataset (DB1-4)", "Upload your own image"],
+        horizontal=True,
+    )
 
-    db_dir = os.path.join(RAW_DIR, db)
-    files = sorted(glob.glob(os.path.join(db_dir, "*.tif"))) if os.path.isdir(db_dir) else []
+    ready = False
+    image_path = None
+    uploaded_image = None
 
-    if not files:
-        st.warning(f"No .tif files found in {db_dir} — copy your dataset into data/raw/ (see README).")
+    if image_source == "Dataset (DB1-4)":
+        col1, col2 = st.columns(2)
+        with col1:
+            db = st.selectbox("Database", DBS)
+        with col2:
+            pipeline_name = st.selectbox("Pipeline", list(PIPELINES.keys()))
+        pipeline_key, _ = PIPELINES[pipeline_name]
+
+        db_dir = os.path.join(RAW_DIR, db)
+        files = sorted(glob.glob(os.path.join(db_dir, "*.tif"))) if os.path.isdir(db_dir) else []
+
+        if not files:
+            st.warning(f"No .tif files found in {db_dir} — copy your dataset into data/raw/ (see README).")
+        else:
+            filename = st.selectbox("Image", [os.path.basename(f) for f in files])
+            image_path = os.path.join(db_dir, filename)
+            ready = True
     else:
-        filename = st.selectbox("Image", [os.path.basename(f) for f in files])
-        image_path = os.path.join(db_dir, filename)
+        pipeline_name = st.selectbox("Pipeline", list(PIPELINES.keys()))
+        pipeline_key, _ = PIPELINES[pipeline_name]
 
+        uploaded = st.file_uploader(
+            "Upload a fingerprint image",
+            type=["tif", "tiff", "png", "jpg", "jpeg", "bmp"],
+        )
+        if uploaded is not None:
+            uploaded_image = safe_imdecode(uploaded.getvalue(), uploaded.name)
+            ready = uploaded_image is not None
+        else:
+            st.info("Upload a fingerprint image to continue.")
+
+    if ready:
         with st.expander("Advanced parameters (optional — defaults match this pipeline's own enhance())"):
             params = param_controls.render_advanced_params(pipeline_key)
 
         show_stages = st.checkbox("Show intermediate stages (Stage 1 / 2 / 3)", value=False)
 
         if st.button("Run"):
-            image = safe_imread(image_path)
+            image = safe_imread(image_path) if image_source == "Dataset (DB1-4)" else uploaded_image
             if image is not None:
                 try:
                     start = time.perf_counter()
@@ -145,7 +183,18 @@ with tab_single:
                         st.image(extra, use_container_width=True, clamp=True)
 
                     with st.spinner("Scoring with NFIQ2..."):
-                        raw_score, raw_err = run_nfiq2_single(image_path)
+                        if image_source == "Dataset (DB1-4)":
+                            raw_score, raw_err = run_nfiq2_single(image_path)
+                        else:
+                            # Uploaded image has no on-disk path of its own (and
+                            # is never written under data/ — see this tab's
+                            # privacy note) -- write, score, delete, the same
+                            # temp-file pattern used for the enhanced image
+                            # just below and for each stage image further down.
+                            raw_tmp_path = os.path.join(os.path.dirname(__file__), "_tmp_uploaded_raw.png")
+                            cv2.imwrite(raw_tmp_path, image)
+                            raw_score, raw_err = run_nfiq2_single(raw_tmp_path)
+                            os.remove(raw_tmp_path)
 
                         tmp_path = os.path.join(os.path.dirname(__file__), "_tmp_enhanced.png")
                         cv2.imwrite(tmp_path, enhanced)
