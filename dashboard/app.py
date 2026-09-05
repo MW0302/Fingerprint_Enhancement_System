@@ -143,7 +143,7 @@ with tab_single:
 
         uploaded = st.file_uploader(
             "Upload a fingerprint image",
-            type=["tif", "tiff", "png", "jpg", "jpeg", "bmp"],
+            type=["tif", "tiff", "png", "jpg", "jpeg", "bmp", "webp"],
         )
         if uploaded is not None:
             uploaded_image = safe_imdecode(uploaded.getvalue(), uploaded.name)
@@ -160,13 +160,14 @@ with tab_single:
         if st.button("Run"):
             image = safe_imread(image_path) if image_source == "Dataset (DB1-4)" else uploaded_image
             if image is not None:
-                try:
-                    start = time.perf_counter()
-                    enhanced, extra = run_pipeline(pipeline_name, image, params)
-                    enhance_ms = (time.perf_counter() - start) * 1000.0
-                except Exception as exc:  # noqa: BLE001 — keep the rest of the page alive
-                    st.error(f"{pipeline_name} raised an error while running: {type(exc).__name__}: {exc}")
-                    enhanced, extra, enhance_ms = None, None, None
+                with st.spinner(f"Running {pipeline_name}..."):
+                    try:
+                        start = time.perf_counter()
+                        enhanced, extra = run_pipeline(pipeline_name, image, params)
+                        enhance_ms = (time.perf_counter() - start) * 1000.0
+                    except Exception as exc:  # noqa: BLE001 — keep the rest of the page alive
+                        st.error(f"{pipeline_name} raised an error while running: {type(exc).__name__}: {exc}")
+                        enhanced, extra, enhance_ms = None, None, None
 
                 if enhanced is not None:
                     col_before, col_after = st.columns(2)
