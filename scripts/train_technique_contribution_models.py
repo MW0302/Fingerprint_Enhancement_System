@@ -1,4 +1,9 @@
 """
+SUPERSEDED (real data for all 4 pipelines now exists) -- see
+scripts/section_2_4_modeling.py and docs/section_2_4_findings.md for the
+real, 4-pipeline x 3-category version of this analysis. Kept as-is
+(unmodified) for history; not deleted, not re-run.
+
 Methodology dry-run: can the 7 diagnostic degradation features
 (results/per_image_metrics.csv) predict how much NFIQ2 each of Pipeline C's
 three techniques contributes per image (results/pipeline_c_ablation.csv's
