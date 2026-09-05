@@ -42,6 +42,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_a
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_b"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_c"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_d"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "hybrid"))
 
 from common import run_nfiq2_single  # noqa: E402
 from config import RAW_DIR, PROCESSED_DIR, DBS  # noqa: E402
@@ -49,6 +50,7 @@ import pipeline_a  # noqa: E402
 import pipeline_b  # noqa: E402
 import pipeline_c  # noqa: E402
 import pipeline_d  # noqa: E402
+import hybrid  # noqa: E402
 
 import results_loader  # noqa: E402
 import stage_adapters  # noqa: E402
@@ -60,6 +62,7 @@ PIPELINES = {
     "Pipeline B — Wavelet Contrast + Wavelet Denoising + Morphology": ("pipeline_b", pipeline_b),
     "Pipeline C — Homomorphic + Coherence Diffusion + Log-Gabor": ("pipeline_c", pipeline_c),
     "Pipeline D — FFT Emphasis + Wiener + STFT": ("pipeline_d", pipeline_d),
+    "Hybrid — B's Wavelet Contrast + C's Coherence Diffusion + A's Oriented Gabor": ("hybrid", hybrid),
 }
 
 
