@@ -52,6 +52,13 @@ results/*
 results/pipeline_d_ablation/*
 !results/pipeline_d_ablation/pipeline_d_ablation.csv
 !results/pipeline_d_ablation/pipeline_d_ablation_summary.csv
+# Hybrid pipeline (src/hybrid/hybrid.py): full cumulative ablation, and the
+# hybrid-minus-one-component validation variants -- same "final locked
+# result, not a sweep/intermediate" exception as every pipeline above.
+!results/hybrid_ablation.csv
+!results/hybrid_ablation_summary.csv
+!results/hybrid_ablation_variants.csv
+!results/hybrid_ablation_variants_summary.csv
 *.png
 *.jpg
 *.jpeg
