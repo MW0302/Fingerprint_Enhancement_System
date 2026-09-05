@@ -62,7 +62,7 @@ PIPELINES = {
     "Pipeline B — Wavelet Contrast + Wavelet Denoising + Morphology": ("pipeline_b", pipeline_b),
     "Pipeline C — Homomorphic + Coherence Diffusion + Log-Gabor": ("pipeline_c", pipeline_c),
     "Pipeline D — FFT Emphasis + Wiener + STFT": ("pipeline_d", pipeline_d),
-    "Hybrid — B's Wavelet Contrast + C's Coherence Diffusion + A's Oriented Gabor": ("hybrid", hybrid),
+    "Hybrid — C's Homomorphic+Feathered Contrast + C's Coherence Diffusion + A's Oriented Gabor": ("hybrid", hybrid),
 }
 
 

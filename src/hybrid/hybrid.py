@@ -1,14 +1,29 @@
 """
 Hybrid pipeline (Handover Notes Priority 5 / Section 17): FIXED, not
 adaptive -- one single pipeline (Step0 -> chosen P1 -> chosen P2 -> chosen
-P6) applied identically to every image. Assembled from the three per-slot
-winners selected in Section 2.4 steps 1-3 (docs/section_2_4_findings.md)
-and adjusted by the project lead's paired-statistical review (paired
-t-test/Wilcoxon on Pipeline B vs C's delta_P1 -- C's higher mean was not
-significant, while B is clearly more reliable on every other metric):
+P6) applied identically to every image.
 
-    P1 (contrast)     -> Pipeline B's wavelet contrast enhancement
-                         (_wavelet_contrast, src/pipeline_b/pipeline_b.py)
+P1 was originally Pipeline B's wavelet contrast (the project lead's
+paired-statistical override of Section 2.4's mechanical P1 winner -- paired
+t-test/Wilcoxon on Pipeline B vs C's delta_P1 showed C's higher mean was not
+significant, while B was more reliable on every other metric). Real 320-
+image NFIQ2 validation of that assembly (docs/hybrid_validation_findings.md)
+then found two real problems traced to P1/P2 being drawn from different
+pipelines: a 20/80 (25%) DB3_B NFIQ2-scoreability collapse at Stage 2+, and
+DB1_B netting -3.28 overall. A follow-up validation of alternative P1/P2
+pairings (docs/hybrid_alternative_combinations.md, src/hybrid/hybrid_v2a.py)
+confirmed the cause and fixed it: pairing Pipeline C's diffusion back with
+Pipeline C's OWN P1 (homomorphic filtering + its Step 1b background-
+feathering blend, not just the homomorphic filter alone) restores the
+79/80 DB3_B scoreability ceiling every other pipeline already has, and
+edges the overall mean above Pipeline C alone (51.95 vs 51.53). P1 was
+switched to this pairing as a result -- see that doc for DB1_B's own
+tradeoff under this composition (net -7.20, the worst DB1_B of any
+combination tested, reported there in full and not hidden here):
+
+    P1 (contrast)     -> Pipeline C's homomorphic filter + Step 1b
+                         background-feathering blend
+                         (_homomorphic_filter, src/pipeline_c/pipeline_c.py)
     P2 (noise)        -> Pipeline C's coherence-enhancing diffusion
                          (_coherence_diffusion, src/pipeline_c/pipeline_c.py)
     P6 (orientation)  -> Pipeline A's oriented Gabor filtering
@@ -35,7 +50,6 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "utils"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "pipeline_a"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "pipeline_b"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "pipeline_c"))
 
 from common import (  # noqa: E402
@@ -44,16 +58,18 @@ from common import (  # noqa: E402
 )
 from config import RAW_DIR  # noqa: E402
 
-from pipeline_b import _wavelet_contrast  # noqa: E402
 from pipeline_c import (  # noqa: E402
     _aggressiveness_alpha,
     _lerp,
+    _homomorphic_filter,
+    _HOMOMORPHIC_GAMMA_HIGH_RANGE,
     _coherence_diffusion,
     _DIFFUSION_ITERATIONS_RANGE,
     _DIFFUSION_KAPPA_RANGE,
 )
 from pipeline_a import _oriented_gabor_filter  # noqa: E402
 
+import numpy as np
 import cv2
 
 
@@ -73,23 +89,64 @@ def stage0_preprocess(image, params=None):
 
 
 def stage1_contrast(normalized, fg_mask_blocks, params=None):
-    """Stage 1 (P1): Pipeline B's _wavelet_contrast, on the shared Step 0
-    output. Real locked defaults confirmed against src/pipeline_b/
-    pipeline_b.py's enhance() (lines 450-461): wavelet="db4", level=3,
-    coarse_gain=1.60, fine_gain=1.00, coefficient_floor_percentile=25.0,
-    blend=1.0 -- identical to the function's own signature defaults, i.e.
-    pipeline_b.py never overrides them either."""
+    """Stage 1 (P1): Pipeline C's own P1 stage -- _homomorphic_filter,
+    immediately followed by its Step 1b background-feathering blend.
+    Reproduces pipeline_c.py's enhance() (the block from "# Step 1:
+    homomorphic filtering" through immediately before "# Step 2: ridge
+    orientation field estimation") exactly, confirmed line by line:
+
+      - Step 0c's alpha probe (pipeline_c.py, right before Step 1):
+        orientation_field() on the shared, pre-P1 Step 0 `normalized`
+        image, followed by _aggressiveness_alpha(normalized's coherence,
+        fg_mask_blocks). This duplicates stage2_noise()'s own identical
+        alpha computation below -- expected and harmless, since it is a
+        deterministic function of `normalized`/`fg_mask_blocks` alone, not
+        of anything this stage produces.
+      - _homomorphic_filter(normalized, cutoff=0.06, gamma_low=0.5,
+        gamma_high=_lerp(_HOMOMORPHIC_GAMMA_HIGH_RANGE, alpha),
+        sharpness=1.0): pipeline_c.py's own real locked defaults for this
+        call, reused unchanged (gamma_high is the one alpha-scaled value;
+        _HOMOMORPHIC_GAMMA_HIGH_RANGE and _lerp are pipeline_c.py's own,
+        imported directly, not re-derived).
+      - Step 1b feathering blend: fg_mask_blocks resized to image shape
+        (cv2.INTER_LINEAR), Gaussian-blurred (sigma=8.0), clipped to
+        [0, 1] as fg_alpha, then contrast_enhanced = fg_alpha *
+        contrast_enhanced_raw + (1 - fg_alpha) * normalized, clipped to
+        [0, 255] uint8 -- pipeline_c.py's exact blend, reused unchanged.
+        Keeps background/low-confidence regions close to the pre-filter
+        brightness rather than the raw homomorphic output; validated
+        (docs/hybrid_alternative_combinations.md Section 3) as the piece
+        that lets Stage 2's diffusion run safely on DB3_B's marginal-
+        foreground images -- swapping in a different P1 technique ahead
+        of the same diffusion call, without this blend, is what caused
+        the DB3_B scoreability collapse documented in
+        docs/hybrid_validation_findings.md."""
     params = params or {}
-    return _wavelet_contrast(
+    _theta_probe, coherence_probe = orientation_field(normalized)
+    alpha = _aggressiveness_alpha(coherence_probe, fg_mask_blocks)
+
+    contrast_enhanced_raw = _homomorphic_filter(
         normalized,
-        fg_mask_blocks=fg_mask_blocks,
-        wavelet=params.get("wavelet", "db4"),
-        level=params.get("wavelet_level", 3),
-        coarse_gain=params.get("wavelet_coarse_gain", 1.60),
-        fine_gain=params.get("wavelet_fine_gain", 1.00),
-        coefficient_floor_percentile=params.get("wavelet_coefficient_floor_percentile", 25.0),
-        blend=params.get("wavelet_contrast_blend", 1.0),
+        cutoff=params.get("homomorphic_cutoff", 0.06),
+        gamma_low=params.get("homomorphic_gamma_low", 0.5),
+        gamma_high=params.get(
+            "homomorphic_gamma_high", _lerp(_HOMOMORPHIC_GAMMA_HIGH_RANGE, alpha)
+        ),
+        sharpness=params.get("homomorphic_sharpness", 1.0),
     )
+
+    h, w = normalized.shape
+    fg_alpha = cv2.resize(
+        fg_mask_blocks.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR
+    )
+    fg_alpha = cv2.GaussianBlur(fg_alpha, (0, 0), 8.0)
+    fg_alpha = np.clip(fg_alpha, 0.0, 1.0)
+    contrast_enhanced = (
+        fg_alpha * contrast_enhanced_raw.astype(np.float64)
+        + (1 - fg_alpha) * normalized.astype(np.float64)
+    )
+    contrast_enhanced = np.clip(contrast_enhanced, 0, 255).astype(np.uint8)
+    return contrast_enhanced
 
 
 def stage2_noise(normalized, stage1_output, fg_mask_blocks, params=None):
@@ -184,10 +241,12 @@ def enhance(image, params=None):
     returns: enhanced 2D grayscale numpy array, same shape as image
 
     Fixed hybrid pipeline (Handover Notes Priority 5 / Section 17): Step 0
-    -> Pipeline B's wavelet contrast (P1) -> Pipeline C's coherence
-    diffusion (P2) -> Pipeline A's oriented Gabor filtering (P6), applied
-    identically to every image -- not adaptive/per-image technique
-    selection; the fixed 3-stage composition Section 2.4 selected.
+    -> Pipeline C's homomorphic filter + Step 1b feathering (P1) ->
+    Pipeline C's coherence diffusion (P2) -> Pipeline A's oriented Gabor
+    filtering (P6), applied identically to every image -- not adaptive/
+    per-image technique selection; see this module's own docstring above
+    for how P1 arrived at Pipeline C's own technique instead of Section
+    2.4's original Pipeline B selection.
     """
     params = params or {}
     normalized, fg_mask_blocks = stage0_preprocess(image, params)

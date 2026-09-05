@@ -19,16 +19,16 @@ import numpy as np
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src" / "hybrid"))
 sys.path.insert(0, str(REPO_ROOT / "src" / "pipeline_a"))
-sys.path.insert(0, str(REPO_ROOT / "src" / "pipeline_b"))
 sys.path.insert(0, str(REPO_ROOT / "src" / "pipeline_c"))
 sys.path.insert(0, str(REPO_ROOT / "src" / "utils"))
 
 from common import orientation_field, segment  # noqa: E402
 from pipeline_a import _oriented_gabor_filter  # noqa: E402
-from pipeline_b import _wavelet_contrast  # noqa: E402
 from pipeline_c import (  # noqa: E402
     _aggressiveness_alpha,
     _lerp,
+    _homomorphic_filter,
+    _HOMOMORPHIC_GAMMA_HIGH_RANGE,
     _coherence_diffusion,
     _DIFFUSION_ITERATIONS_RANGE,
     _DIFFUSION_KAPPA_RANGE,
@@ -69,23 +69,57 @@ class Stage1ContrastTests(unittest.TestCase):
         self.image = _synthetic_fingerprint()
         self.normalized, self.fg_mask_blocks = hybrid.stage0_preprocess(self.image)
 
-    def test_matches_direct_pipeline_b_call_exactly(self):
-        """Stage 1 must be bit-identical to calling Pipeline B's own
-        _wavelet_contrast directly with its own real defaults -- confirms
-        the wrapper isn't silently altering any parameter."""
-        actual = hybrid.stage1_contrast(self.normalized, self.fg_mask_blocks)
-        expected = _wavelet_contrast(
+    def test_matches_direct_pipeline_c_call_exactly(self):
+        """Stage 1 must be bit-identical to manually reconstructing
+        pipeline_c.py's own Step 0c alpha probe + Step 1 homomorphic
+        filter + Step 1b feather blend, using its own real defaults --
+        confirms the wrapper isn't silently altering any parameter."""
+        _theta_probe, coherence_probe = orientation_field(self.normalized)
+        alpha = _aggressiveness_alpha(coherence_probe, self.fg_mask_blocks)
+        contrast_enhanced_raw = _homomorphic_filter(
             self.normalized,
-            fg_mask_blocks=self.fg_mask_blocks,
-            wavelet="db4", level=3, coarse_gain=1.60, fine_gain=1.00,
-            coefficient_floor_percentile=25.0, blend=1.0,
+            cutoff=0.06, gamma_low=0.5,
+            gamma_high=_lerp(_HOMOMORPHIC_GAMMA_HIGH_RANGE, alpha),
+            sharpness=1.0,
         )
+        h, w = self.normalized.shape
+        fg_alpha = cv2.resize(
+            self.fg_mask_blocks.astype(np.float32), (w, h), interpolation=cv2.INTER_LINEAR
+        )
+        fg_alpha = cv2.GaussianBlur(fg_alpha, (0, 0), 8.0)
+        fg_alpha = np.clip(fg_alpha, 0.0, 1.0)
+        expected = (
+            fg_alpha * contrast_enhanced_raw.astype(np.float64)
+            + (1 - fg_alpha) * self.normalized.astype(np.float64)
+        )
+        expected = np.clip(expected, 0, 255).astype(np.uint8)
+
+        actual = hybrid.stage1_contrast(self.normalized, self.fg_mask_blocks)
         np.testing.assert_array_equal(actual, expected)
 
     def test_preserves_grayscale_contract(self):
         actual = hybrid.stage1_contrast(self.normalized, self.fg_mask_blocks)
         self.assertEqual(actual.shape, self.normalized.shape)
         self.assertEqual(actual.dtype, np.uint8)
+
+    def test_background_is_fed_back_toward_normalized(self):
+        """Step 1b's whole purpose is to keep background regions close to
+        `normalized` rather than the raw homomorphic output -- confirm the
+        all-background corner (fg_mask_blocks all zero there) stays much
+        closer to `normalized` than an unblended homomorphic filter would
+        leave it."""
+        fg_mask_blocks = np.ones_like(self.fg_mask_blocks)
+        fg_mask_blocks[:2, :2] = 0  # force a background corner
+        actual = hybrid.stage1_contrast(self.normalized, fg_mask_blocks)
+        raw = _homomorphic_filter(self.normalized, cutoff=0.06, gamma_low=0.5, gamma_high=2.0, sharpness=1.0)
+        corner_slice = (slice(0, 16), slice(0, 16))
+        dist_to_normalized = np.abs(
+            actual[corner_slice].astype(np.int32) - self.normalized[corner_slice].astype(np.int32)
+        ).mean()
+        dist_to_raw_homomorphic = np.abs(
+            actual[corner_slice].astype(np.int32) - raw[corner_slice].astype(np.int32)
+        ).mean()
+        self.assertLess(dist_to_normalized, dist_to_raw_homomorphic)
 
     def test_rejects_colour_input_via_underlying_function(self):
         colour = cv2.cvtColor(self.normalized, cv2.COLOR_GRAY2BGR)
