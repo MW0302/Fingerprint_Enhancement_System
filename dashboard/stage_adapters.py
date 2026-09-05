@@ -12,10 +12,8 @@ Per pipeline:
         _clahe_contrast(), _bilateral_denoise(), _oriented_gabor_filter()
         as separately-callable module functions. This adapter just calls
         them in enhance()'s own order.
-    Pipeline B -- has no separate step functions (Steps 1-3 are TODO
-        placeholders, confirmed by reading the file: each one is a bare
-        `.copy()` of its input). get_stages() returns available=False with
-        an explanatory message instead of erroring or faking a breakdown.
+    Pipeline B -- all three counted stages expose _wavelet_contrast(),
+        _wavelet_shrinkage_denoise(), and _orientation_steered_morphology().
     Pipeline C -- its internals are intentionally NOT exposed (validated/
         tuned, not to be touched -- see src/pipeline_c/pipeline_c.py's own
         module docstring). scripts/pipeline_c_ablation.py already solves
@@ -45,6 +43,7 @@ import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "utils"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_a"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_b"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_d"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
@@ -52,6 +51,7 @@ from common import normalize_image, segment, orientation_field  # noqa: E402
 from common import DEFAULT_NORMALIZE_TARGET_MEAN, DEFAULT_NORMALIZE_TARGET_VAR  # noqa: E402
 
 import pipeline_a  # noqa: E402
+import pipeline_b  # noqa: E402
 import pipeline_d  # noqa: E402
 
 
@@ -105,16 +105,75 @@ def get_stages_pipeline_a(image, params=None):
 
 
 def get_stages_pipeline_b(image, params=None):
-    return {
-        "available": False,
-        "message": (
-            "Pipeline B's techniques aren't implemented yet — Steps 1-3 in "
-            "src/pipeline_b/pipeline_b.py are still TODO placeholders that "
-            "pass the image through unchanged (that's someone else's "
-            "in-progress work, not a bug here). No stage-by-stage "
-            "breakdown to show until those are implemented."
+    params = params or {}
+    normalized, t0 = _timed(
+        normalize_image,
+        image,
+        target_mean=params.get("normalize_target_mean", DEFAULT_NORMALIZE_TARGET_MEAN),
+        target_var=params.get("normalize_target_var", DEFAULT_NORMALIZE_TARGET_VAR),
+    )
+    (fg_mask_blocks, _block_var), t_seg = _timed(segment, normalized)
+    stage1, t1 = _timed(
+        pipeline_b._wavelet_contrast,
+        normalized,
+        fg_mask_blocks,
+        wavelet=params.get("wavelet", "db4"),
+        level=params.get("wavelet_level", 3),
+        coarse_gain=params.get("wavelet_coarse_gain", 1.60),
+        fine_gain=params.get("wavelet_fine_gain", 1.00),
+        coefficient_floor_percentile=params.get(
+            "wavelet_coefficient_floor_percentile", 25.0
         ),
-        "stages": [],
+        blend=params.get("wavelet_contrast_blend", 1.0),
+    )
+    stage2, t2 = _timed(
+        pipeline_b._wavelet_shrinkage_denoise,
+        stage1,
+        fg_mask_blocks,
+        wavelet=params.get("denoise_wavelet", "db4"),
+        level=params.get("denoise_wavelet_level", 3),
+        threshold_scale=params.get("denoise_threshold_scale", 1.00),
+        denoise_finest_levels=params.get("denoise_finest_levels", 1),
+        blend=params.get("denoise_blend", 1.0),
+        noise_adaptive=params.get("denoise_noise_adaptive", True),
+        noise_reference_sigma=params.get("denoise_noise_reference_sigma", 5.0),
+        noise_adaptive_power=params.get("denoise_noise_adaptive_power", 4.0),
+        minimum_scale_factor=params.get("denoise_minimum_scale_factor", 0.10),
+    )
+    (theta_field, coherence_field), t_orientation = _timed(orientation_field, stage2)
+    stage3, t3 = _timed(
+        pipeline_b._orientation_steered_morphology,
+        stage2,
+        theta_field,
+        coherence_field,
+        fg_mask_blocks,
+        kernel_length=params.get("morph_kernel_length", 7),
+        orientation_bins=params.get("morph_orientation_bins", 12),
+        strength=params.get("morph_strength", 0.50),
+        coherence_floor=params.get("morph_coherence_floor", 0.20),
+        coherence_power=params.get("morph_coherence_power", 1.0),
+        max_darkening=params.get("morph_max_darkening", 16.0),
+    )
+    return {
+        "available": True,
+        "message": "",
+        "stages": [
+            {
+                "name": "Stage 1 (P1 — wavelet detail contrast)",
+                "image": stage1,
+                "time_ms": t0 + t_seg + t1,
+            },
+            {
+                "name": "Stage 2 (P1+P2 — + wavelet shrinkage)",
+                "image": stage2,
+                "time_ms": t2,
+            },
+            {
+                "name": "Stage 3 (P1+P2+P6 — + oriented morphology)",
+                "image": stage3,
+                "time_ms": t_orientation + t3,
+            },
+        ],
     }
 
 

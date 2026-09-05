@@ -41,13 +41,67 @@ def render_pipeline_a_controls():
 
 
 def render_pipeline_b_controls():
-    st.info(
-        "Pipeline B has no tunable parameters yet — Steps 1-3 are still "
-        "TODO placeholders that don't read any params (only the shared "
-        "Step 0 normalize_target_mean/var apply, and they're not exposed "
-        "here since there's no technique yet for them to visibly affect)."
+    params = _shared_normalize_controls("b")
+    st.caption("Stage 1 — wavelet detail-coefficient contrast")
+    params["wavelet"] = st.selectbox(
+        "wavelet", ["db4", "db2", "sym4", "coif1"], index=0, key="b_wavelet"
     )
-    return {}
+    params["wavelet_level"] = st.slider(
+        "wavelet_level", 1, 4, 3, 1, key="b_wavelet_level"
+    )
+    params["wavelet_coarse_gain"] = st.slider(
+        "wavelet_coarse_gain", 1.0, 2.0, 1.60, 0.05, key="b_wavelet_coarse_gain"
+    )
+    params["wavelet_fine_gain"] = st.slider(
+        "wavelet_fine_gain", 1.0, 1.5, 1.00, 0.05, key="b_wavelet_fine_gain"
+    )
+    params["wavelet_coefficient_floor_percentile"] = st.slider(
+        "wavelet_coefficient_floor_percentile",
+        0.0,
+        100.0,
+        25.0,
+        5.0,
+        key="b_wavelet_floor",
+    )
+    params["wavelet_contrast_blend"] = st.slider(
+        "wavelet_contrast_blend", 0.0, 1.0, 1.0, 0.05, key="b_wavelet_blend"
+    )
+    st.caption("Stage 2 — noise-adaptive BayesShrink soft threshold")
+    params["denoise_threshold_scale"] = st.slider(
+        "denoise_threshold_scale", 0.0, 2.0, 1.0, 0.05, key="b_denoise_scale"
+    )
+    params["denoise_finest_levels"] = st.slider(
+        "denoise_finest_levels", 1, 3, 1, 1, key="b_denoise_levels"
+    )
+    params["denoise_noise_adaptive"] = st.checkbox(
+        "denoise_noise_adaptive", value=True, key="b_denoise_adaptive"
+    )
+    params["denoise_noise_adaptive_power"] = st.slider(
+        "denoise_noise_adaptive_power", 1.0, 6.0, 4.0, 0.5, key="b_denoise_power"
+    )
+    params["denoise_minimum_scale_factor"] = st.slider(
+        "denoise_minimum_scale_factor", 0.0, 1.0, 0.10, 0.05, key="b_denoise_minimum"
+    )
+    st.caption("Stage 3 — orientation-steered grayscale morphology")
+    params["morph_kernel_length"] = st.slider(
+        "morph_kernel_length", 3, 11, 7, 2, key="b_morph_length"
+    )
+    params["morph_orientation_bins"] = st.slider(
+        "morph_orientation_bins", 4, 20, 12, 4, key="b_morph_bins"
+    )
+    params["morph_strength"] = st.slider(
+        "morph_strength", 0.0, 1.0, 0.50, 0.05, key="b_morph_strength"
+    )
+    params["morph_coherence_floor"] = st.slider(
+        "morph_coherence_floor", 0.0, 0.8, 0.20, 0.05, key="b_morph_floor"
+    )
+    params["morph_coherence_power"] = st.slider(
+        "morph_coherence_power", 0.0, 3.0, 1.0, 0.25, key="b_morph_power"
+    )
+    params["morph_max_darkening"] = st.slider(
+        "morph_max_darkening", 0.0, 32.0, 16.0, 1.0, key="b_morph_cap"
+    )
+    return params
 
 
 def render_pipeline_c_controls():

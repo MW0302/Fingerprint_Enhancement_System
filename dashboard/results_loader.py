@@ -12,9 +12,8 @@ assumed -- see each loader's docstring for how it was confirmed):
     Pipeline A: data/pipeline_a_full_320_cumulative_nfiq2_config_*/
                 per_image_cumulative_scores.csv -- has raw/stage1/stage2/
                 stage3 NFIQ2 per image already.
-    Pipeline B: nothing -- its three technique steps are still TODO
-                placeholders (see src/pipeline_b/pipeline_b.py), so there is
-                nothing to load. Expected, not an error.
+    Pipeline B: results/pipeline_b_ablation.csv, the locked 320-image
+                cumulative run with raw and all three stage scores.
     Pipeline C: data/processed/pipeline_c/<DB>/batch_results.csv (raw +
                 final-enhanced NFIQ2 per DB) is the validated production
                 source. results/pipeline_c_ablation.csv additionally has
@@ -100,11 +99,28 @@ def load_pipeline_a():
 
 
 def load_pipeline_b():
-    """Pipeline B: no persisted results exist (steps are TODO placeholders
-    in src/pipeline_b/pipeline_b.py, confirmed by reading the file -- Steps
-    1-3 all `.copy()` their input unchanged). Always returns None; this is
-    the expected, documented state, not a bug in the loader."""
-    return None
+    """Pipeline B: locked cumulative 320-image ablation result."""
+    path = os.path.join(RESULTS_DIR, "pipeline_b_ablation.csv")
+    if not os.path.isfile(path):
+        return None
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return None
+    required = {
+        "filename", "database", "raw_nfiq2", "stage1_p1_nfiq2",
+        "stage2_p1_p2_nfiq2", "stage3_p1_p2_p6_nfiq2",
+    }
+    if not required.issubset(df.columns):
+        return None
+    return pd.DataFrame({
+        "file": df["filename"],
+        "db": df["database"],
+        "raw_nfiq2": df["raw_nfiq2"],
+        "stage1_nfiq2": df["stage1_p1_nfiq2"],
+        "stage2_nfiq2": df["stage2_p1_p2_nfiq2"],
+        "enhanced_nfiq2": df["stage3_p1_p2_p6_nfiq2"],
+    })
 
 
 def load_pipeline_c():
