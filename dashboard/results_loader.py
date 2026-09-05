@@ -30,6 +30,9 @@ assumed -- see each loader's docstring for how it was confirmed):
                 with results available". It will show the same "not yet
                 available, live-run only" state as Pipeline B until someone
                 runs pipeline_d_ablation.py and the output lands on disk.
+    Hybrid:     results/hybrid_ablation.csv, the fixed Section-2.4 hybrid's
+                own full-320-image cumulative ablation (src/hybrid/
+                hybrid.py + scripts/hybrid_ablation.py).
 
 Every load_pipeline_*() function returns a DataFrame with at least the
 columns `file`, `db`, `raw_nfiq2`, `enhanced_nfiq2` (plus optional
@@ -52,6 +55,7 @@ PIPELINE_LABELS = {
     "pipeline_b": "Pipeline B",
     "pipeline_c": "Pipeline C",
     "pipeline_d": "Pipeline D",
+    "hybrid": "Hybrid",
 }
 
 
@@ -206,11 +210,40 @@ def load_pipeline_d():
     })
 
 
+def load_hybrid():
+    """Hybrid: results/hybrid_ablation.csv, written by
+    scripts/hybrid_ablation.py -- columns db, file, raw_nfiq2, raw_error,
+    stage1_nfiq2, stage1_error, stage2_nfiq2, stage2_error, stage3_nfiq2,
+    stage3_error, delta_p1, delta_p2, delta_p6, delta_final (confirmed by
+    reading that script directly). Same missing-value convention as every
+    other pipeline: DB3_B/110_5.tif has a blank raw_nfiq2 with real NFIQ2
+    error text in raw_error, never zero-filled."""
+    path = os.path.join(RESULTS_DIR, "hybrid_ablation.csv")
+    if not os.path.isfile(path):
+        return None
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return None
+    required = {"db", "file", "raw_nfiq2", "stage1_nfiq2", "stage2_nfiq2", "stage3_nfiq2"}
+    if not required.issubset(df.columns):
+        return None
+    return pd.DataFrame({
+        "file": df["file"],
+        "db": df["db"],
+        "raw_nfiq2": df["raw_nfiq2"],
+        "stage1_nfiq2": df["stage1_nfiq2"],
+        "stage2_nfiq2": df["stage2_nfiq2"],
+        "enhanced_nfiq2": df["stage3_nfiq2"],
+    })
+
+
 _LOADERS = {
     "pipeline_a": load_pipeline_a,
     "pipeline_b": load_pipeline_b,
     "pipeline_c": load_pipeline_c,
     "pipeline_d": load_pipeline_d,
+    "hybrid": load_hybrid,
 }
 
 
@@ -240,8 +273,10 @@ def availability_summary(loaded=None):
 
 def build_master_table(loaded=None):
     """Image | DB | Raw NFIQ2 | Pipeline A | Pipeline B | Pipeline C |
-    Pipeline D | Hybrid. Hybrid is intentionally left NaN -- it depends on
-    Pipeline B finishing first (see task context), never fabricated here.
+    Pipeline D | Hybrid. Hybrid is populated from load_hybrid() the same
+    generic way as every other pipeline once results/hybrid_ablation.csv
+    exists (src/hybrid/hybrid.py + scripts/hybrid_ablation.py) -- stays
+    NaN, never fabricated, until that file is actually present.
     Raw NFIQ2 is taken from whichever pipeline's data has it for that image
     (raw scoring doesn't depend on which pipeline processed the image, so
     any available source is equally valid); if two sources disagree on the
@@ -252,7 +287,7 @@ def build_master_table(loaded=None):
     all_keys = pd.DataFrame(columns=["file", "db"])
     raw_frames = []
     enhanced = {}
-    for key in ("pipeline_a", "pipeline_b", "pipeline_c", "pipeline_d"):
+    for key in ("pipeline_a", "pipeline_b", "pipeline_c", "pipeline_d", "hybrid"):
         df = loaded.get(key)
         if df is None or len(df) == 0:
             continue
@@ -292,7 +327,6 @@ def build_master_table(loaded=None):
             master[label] = master.apply(
                 lambda r, s=series: s.get((r["file"], r["db"])), axis=1
             )
-    master["Hybrid"] = pd.NA  # never fabricated -- depends on Pipeline B finishing
 
     master = master.rename(columns={"file": "Image", "db": "DB"})
     master = master[["Image", "DB", "Raw NFIQ2", "Pipeline A", "Pipeline B",

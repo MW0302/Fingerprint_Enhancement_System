@@ -45,6 +45,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "utils"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_a"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_b"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "pipeline_d"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src", "hybrid"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 from common import normalize_image, segment, orientation_field  # noqa: E402
@@ -53,6 +54,7 @@ from common import DEFAULT_NORMALIZE_TARGET_MEAN, DEFAULT_NORMALIZE_TARGET_VAR  
 import pipeline_a  # noqa: E402
 import pipeline_b  # noqa: E402
 import pipeline_d  # noqa: E402
+import hybrid  # noqa: E402
 
 
 def _timed(fn, *args, **kwargs):
@@ -257,16 +259,52 @@ def get_stages_pipeline_d(image, params=None):
     return {"available": True, "message": "", "stages": stages}
 
 
+def get_stages_hybrid(image, params=None):
+    # Unlike Pipeline C, hybrid.py already exposes stage0_preprocess()/
+    # stage1_contrast()/stage2_noise()/stage3_orientation() as separately-
+    # callable module functions -- no ablation-wrapper workaround needed,
+    # call them directly in enhance()'s own order.
+    params = params or {}
+
+    (normalized, fg_mask_blocks), t0 = _timed(hybrid.stage0_preprocess, image, params)
+    stage1, t1 = _timed(hybrid.stage1_contrast, normalized, fg_mask_blocks, params)
+    (stage2, _alpha), t2 = _timed(hybrid.stage2_noise, normalized, stage1, fg_mask_blocks, params)
+    stage3, t3 = _timed(hybrid.stage3_orientation, stage2, fg_mask_blocks, params)
+
+    return {
+        "available": True,
+        "message": "",
+        "stages": [
+            {
+                "name": "Stage 1 (P1 — Pipeline C's homomorphic filter + feathering)",
+                "image": stage1,
+                "time_ms": t0 + t1,
+            },
+            {
+                "name": "Stage 2 (P1+P2 — + Pipeline C's coherence diffusion)",
+                "image": stage2,
+                "time_ms": t2,
+            },
+            {
+                "name": "Stage 3 (P1+P2+P6 — + Pipeline A's oriented Gabor)",
+                "image": stage3,
+                "time_ms": t3,
+            },
+        ],
+    }
+
+
 _ADAPTERS = {
     "pipeline_a": get_stages_pipeline_a,
     "pipeline_b": get_stages_pipeline_b,
     "pipeline_c": get_stages_pipeline_c,
     "pipeline_d": get_stages_pipeline_d,
+    "hybrid": get_stages_hybrid,
 }
 
 
 def get_stages(pipeline_key, image, params=None):
-    """pipeline_key: one of 'pipeline_a'/'pipeline_b'/'pipeline_c'/'pipeline_d'."""
+    """pipeline_key: one of 'pipeline_a'/'pipeline_b'/'pipeline_c'/'pipeline_d'/'hybrid'."""
     adapter = _ADAPTERS.get(pipeline_key)
     if adapter is None:
         return {"available": False, "message": f"Unknown pipeline key: {pipeline_key}", "stages": []}
